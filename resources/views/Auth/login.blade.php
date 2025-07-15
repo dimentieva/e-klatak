@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <title>Login - E-Klatak</title>
@@ -16,48 +15,45 @@
         }
     </style>
 </head>
-
-<body class="bg-[#e0f7fa] flex items-center justify-center min-h-screen">
-    <div class="bg-white w-full max-w-3xl rounded-2xl box-shadow overflow-hidden md:flex">
-        <!-- Left -->
-        <div class="hidden md:flex md:w-1/2 flex-col items-center justify-start bg-white p-8 pt-12">
-            <img src="{{ asset('eklatak.png') }}" class="w-58 h-58 object-contain mb-1" />
-            <h1 class="text-3xl font-bold text-[#0bb4b2] text-center mt-2">E-Klatak</h1>
+<body class="bg-[#e0f7fa] min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white w-full max-w-4xl rounded-2xl box-shadow overflow-hidden flex flex-col md:flex-row transition-all duration-300 ease-in-out">
+        
+        <!-- Kiri -->
+        <div class="hidden md:flex md:w-1/2 flex-col items-center justify-center p-8 bg-white">
+            <img src="{{ asset('assets/eklatak.png') }}" class="w-32 h-32 md:w-44 md:h-44 object-contain mb-4" alt="Logo E-Klatak" />
+            <h1 class="text-2xl md:text-3xl font-bold text-[#0bb4b2] text-center">E-Klatak</h1>
             <p class="text-sm text-gray-600 text-center mt-1">Point Of Sales Application</p>
         </div>
 
-        <!-- Right -->
-        <div class="w-full md:w-1/2 bg-[#0bb4b2] p-8 flex items-center justify-center rounded-b-2xl md:rounded-bl-none md:rounded-r-2xl">
-            <form method="POST" action="{{ route('login') }}" class="w-full max-w-sm space-y-6 p-6">
+        <!-- Kanan -->
+        <div class="w-full md:w-1/2 bg-[#0bb4b2] px-6 py-10 flex items-center justify-center rounded-b-2xl md:rounded-bl-none md:rounded-r-2xl">
+            <form method="POST" action="{{ route('login') }}" class="w-full max-w-md space-y-6">
                 @csrf
 
-                <h2 class="text-xl font-bold text-center text-white">Login to Your Account</h2>
+                <h2 class="text-xl md:text-2xl font-bold text-center text-white">Login to Your Account</h2>
 
-                <!-- Username -->
+                <!-- Email -->
                 <div>
-                    <label class="text-white font-semibold block mb-1">Username</label>
+                    <label class="text-white font-semibold block mb-1 text-sm">Email</label>
                     <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5.121 17.804A13.937 13.937 0 0112 15c2.485 0 4.797.657 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m0 0l4 4m-4-4l4-4" />
                         </svg>
-                        <input type="text" name="name" placeholder="Enter your username"
-                            class="flex-1 bg-transparent focus:outline-none text-gray-700" required />
+                        <input type="text" name="name" placeholder="Enter your name"
+                            class="w-full bg-transparent focus:outline-none text-gray-700 text-sm" required />
                     </div>
                 </div>
 
                 <!-- Password -->
                 <div>
-                    <label class="text-white font-semibold block mb-1">Password</label>
+                    <label class="text-white font-semibold block mb-1 text-sm">Password</label>
                     <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 11c.828 0 1.5-.672 1.5-1.5S12.828 8 12 8s-1.5.672-1.5 1.5S11.172 11 12 11zm0 0v3m-6 4a9 9 0 1112 0H6z" />
                         </svg>
                         <input type="password" name="password" id="passwordInput" placeholder="Enter your password"
-                            class="flex-1 bg-transparent focus:outline-none text-gray-700" required />
+                            class="w-full bg-transparent focus:outline-none text-gray-700 text-sm" required />
                         <span onclick="togglePassword()" class="absolute right-3 text-gray-500 cursor-pointer">
                             <svg id="eyeIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -68,9 +64,8 @@
                             </svg>
                             <svg id="eyeIconClosed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13.875 18.825A10.05 10.05 0 0112 19
-                                    c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0
-                                    012.458-4.042m3.208-2.24A9.956 9.956 0 0112 5
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7
+                                    a9.956 9.956 0 012.458-4.042m3.208-2.24A9.956 9.956 0 0112 5
                                     c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0
                                     01-1.334 2.472M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
@@ -79,11 +74,19 @@
                     </div>
                 </div>
 
-                <!-- Button -->
+                <!-- Submit -->
                 <button type="submit"
-                    class="w-full py-2 rounded-md bg-[#00bcd4] hover:bg-[#0097a7] text-white font-bold transition duration-300">
+                    class="w-full py-2 rounded-md bg-[#00bcd4] hover:bg-[#0097a7] text-white font-bold text-sm transition duration-300">
                     Login
                 </button>
+
+                <!-- Error Message -->
+                @if(session('error'))
+                    <div class="text-red-100 bg-red-500 text-center rounded-md px-4 py-2 text-sm">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
             </form>
         </div>
     </div>
@@ -101,5 +104,4 @@
         }
     </script>
 </body>
-
 </html>
