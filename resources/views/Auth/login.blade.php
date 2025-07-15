@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>Login - E-Klatak</title>
@@ -15,36 +16,38 @@
         }
     </style>
 </head>
-<body class="bg-[#e0f7fa] min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white w-full max-w-4xl rounded-2xl box-shadow overflow-hidden flex flex-col md:flex-row transition-all duration-300 ease-in-out">
-        
-        <!-- Kiri -->
-        <div class="hidden md:flex md:w-1/2 flex-col items-center justify-center p-8 bg-white">
-            <img src="{{ asset('assets/eklatak.png') }}" class="w-32 h-32 md:w-44 md:h-44 object-contain mb-4" alt="Logo E-Klatak" />
-            <h1 class="text-2xl md:text-3xl font-bold text-[#0bb4b2] text-center">E-Klatak</h1>
-            <p class="text-sm text-gray-600 text-center mt-1">Point Of Sales Application</p>
+
+<body class="bg-[#e0f7fa] min-h-screen flex items-center justify-center px-2">
+    <div class="bg-white w-full max-w-5xl rounded-2xl box-shadow overflow-hidden flex flex-row transition-all duration-300 ease-in-out">
+
+        <!-- Kiri (Logo) -->
+        <div class="w-1/2 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-white">
+            <img src="{{ asset('assets/eklatak.png') }}" class="w-28 sm:w-30 md:w-40 h-auto object-contain mb-4" alt="Logo E-Klatak" />
+            <h1 class="text-lg sm:text-xl md:text-3xl font-bold text-[#0bb4b2] text-center">E-Klatak</h1>
+            <p class="text-xs sm:text-sm text-gray-600 text-center mt-1">Point Of Sales Application</p>
         </div>
 
-        <!-- Kanan -->
-        <div class="w-full md:w-1/2 bg-[#0bb4b2] px-6 py-10 flex items-center justify-center rounded-b-2xl md:rounded-bl-none md:rounded-r-2xl">
-            <form method="POST" action="{{ route('login') }}" class="w-full max-w-md space-y-6">
+        <!-- Kanan (Form Login) -->
+        <div class="w-1/2 bg-[#0bb4b2] px-4 sm:px-6 py-6 sm:py-10 flex items-center justify-center rounded-r-2xl">
+            <form method="POST" action="{{ route('login') }}" class="w-full max-w-sm space-y-5">
                 @csrf
 
-                <h2 class="text-xl md:text-2xl font-bold text-center text-white">Login to Your Account</h2>
+                <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-center text-white">Login to Your Account</h2>
 
-                <!-- Email -->
+                <!-- Username -->
                 <div>
-                    <label class="text-white font-semibold block mb-1 text-sm">Email</label>
+                    <label class="text-white font-semibold block mb-1 text-sm">Username</label>
                     <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m0 0l4 4m-4-4l4-4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5.121 17.804A9.969 9.969 0 0012 20c2.21 0 4.25-.715 5.879-1.924M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <input type="text" name="name" placeholder="Enter your name"
+                        <input type="text" name="name" placeholder="Enter your username"
                             class="w-full bg-transparent focus:outline-none text-gray-700 text-sm" required />
                     </div>
                 </div>
 
-                <!-- Password -->
+
                 <div>
                     <label class="text-white font-semibold block mb-1 text-sm">Password</label>
                     <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white relative">
@@ -82,11 +85,10 @@
 
                 <!-- Error Message -->
                 @if(session('error'))
-                    <div class="text-red-100 bg-red-500 text-center rounded-md px-4 py-2 text-sm">
-                        {{ session('error') }}
-                    </div>
+                <div class="text-red-100 bg-red-500 text-center rounded-md px-4 py-2 text-sm">
+                    {{ session('error') }}
+                </div>
                 @endif
-
             </form>
         </div>
     </div>
@@ -104,4 +106,5 @@
         }
     </script>
 </body>
+
 </html>
