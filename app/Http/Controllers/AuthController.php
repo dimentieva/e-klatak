@@ -17,22 +17,18 @@ class AuthController extends Controller
         $credentials = $request->only('name', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            if ($user->role === 'admin') {
-                return redirect()->route('dashboard.admin');
-            } elseif ($user->role === 'kasir') {
-                return redirect()->route('dashboard.kasir');
-            }
+            return redirect('/dashboard');
         }
 
-        return back()->with('error', 'Email atau password salah');
+        return back()->withErrors([
+            'name' => 'Username atau password salah.',
+        ]);
     }
-    
-     public function username()
+
+    public function username()
     {
         return 'name';
     }
-
 
     public function dashboard()
     {
