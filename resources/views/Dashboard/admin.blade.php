@@ -28,7 +28,7 @@
                     <span>👥</span><span>Kelola Karyawan</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Suplier</p>
-                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
+                <a href="{{ route('supplier.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
                     <span>🏭</span><span>Kelola Suplier</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Produk</p>
