@@ -9,26 +9,33 @@
 </head>
 
 <body class="bg-gray-100 font-sans">
+
+    <!-- Layout -->
     <div class="flex min-h-screen">
 
-        <!-- Sidebar -->
-        <aside class="w-64 bg-[#0BB4B2] text-white flex flex-col p-4 justify-between">
-            <div>
-                <!-- Logo -->
-                <div class="flex items-center space-x-2 mb-6">
-                    <img src="{{ asset('assets/eklatak.png') }}" alt="Logo" class="w-14 h-14 rounded-full" />
-                    <h1 class="text-xl font-bold">E-KLATAK</h1>
-                </div>
+  <!-- Sidebar -->
+<aside class="w-64 bg-[#0bb4b2] text-white flex flex-col p-4 min-h-screen justify-between">
+    <div>
+        <div class="flex items-center space-x-2 mb-6">
+            <img src="{{ asset('assets/eklatak.png') }}" alt="Logo" class="w-14 h-14 rounded-full" />
+            <h1 class="text-xl font-bold">E-KLATAK</h1>
+        </div>
 
-                <!-- Navigation -->
-                <nav class="space-y-3">
-                    <a href="#" class="flex items-center space-x-2 px-3 py-2 bg-[#6DCDE1] text-white rounded-md font-semibold">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10.707 1.293a1 1 0 00-1.414 0L2 8.586V18a1 1 0 001 1h5a1 1 0 001-1V13h2v5a1 1 0 001 1h5a1 1 0 001-1V8.586l-7.293-7.293z" />
-                        </svg>
-                        <span>Dashboard</span>
-                    </a>
+        <nav class="space-y-3">
+            <!-- Dashboard -->
+            <a href="{{ route('dashboard.admin') }}"
+                class="flex items-center space-x-2 px-3 py-2 rounded-md font-semibold
+                    {{ Route::is('dashboard.admin') ? 'bg-white text-[#0bb4b2]' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 {{ Route::is('dashboard.admin') ? 'text-[#0bb4b2]' : 'text-white' }}" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-3a2 2 0 01-2-2V14H9v6a2 2 0 01-2 2H4a2 2 0 01-2-2V10z" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
 
+<<<<<<< HEAD
                     <p class="mt-4 text-sm text-white uppercase">Karyawan</p>
                     <a href="{{ route('karyawan.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -36,46 +43,81 @@
                         </svg>
                         <span>Kelola Karyawan</span>
                     </a>
+=======
+            <!-- Karyawan -->
+            <p class="mt-4 text-sm text-gray-200 uppercase">Karyawan</p>
+            <a href="#"
+                class="flex items-center space-x-2 px-3 py-2 rounded-md
+                    hover:bg-white hover:text-[#0bb4b2]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20h6M6 20h.01M4 20H2v-2a4 4 0 014-4h1
+                          m0-6a4 4 0 108 0 4 4 0 00-8 0z" />
+                </svg>
+                <span>Kelola Karyawan</span>
+            </a>
+>>>>>>> 35520ec78be3193dd0ce0459d4f0d03b9e507a9c
 
-                    <p class="mt-4 text-sm text-white uppercase">Supplier</p>
-                    <a href="{{ route('supplier.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v4H3V4zM3 9h6v6H3V9zm0 7h6v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm7 0h11v4a1 1 0 01-1 1h-9a1 1 0 01-1-1v-4zm0-7h11v6H10V9zm0-5a1 1 0 011-1h9a1 1 0 011 1v4H10V4z" />
-                        </svg>
-                        <span>Kelola Supplier</span>
-                    </a>
+            <!-- Supplier -->
+            <p class="mt-4 text-sm text-gray-200 uppercase">Suplier</p>
+            <a href="{{ route('supplier.index') }}"
+                class="flex items-center space-x-2 px-3 py-2 rounded-md
+                    {{ Route::is('supplier.*') ? 'bg-white text-[#0bb4b2] font-semibold' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-5 h-5 {{ Route::is('supplier.*') ? 'text-[#0bb4b2]' : 'text-white' }}" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                <span>Kelola Suplier</span>
+            </a>
 
-                    <p class="mt-4 text-sm text-white uppercase">Produk</p>
-                    <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M4 3a2 2 0 00-2 2v3a2 2 0 001 1.732V14a2 2 0 002 2h2a2 2 0 002-2v-4.268A2 2 0 0010 8V5a2 2 0 00-2-2H4zM8 5v3H4V5h4zM18 8h-4V5h4v3zM18 10a2 2 0 01-1 1.732V14a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4.268A2 2 0 0112 10V5a2 2 0 012-2h2a2 2 0 012 2v5z" />
-                        </svg>
-                        <span>Kelola Produk</span>
-                    </a>
+            <!-- Produk -->
+            <p class="mt-4 text-sm text-gray-200 uppercase">Produk</p>
+            <a href="#"
+                class="flex items-center space-x-2 px-3 py-2 rounded-md
+                    hover:bg-white hover:text-[#0bb4b2]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M20 13V6a2 2 0 00-2-2h-5.586a1 1 0 00-.707.293L7 9H4a1 1 0
+                          00-1 1v9a2 2 0 002 2h14a2 2 0 002-2v-5a1 1 0 00-1-1h-3z" />
+                </svg>
+                <span>Kelola Produk</span>
+            </a>
 
-                    <p class="mt-4 text-sm text-white uppercase">Laporan</p>
-                    <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 00-2-2H5m0 8h2a2 2 0 002-2v-6a2 2 0 012-2h2m0 8h2a2 2 0 002-2v-4a2 2 0 00-2-2h-2" />
-                        </svg>
-                        <span>Laporan</span>
-                    </a>
-                </nav>
-            </div>
+            <!-- Laporan -->
+            <p class="mt-4 text-sm text-gray-200 uppercase">Laporan</p>
+            <a href="#"
+                class="flex items-center space-x-2 px-3 py-2 rounded-md
+                    hover:bg-white hover:text-[#0bb4b2]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6" />
+                </svg>
+                <span>Laporan</span>
+            </a>
+        </nav>
+    </div>
 
-            <!-- Logout -->
-            <form action="{{ route('logout') }}" method="POST" class="mt-6">
-                @csrf
-                <button type="submit" class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
-                    Logout
-                </button>
-            </form>
-        </aside>
+    <!-- Logout -->
+    <form action="{{ route('logout') }}" method="POST" class="mt-6">
+        @csrf
+        <button type="submit"
+                class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
+            Logout
+        </button>
+    </form>
+</aside>
 
-        <!-- Main content -->
+
+
+        <!-- Main Content -->
         <main class="flex-1 p-6 bg-white overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-[#0BB4B2]">Dashboard</h2>
+                <h2 class="text-2xl font-bold text-[#0bb4b2]">Dashboard</h2>
                 <div class="flex items-center space-x-2">
                     <span class="text-gray-700">Admin 1</span>
                     <span class="text-gray-600 text-xl">👤</span>
@@ -84,20 +126,20 @@
 
             <!-- Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Produk</p>
                     <h3 class="text-xl font-bold">120</h3>
                 </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Pendapatan</p>
                     <h3 class="text-xl font-bold">Rp. 80.000.000</h3>
                 </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Karyawan</p>
                     <h3 class="text-xl font-bold">12</h3>
                 </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-                    <p class="text-sm">Total Supplier</p>
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
+                    <p class="text-sm">Total Suplier</p>
                     <h3 class="text-xl font-bold">5</h3>
                 </div>
             </div>
@@ -152,6 +194,7 @@
                     </div>
                 </div>
             </div>
+
         </main>
     </div>
 </body>
