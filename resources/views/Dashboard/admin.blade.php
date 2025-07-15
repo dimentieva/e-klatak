@@ -14,29 +14,29 @@
     <div class="flex min-h-screen">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-teal-600 text-white flex flex-col p-4">
+        <aside class="w-64 bg-[#0bb4b2] text-white flex flex-col p-4 min-h-screen">
             <div class="flex items-center space-x-2 mb-6">
                 <img src="https://via.placeholder.com/40" alt="Logo" class="w-10 h-10 rounded-full" />
                 <h1 class="text-xl font-bold">E-KLATAK</h1>
             </div>
             <nav class="space-y-3">
-                <a href="#" class="flex items-center space-x-2 px-3 py-2 bg-white text-teal-600 rounded-md font-semibold">
+                <a href="#" class="flex items-center space-x-2 px-3 py-2 bg-white text-[#0bb4b2] rounded-md font-semibold">
                     <span>🏠</span><span>Dashboard</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Karyawan</p>
-                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
+                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-[#0bb4b2] rounded-md">
                     <span>👥</span><span>Kelola Karyawan</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Suplier</p>
-                <a href="{{ route('supplier.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
+                <a href="{{ route('supplier.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-[#0bb4b2] rounded-md">
                     <span>🏭</span><span>Kelola Suplier</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Produk</p>
-                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
+                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-[#0bb4b2] rounded-md">
                     <span>📦</span><span>Kelola Produk</span>
                 </a>
                 <p class="mt-4 text-sm text-gray-200 uppercase">Laporan</p>
-                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-teal-600 rounded-md">
+                <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-[#0bb4b2] rounded-md">
                     <span>📑</span><span>Laporan</span>
                 </a>
             </nav>
@@ -45,7 +45,7 @@
         <!-- Main Content -->
         <main class="flex-1 p-6 bg-white overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-teal-600">Dashboard</h2>
+                <h2 class="text-2xl font-bold text-[#0bb4b2]">Dashboard</h2>
                 <div class="flex items-center space-x-2">
                     <span class="text-gray-700">Admin 1</span>
                     <span class="text-gray-600 text-xl">👤</span>
@@ -54,19 +54,19 @@
 
             <!-- Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-teal-500 text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Produk</p>
                     <h3 class="text-xl font-bold">120</h3>
                 </div>
-                <div class="bg-teal-500 text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Pendapatan</p>
                     <h3 class="text-xl font-bold">Rp. 80.000.000</h3>
                 </div>
-                <div class="bg-teal-500 text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Karyawan</p>
                     <h3 class="text-xl font-bold">12</h3>
                 </div>
-                <div class="bg-teal-500 text-white p-4 rounded-lg shadow">
+                <div class="bg-[#0bb4b2] hover:bg-[#0097a7] transition duration-300 cursor-pointer text-white p-4 rounded-lg shadow">
                     <p class="text-sm">Total Suplier</p>
                     <h3 class="text-xl font-bold">5</h3>
                 </div>
@@ -109,7 +109,6 @@
                                     <td class="px-3 py-2">3.000</td>
                                     <td class="px-3 py-2">15.000</td>
                                 </tr>
-                                <!-- Tambahkan baris lainnya sesuai data -->
                             </tbody>
                         </table>
                     </div>
