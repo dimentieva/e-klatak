@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\KaryawanController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -13,3 +14,5 @@ Route::middleware(['auth'])->group(function () {
 Route::resource('supplier', SupplierController::class)->middleware('auth');
 Route::resource('supplier', SupplierController::class);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::resource('karyawan', KaryawanController::class)->middleware('auth');
+Route::resource('karyawan', KaryawanController::class);
