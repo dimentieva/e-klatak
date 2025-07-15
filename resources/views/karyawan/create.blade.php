@@ -2,15 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - E-KLATAK</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Karyawan - E-KLATAK</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 font-sans">
     <div class="flex min-h-screen">
-
         <!-- Sidebar -->
         <aside class="w-64 bg-[#0BB4B2] text-white flex flex-col p-4 justify-between">
             <div>
@@ -72,86 +71,50 @@
             </form>
         </aside>
 
-        <!-- Main content -->
+        <!-- Main Content -->
         <main class="flex-1 p-6 bg-white overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-[#0BB4B2]">Dashboard</h2>
-                <div class="flex items-center space-x-2">
-                    <span class="text-gray-700">Admin 1</span>
-                    <span class="text-gray-600 text-xl">👤</span>
-                </div>
-            </div>
+            <h2 class="text-xl font-bold text-teal-600 mb-4">Tambah Karyawan</h2>
 
-            <!-- Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-                    <p class="text-sm">Total Produk</p>
-                    <h3 class="text-xl font-bold">120</h3>
-                </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-                    <p class="text-sm">Total Pendapatan</p>
-                    <h3 class="text-xl font-bold">Rp. 80.000.000</h3>
-                </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-                    <p class="text-sm">Total Karyawan</p>
-                    <h3 class="text-xl font-bold">12</h3>
-                </div>
-                <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-                    <p class="text-sm">Total Supplier</p>
-                    <h3 class="text-xl font-bold">5</h3>
-                </div>
+            @if ($errors->any())
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+            @endif
 
-            <!-- Table and Chart -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Table -->
-                <div class="md:col-span-2 bg-gray-50 rounded-lg p-4 shadow">
-                    <h3 class="font-semibold text-gray-700 mb-2">Data Penjualan Terbaru</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-gray-600">
-                            <thead class="bg-gray-200 text-xs uppercase">
-                                <tr>
-                                    <th class="px-3 py-2">No</th>
-                                    <th class="px-3 py-2">Kasir</th>
-                                    <th class="px-3 py-2">Tanggal</th>
-                                    <th class="px-3 py-2">Produk</th>
-                                    <th class="px-3 py-2">Qty</th>
-                                    <th class="px-3 py-2">Harga</th>
-                                    <th class="px-3 py-2">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b">
-                                    <td class="px-3 py-2">1</td>
-                                    <td class="px-3 py-2">Bela</td>
-                                    <td class="px-3 py-2">15/01/2025</td>
-                                    <td class="px-3 py-2">Ikan Asap</td>
-                                    <td class="px-3 py-2">4 pcs</td>
-                                    <td class="px-3 py-2">25.000</td>
-                                    <td class="px-3 py-2">100.000</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="px-3 py-2">2</td>
-                                    <td class="px-3 py-2">John</td>
-                                    <td class="px-3 py-2">15/01/2025</td>
-                                    <td class="px-3 py-2">Indomie Kuah</td>
-                                    <td class="px-3 py-2">5 pcs</td>
-                                    <td class="px-3 py-2">3.000</td>
-                                    <td class="px-3 py-2">15.000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <form action="{{ route('karyawan.store') }}" method="POST"
+                class="bg-white p-4 rounded shadow space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium">Username</label>
+                    <input type="text" name="username" class="w-full border px-3 py-2 rounded" required>
                 </div>
-
-                <!-- Chart Placeholder -->
-                <div class="bg-gray-50 rounded-lg p-4 shadow">
-                    <h3 class="font-semibold text-gray-700 mb-2">Statistik Penjualan</h3>
-                    <div class="h-40 flex items-center justify-center bg-white border rounded-md">
-                        <span class="text-gray-400 text-sm">[ Grafik penjualan ]</span>
-                    </div>
+                <div>
+                    <label class="block text-sm font-medium">Email</label>
+                    <input type="email" name="email" class="w-full border px-3 py-2 rounded" required>
                 </div>
-            </div>
+                <div>
+                    <label class="block text-sm font-medium">No HP</label>
+                    <input type="text" name="no_hp" class="w-full border px-3 py-2 rounded" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Alamat</label>
+                    <textarea name="alamat" rows="3" class="w-full border px-3 py-2 rounded" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Tanggal Bergabung</label>
+                    <input type="date" name="tanggal_bergabung" class="w-full border px-3 py-2 rounded" required>
+                </div>
+                <div>
+                    <button type="submit"
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded">
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </main>
     </div>
 </body>
