@@ -30,7 +30,7 @@
                     </a>
 
                     <p class="mt-4 text-sm text-white uppercase">Karyawan</p>
-                    <a href="#" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
+                    <a href="{{ route('karyawan.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-[#6DCDE1] hover:text-white rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10 4a2 2 0 100 4 2 2 0 000-4zM2 16a6 6 0 1112 0H2zM16 8a2 2 0 11-4 0 2 2 0 014 0zm0 8h-3.5a8.03 8.03 0 00-.5-2.5 6.97 6.97 0 011.5-1.5c.5.5 1.5 1.5 2.5 4z" />
                         </svg>
