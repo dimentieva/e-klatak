@@ -1,146 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Supplier - E-KLATAK</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 font-sans">
-<div class="flex min-h-screen">
-   <!-- Sidebar -->
-<aside class="w-64 bg-[#0bb4b2] text-white flex flex-col p-4 min-h-screen justify-between">
-    <div>
-        <div class="flex items-center space-x-2 mb-6">
-            <img src="{{ asset('assets/eklatak.png') }}" alt="Logo" class="w-14 h-14 rounded-full" />
-            <h1 class="text-xl font-bold">E-KLATAK</h1>
-        </div>
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-[#0BB4B2] text-white flex flex-col p-4 justify-between">
+            <div>
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 mb-6">
+                    <img src="{{ asset('assets/eklatak.png') }}" alt="Logo" class="w-14 h-14 rounded-full" />
+                    <h1 class="text-xl font-bold">E-KLATAK</h1>
+                </div>
 
-        <nav class="space-y-3">
-            <!-- Dashboard -->
-            <a href="{{ route('dashboard.admin') }}"
-                class="flex items-center space-x-2 px-3 py-2 rounded-md font-semibold
-                    {{ Route::is('dashboard.admin') ? 'bg-white text-[#0bb4b2]' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5 {{ Route::is('dashboard.admin') ? 'text-[#0bb4b2]' : 'text-white' }}" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-3a2 2 0 01-2-2V14H9v6a2 2 0 01-2 2H4a2 2 0 01-2-2V10z" />
-                </svg>
-                <span>Dashboard</span>
-            </a>
+                <!-- Navigation -->
+                <nav class="space-y-3">
+                    <a href="{{ route('dashboard.admin') }}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-white hover:text-[#0BB4B2]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 1.293a1 1 0 00-1.414 0L2 8.586V18a1 1 0 001 1h5a1 1 0 001-1V13h2v5a1 1 0 001 1h5a1 1 0 001-1V8.586l-7.293-7.293z" />
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
 
-            <!-- Karyawan -->
-            <p class="mt-4 text-sm text-gray-200 uppercase">Karyawan</p>
-            <a href="{{ route('karyawan.index') }}"
-                class="flex items-center space-x-2 px-3 py-2 rounded-md
-                    hover:bg-white hover:text-[#0bb4b2]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20h6M6 20h.01M4 20H2v-2a4 4 0 014-4h1
-                          m0-6a4 4 0 108 0 4 4 0 00-8 0z" />
-                </svg>
-                <span>Kelola Karyawan</span>
-            </a>
+                    <p class="mt-4 text-sm text-white uppercase">Karyawan</p>
+                    <a href="{{ route('karyawan.index') }}" class="flex items-center space-x-2 px-3 py-2 hover:bg-white hover:text-[#0BB4B2] rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 4a2 2 0 100 4 2 2 0 000-4zM2 16a6 6 0 1112 0H2zM16 8a2 2 0 11-4 0 2 2 0 014 0zm0 8h-3.5a8.03 8.03 0 00-.5-2.5 6.97 6.97 0 011.5-1.5c.5.5 1.5 1.5 2.5 4z" />
+                        </svg>
+                        <span>Kelola Karyawan</span>
+                    </a>
 
-            <!-- Supplier -->
-            <p class="mt-4 text-sm text-gray-200 uppercase">Suplier</p>
-            <a href="{{ route('supplier.index') }}"
-                class="flex items-center space-x-2 px-3 py-2 rounded-md
-                    {{ Route::is('supplier.*') ? 'bg-white text-[#0bb4b2] font-semibold' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5 {{ Route::is('supplier.*') ? 'text-[#0bb4b2]' : 'text-white' }}" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-                <span>Kelola Suplier</span>
-            </a>
+                    <p class="mt-4 text-sm text-white uppercase">Supplier</p>
+                    <a href="{{ route('supplier.index') }}" class="flex items-center space-x-2 px-3 py-2 bg-white text-[#0BB4B2] font-semibold rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v4H3V4zM3 9h6v6H3V9zm0 7h6v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm7 0h11v4a1 1 0 01-1 1h-9a1 1 0 01-1-1v-4zm0-7h11v6H10V9zm0-5a1 1 0 011-1h9a1 1 0 011 1v4H10V4z" />
+                        </svg>
+                        <span>Kelola Supplier</span>
+                    </a>
 
-            <!-- Produk -->
-            <p class="mt-4 text-sm text-gray-200 uppercase">Produk</p>
-            <a href="#"
-                class="flex items-center space-x-2 px-3 py-2 rounded-md
-                    hover:bg-white hover:text-[#0bb4b2]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M20 13V6a2 2 0 00-2-2h-5.586a1 1 0 00-.707.293L7 9H4a1 1 0
-                          00-1 1v9a2 2 0 002 2h14a2 2 0 002-2v-5a1 1 0 00-1-1h-3z" />
-                </svg>
-                <span>Kelola Produk</span>
-            </a>
+                    <p class="mt-4 text-sm text-white uppercase">Produk</p>
+                    <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-white hover:text-[#0BB4B2]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M4 3a2 2 0 00-2 2v3a2 2 0 001 1.732V14a2 2 0 002 2h2a2 2 0 002-2v-4.268A2 2 0 0010 8V5a2 2 0 00-2-2H4zM8 5v3H4V5h4zM18 8h-4V5h4v3zM18 10a2 2 0 01-1 1.732V14a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4.268A2 2 0 0112 10V5a2 2 0 012-2h2a2 2 0 012 2v5z" />
+                        </svg>
+                        <span>Kelola Produk</span>
+                    </a>
 
-            <!-- Laporan -->
-            <p class="mt-4 text-sm text-gray-200 uppercase">Laporan</p>
-            <a href="#"
-                class="flex items-center space-x-2 px-3 py-2 rounded-md
-                    hover:bg-white hover:text-[#0bb4b2]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6" />
-                </svg>
-                <span>Laporan</span>
-            </a>
-        </nav>
-    </div>
+                    <p class="mt-4 text-sm text-white uppercase">Laporan</p>
+                    <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-white hover:text-[#0BB4B2]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 00-2-2H5m0 8h2a2 2 0 002-2v-6a2 2 0 012-2h2m0 8h2a2 2 0 002-2v-4a2 2 0 00-2-2h-2" />
+                        </svg>
+                        <span>Laporan</span>
+                    </a>
+                </nav>
+            </div>
 
-    <!-- Logout -->
-    <form action="{{ route('logout') }}" method="POST" class="mt-6">
-        @csrf
-        <button type="submit"
-                class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
-            Logout
-        </button>
-    </form>
-</aside>
-    <!-- Main Content -->
-    <main class="flex-1 p-6 bg-white overflow-y-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-[#0bb4b2]">Data Supplier</h2>
-            <a href="{{ route('supplier.create') }}" class="bg-[#0bb4b2] text-white px-4 py-2 rounded hover:bg-[#0aa5a3] transition">+ Tambah</a>
-        </div>
+            <!-- Logout -->
+            <form action="{{ route('logout') }}" method="POST" class="mt-6">
+                @csrf
+                <button type="submit" class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
+                    Logout
+                </button>
+            </form>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 p-6 bg-white overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-teal-600">Kelola Supplier</h2>
+                <a href="{{ route('supplier.create') }}"
+                    class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold">
+                    + Tambah
+                </a>
+            </div>
 
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            @if(session('success'))
+            <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
                 {{ session('success') }}
             </div>
-        @endif
+            @endif
 
-        <table class="min-w-full bg-white rounded-lg shadow overflow-hidden text-sm">
-            <thead class="bg-[#0bb4b2] text-white">
-                <tr>
-                    <th class="py-2 px-4 text-left">No</th>
-                    <th class="py-2 px-4 text-left">Nama</th>
-                    <th class="py-2 px-4 text-left">Kontak</th>
-                    <th class="py-2 px-4 text-left">Alamat</th>
-                    <th class="py-2 px-4 text-left">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($suppliers as $supplier)
-                    <tr class="border-b">
-                        <td class="py-2 px-4">{{ $loop->iteration }}</td>
-                        <td class="py-2 px-4">{{ $supplier->nama_supp }}</td>
-                        <td class="py-2 px-4">{{ $supplier->kontak }}</td>
-                        <td class="py-2 px-4">{{ $supplier->alamat }}</td>
-                        <td class="py-2 px-4 space-x-2">
-                            <a href="{{ route('supplier.edit', $supplier->id) }}" class="bg-yellow-400 text-white px-2 py-1 rounded">Edit</a>
-                            <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin hapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="5" class="text-center text-gray-500 py-4">Belum ada data supplier.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </main>
-</div>
+            <div class="overflow-x-auto bg-gray-50 p-4 rounded shadow">
+                <table class="w-full text-sm text-center text-gray-600 border">
+                    <thead class="bg-gray-200 text-xs uppercase">
+                        <tr>
+                            <th class="px-3 py-2 border">No</th>
+                            <th class="px-3 py-2 border">Nama</th>
+                            <th class="px-3 py-2 border">Kontak</th>
+                            <th class="px-3 py-2 border">Alamat</th>
+                            <th class="px-3 py-2 border">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($suppliers as $index => $supplier)
+                        <tr class="border-b">
+                            <td class="px-3 py-2 border">{{ $index + 1 }}</td>
+                            <td class="px-3 py-2 border">{{ $supplier->nama_supp }}</td>
+                            <td class="px-3 py-2 border">{{ $supplier->kontak }}</td>
+                            <td class="px-3 py-2 border">{{ $supplier->alamat }}</td>
+                            <td class="px-3 py-2 border space-x-2">
+                                <a href="{{ route('supplier.edit', $supplier->id) }}"
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+                                <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST"
+                                    class="inline-block" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center px-3 py-4 text-gray-500">Tidak ada data supplier.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+
+    </div>
 </body>
+
 </html>
