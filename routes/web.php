@@ -6,20 +6,21 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProdukController;
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/', [AuthController::class, 'login']);
+// Guest-only routes (hanya bisa diakses saat belum login)
+Route::middleware('guest')->group(function () {
+    Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/', [AuthController::class, 'login']);
+});
 
+// Authenticated-only routes (hanya bisa diakses setelah login)
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
     Route::get('/dashboard/kasir', fn() => view('dashboard.kasir'))->name('dashboard.kasir');
 
     Route::resource('supplier', SupplierController::class);
-
-    Route::resource('karyawan', UserController::class)
-        ->parameters(['karyawan' => 'user']);
-
+    Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
     Route::resource('produk', ProdukController::class);
+    // Logout POST (hanya bisa diakses saat login)
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-
-Route::post('/', [AuthController::class, 'logout'])->name('logout');
