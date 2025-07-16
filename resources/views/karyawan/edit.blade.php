@@ -16,7 +16,7 @@
     </div>
     @endif
 
-    <form action="{{ route('karyawan.edit', $user->id) }}" method="POST" class="space-y-4">
+    <form action="{{ route('karyawan.update', $user->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 
@@ -38,6 +38,12 @@
                 <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="kasir" {{ old('role', $user->role) == 'kasir' ? 'selected' : '' }}>Kasir</option>
             </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium">Password Baru</label>
+            <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti"
+                class="w-full border px-3 py-2 rounded">
         </div>
 
         <div class="flex justify-between">
