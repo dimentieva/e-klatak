@@ -6,11 +6,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProdukController;
 
-// Guest-only routes (hanya bisa diakses saat belum login)
-Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/', [AuthController::class, 'login']);
-});
 
 // Authenticated-only routes (hanya bisa diakses setelah login)
 Route::middleware(['auth'])->group(function () {

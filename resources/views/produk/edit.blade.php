@@ -41,23 +41,23 @@
 
         <div>
             <label class="block text-sm font-medium">Nama Produk</label>
-            <input type="text" name="nama_produk" value="{{ old('Nama_produk', $produk->Nama_produk) }}" class="w-full border px-3 py-2 rounded" required>
+            <input type="text" name="nama_produk" value="{{ old('nama_produk', $produk->nama_produk) }}" class="w-full border px-3 py-2 rounded" required>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium">Harga Jual</label>
-                <input type="number" step="0.01" name="harga_jual" value="{{ old('Harga_jual', $produk->Harga_jual) }}" class="w-full border px-3 py-2 rounded" required>
+                <input type="number" step="0.01" name="harga_jual" value="{{ old('harga_jual', $produk->harga_jual) }}" class="w-full border px-3 py-2 rounded" required>
             </div>
             <div>
                 <label class="block text-sm font-medium">Harga Beli</label>
-                <input type="number" step="0.01" name="harga_beli" value="{{ old('Harga_beli', $produk->Harga_beli) }}" class="w-full border px-3 py-2 rounded" required>
+                <input type="number" step="0.01" name="harga_beli" value="{{ old('harga_beli', $produk->harga_beli) }}" class="w-full border px-3 py-2 rounded" required>
             </div>
         </div>
 
         <div>
             <label class="block text-sm font-medium">Stok</label>
-            <input type="number" name="stok" value="{{ old('Stok', $produk->Stok) }}" class="w-full border px-3 py-2 rounded" required>
+            <input type="number" name="stok" value="{{ old('stok', $produk->stok) }}" class="w-full border px-3 py-2 rounded" required>
         </div>
 
         <div>

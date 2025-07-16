@@ -7,6 +7,7 @@ use App\Models\Produk;
 use App\Models\Supplier;
 use App\Models\LogPerubahanStok;
 use App\Models\NotifikasiStok;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -107,10 +108,18 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
-    public function destroy($id)
-    {
-        $produk = Produk::findOrFail($id);
-        $produk->delete();
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+   public function destroy($id)
+{
+    $produk = Produk::findOrFail($id);
+
+    // Hapus foto dari storage jika ada
+    if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
+        Storage::disk('public')->delete('foto_produk/' . $produk->foto);
     }
+
+    // Hapus produk dari database
+    $produk->delete();
+
+    return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+}
 }

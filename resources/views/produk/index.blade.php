@@ -6,7 +6,7 @@
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-teal-600">Kelola Produk</h2>
     <a href="{{ route('produk.create') }}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold">
-        + Tambah Produk
+        + Tambah 
     </a>
 </div>
 
