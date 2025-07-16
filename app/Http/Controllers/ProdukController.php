@@ -42,7 +42,7 @@ class ProdukController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/foto_produk', $filename);
+            $file->storeAs('foto_produk', $filename);
             $data['foto'] = $filename;
         }
 
@@ -80,7 +80,7 @@ class ProdukController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/foto_produk', $filename);
+            $file->storeAs('foto_produk', $filename);
             $data['foto'] = $filename;
         }
 
