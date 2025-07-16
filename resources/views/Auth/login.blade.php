@@ -36,13 +36,13 @@
 
                 <!-- Username -->
                 <div>
-                    <label class="text-white font-semibold block mb-1 text-sm">Username</label>
+                    <label class="text-white font-semibold block mb-1 text-sm">Email</label>
                     <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 bg-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M5.121 17.804A9.969 9.969 0 0012 20c2.21 0 4.25-.715 5.879-1.924M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <input type="text" name="name" placeholder="Enter your username"
+                        <input type="text" name="email" placeholder="Enter your email"
                             class="w-full bg-transparent focus:outline-none text-gray-700 text-sm" required />
                     </div>
                 </div>
