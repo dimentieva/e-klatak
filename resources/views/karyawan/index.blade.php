@@ -19,7 +19,7 @@
 
 <div class="overflow-x-auto bg-gray-50 p-4 rounded shadow">
     <table class="w-full text-sm text-center text-gray-600 border">
-        <thead class="bg-gray-200 text-xs uppercase">
+        <thead class="bg-[#0BB4B2] text-white text-xs uppercase text-center">
             <tr>
                 <th class="px-3 py-2 border">No</th>
                 <th class="px-3 py-2 border">Nama</th>
