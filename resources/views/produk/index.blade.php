@@ -51,11 +51,16 @@
                     @else
                     <span class="text-gray-400">-</span>
                     @endif
+                </td>
                 <td class="px-3 py-2 border">
                     <div class="flex flex-wrap gap-2 justify-center">
                         <a href="{{ route('produk.edit', $produk->id_produk) }}"
                             class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm whitespace-nowrap">
                             Edit
+                        </a>
+                        <a href="{{ route('produk.kelola_stok', $produk->id_produk) }}"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
+                            Stok
                         </a>
                         <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST"
                             onsubmit="return confirm('Yakin ingin menghapus?')" class="inline-block">

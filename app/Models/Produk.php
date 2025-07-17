@@ -31,14 +31,12 @@ class Produk extends Model
         return $this->belongsTo(Supplier::class, 'id_supplier');
     }
 
-    // Relasi ke log stok
-    public function logStok()
-    {
-        return $this->hasMany(LogPerubahanStok::class, 'id_produk');
-    }
-
     public function notifikasiStok()
     {
         return $this->hasOne(NotifikasiStok::class, 'id_produk');
+    }
+    public function logPerubahanStok()
+    {
+        return $this->hasMany(LogPerubahanStok::class, 'id_produk', 'id_produk');
     }
 }

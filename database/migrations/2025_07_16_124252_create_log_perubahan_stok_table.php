@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('log_perubahan_stok', function (Blueprint $table) {
             $table->id(); // id log
             $table->unsignedBigInteger('id_produk'); // relasi ke produk
-            $table->enum('jenis', ['masih dijual', 'tidak dijual']);
+            $table->enum('jenis', ['tambah', 'kurang']);
             $table->integer('jumlah_perubahan');
-            $table->integer('stok_awal');
-            $table->integer('stok_akhir');
+            $table->integer('stok_awal'); // stok_sebelum
+            $table->integer('stok_akhir'); // stok_sesudah
+            $table->text('keterangan')->nullable(); // tambahan
+            $table->string('created_by')->nullable(); // siapa yang merubah (kasir/admin)
             $table->timestamps();
 
             // Foreign key ke produk

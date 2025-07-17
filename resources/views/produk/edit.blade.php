@@ -54,16 +54,19 @@
                 <input type="number" step="0.01" name="harga_beli" value="{{ old('harga_beli', $produk->harga_beli) }}" class="w-full border px-3 py-2 rounded" required>
             </div>
         </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium">Stok</label>
+                <input type="number" name="stok" value="{{ $produk->stok }}" class="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed" readonly>
+                <p class="text-sm text-gray-500 mt-1">Gunakan <strong>Tambah Stok</strong> untuk mengubah stok.</p>
+            </div>
 
-        <div>
-            <label class="block text-sm font-medium">Stok</label>
-            <input type="number" name="stok" value="{{ old('stok', $produk->stok) }}" class="w-full border px-3 py-2 rounded" required>
+            <div>
+                <label class="block text-sm font-medium">Batas Stok Minimal</label>
+                <input type="number" name="batas_stok_minimal" value="{{ old('batas_stok_minimal', $produk->batas_stok_minimal) }}" class="w-full border px-3 py-2 rounded" required>
+            </div>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium">Batas Stok Minimal</label>
-            <input type="number" name="batas_stok_minimal" value="{{ old('batas_stok_minimal', $produk->batas_stok_minimal) }}" class="w-full border px-3 py-2 rounded" required>
-        </div>
 
         <div>
             <label class="block text-sm font-medium">Status</label>

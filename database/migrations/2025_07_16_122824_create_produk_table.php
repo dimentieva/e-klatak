@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_produk');
             $table->string('kategori');
             $table->unsignedBigInteger('id_supplier');
-            $table->string('nomor_barcode')->unique();
+            $table->string('nomor_barcode')->nullable();
             $table->string('nama_produk');
             $table->decimal('harga_jual', 12, 2);
             $table->decimal('harga_beli', 12, 2);

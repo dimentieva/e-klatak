@@ -5,11 +5,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\LogPerubahanStokController;
 
-    Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/', [AuthController::class, 'login']);
 
-// Authenticated-only routes (hanya bisa diakses setelah login)
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/', [AuthController::class, 'login']);
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
@@ -18,6 +19,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
     Route::resource('produk', ProdukController::class);
-    // Logout POST (hanya bisa diakses saat login)
+
+    Route::get('kelola_stok', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
+    Route::post('kelola_stok', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

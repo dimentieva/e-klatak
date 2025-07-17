@@ -22,6 +22,11 @@ class ProdukController extends Controller
         $suppliers = Supplier::all();
         return view('produk.create', compact('suppliers'));
     }
+    public function show($id)
+    {
+        $produk = Produk::with('supplier')->findOrFail($id);
+        return view('produk.show', compact('produk'));
+    }
 
     public function store(Request $request)
     {
@@ -89,16 +94,16 @@ class ProdukController extends Controller
         if ($produk->Stok != $request->Stok) {
             $log = LogPerubahanStok::create([
                 'id_produk' => $produk->id_produk,
-                'stok_sebelumnya' => $produk->Stok,
-                'stok_sesudah' => $request->Stok,
+                'stok_awal' => $produk->Stok,
+                'stok_akhir' => $request->Stok,
                 'alasan_perubahan' => 'Update produk',
             ]);
 
             if ($request->Stok < $request->batas_stok_minimal) {
                 NotifikasiStok::create([
                     'id_perubahan_stok' => $log->id,
-                    'judul' => 'Stok Menipis',
-                    'pesan' => 'Stok produk ' . $produk->Nama_produk . ' menipis hingga ' . $request->Stok . ' unit.',
+                    'judul' => 'stok menipis',
+                    'pesan' => 'stok produk ' . $produk->Nama_produk . ' menipis hingga ' . $request->Stok . ' unit.',
                 ]);
             }
         }
@@ -107,19 +112,72 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
-
-   public function destroy($id)
-{
-    $produk = Produk::findOrFail($id);
-
-    // Hapus foto dari storage jika ada
-    if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
-        Storage::disk('public')->delete('foto_produk/' . $produk->foto);
+    // Menampilkan form tambah stok
+    public function tambahStok($id)
+    {
+        $produk = Produk::findOrFail($id);
+        return view('produk.kelola_stok', compact('produk'));
     }
 
-    // Hapus produk dari database
-    $produk->delete();
+    // Memproses penambahan stok
+    public function updateStok(Request $request, $id)
+    {
+        $request->validate([
+            'stok_baru' => 'required|integer|min:1',
+            'alasan' => 'required|string',
+        ]);
 
-    return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
-}
+        $produk = Produk::findOrFail($id);
+        $stok_lama = $produk->Stok;
+        $stok_baru = $stok_lama + $request->stok_baru;
+
+        $produk->update(['Stok' => $stok_baru]);
+
+        // Catat perubahan stok
+        $log = LogPerubahanStok::create([
+            'id_produk' => $produk->id_produk,
+            'stok_awal' => $stok_lama,
+            'stok_akhir' => $stok_baru,
+            'alasan_perubahan' => $request->alasan,
+        ]);
+
+        // Tambahkan notifikasi jika stok tetap rendah
+        if ($stok_baru < $produk->batas_stok_minimal) {
+            NotifikasiStok::create([
+                'id_perubahan_stok' => $log->id,
+                'judul' => 'Stok Masih Rendah',
+                'pesan' => 'Stok produk ' . $produk->Nama_produk . ' masih rendah walaupun sudah ditambah.',
+            ]);
+        }
+
+        return redirect()->route('produk.index')->with('success', 'Stok produk berhasil ditambahkan.');
+    }
+    public function simpanStok(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah_stok' => 'required|integer|min:1',
+        ]);
+
+        $produk = Produk::findOrFail($id);
+        $produk->stok += $request->jumlah_stok;
+        $produk->save();
+
+        return redirect()->route('produk.index')->with('success', 'Stok berhasil ditambahkan.');
+    }
+
+
+    public function destroy($id)
+    {
+        $produk = Produk::findOrFail($id);
+
+        // Hapus foto dari storage jika ada
+        if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
+            Storage::disk('public')->delete('foto_produk/' . $produk->foto);
+        }
+
+        // Hapus produk dari database
+        $produk->delete();
+
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+    }
 }
