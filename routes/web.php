@@ -16,6 +16,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
     Route::get('/dashboard/kasir', fn() => view('dashboard.kasir'))->name('dashboard.kasir');
 
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+
+
     Route::resource('supplier', SupplierController::class);
     Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
     Route::resource('produk', ProdukController::class);
