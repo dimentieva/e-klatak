@@ -10,6 +10,16 @@
     </a>
 </div>
 
+{{-- Search --}}
+<form method="GET" action="{{ route('produk.index') }}" class="mb-4">
+    <input type="text" name="search"
+        placeholder="Cari produk..."
+        value="{{ request('search') }}"
+        oninput="this.form.submit()"
+        class="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring focus:border-teal-400" />
+</form>
+
+
 @if(session('success'))
 <div class="bg-green-100 text-green-800 p-3 rounded mb-4">
     {{ session('success') }}
@@ -34,13 +44,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($produks as $index => $produk)
+            @forelse($produks as $index => $produk)
             <tr class="border-b text-center">
-                <td class="px-3 py-2 border">{{ $index + 1 }}</td>
+                <td class="px-3 py-2 border">{{ $produks->firstItem() + $index }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nomor_barcode }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nama_produk }}</td>
                 <td class="px-3 py-2 border">{{ $produk->kategori }}</td>
-                <td class="px-3 py-2 border">{{ $produk->supplier->nama_supp }}</td>
+                <td class="px-3 py-2 border">{{ $produk->supplier->nama_supp ?? '-' }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_beli, 0, ',', '.') }}</td>
                 <td class="px-3 py-2 border">{{ $produk->stok }}</td>
@@ -74,8 +84,17 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="11" class="text-center px-3 py-4 text-gray-500">Tidak ada data produk.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{ $produks->links('pagination::tailwind') }}
+    </div>
 </div>
 @endsection

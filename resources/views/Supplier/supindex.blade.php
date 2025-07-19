@@ -11,6 +11,16 @@
     </a>
 </div>
 
+<!-- Form Search -->
+<form method="GET" action="{{ route('supplier.index') }}" id="searchForm" class="mb-4">
+    <div class="flex items-center space-x-2">
+        <input type="text" name="search" value="{{ request('search') }}"
+               placeholder="Cari supplier..."
+               class="w-full md:w-64 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+               oninput="submitForm()">
+    </div>
+</form>
+
 @if(session('success'))
     <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
         {{ session('success') }}
@@ -31,7 +41,7 @@
         <tbody>
             @forelse ($suppliers as $index => $supplier)
                 <tr class="border-b">
-                    <td class="px-3 py-2 border">{{ $index + 1 }}</td>
+                    <td class="px-3 py-2 border">{{ $suppliers->firstItem() + $index }}</td>
                     <td class="px-3 py-2 border">{{ $supplier->nama_supp }}</td>
                     <td class="px-3 py-2 border">{{ $supplier->kontak }}</td>
                     <td class="px-3 py-2 border">{{ $supplier->alamat }}</td>
@@ -54,5 +64,21 @@
             @endforelse
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $suppliers->links('pagination::tailwind') }}
+    </div>
 </div>
+
+<!-- Live Search JS -->
+<script>
+    let timer;
+    function submitForm() {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            document.getElementById('searchForm').submit();
+        }, 500); // tunggu 0.5 detik sebelum submit saat user berhenti mengetik
+    }
+</script>
 @endsection

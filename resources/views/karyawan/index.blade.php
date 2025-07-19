@@ -17,9 +17,17 @@
 </div>
 @endif
 
+{{-- Input Search --}}
+<div class="mb-4">
+    <input type="text" name="search" id="search" placeholder="Cari akun..."
+        value="{{ request('search') }}"
+        class="border border-gray-300 rounded px-4 py-2 w-full max-w-sm"
+        oninput="searchUsers()" />
+</div>
+
 <div class="overflow-x-auto bg-gray-50 p-4 rounded shadow">
     <table class="w-full text-sm text-center text-gray-600 border">
-        <thead class="bg-[#0BB4B2] text-white text-xs uppercase text-center">
+        <thead class="bg-[#0BB4B2] text-white text-xs uppercase">
             <tr>
                 <th class="px-3 py-2 border">No</th>
                 <th class="px-3 py-2 border">Nama</th>
@@ -31,7 +39,7 @@
         <tbody>
             @forelse ($users as $index => $user)
             <tr class="border-b">
-                <td class="px-3 py-2 border">{{ $index + 1 }}</td>
+                <td class="px-3 py-2 border">{{ $users->firstItem() + $index }}</td>
                 <td class="px-3 py-2 border">{{ $user->name }}</td>
                 <td class="px-3 py-2 border">{{ $user->email }}</td>
                 <td class="px-3 py-2 border capitalize">{{ $user->role }}</td>
@@ -56,5 +64,22 @@
             @endforelse
         </tbody>
     </table>
+
+    <div class="mt-4">
+        {{ $users->withQueryString()->links() }}
+    </div>
 </div>
+
+<script>
+    function searchUsers() {
+        const search = document.getElementById('search').value;
+        const params = new URLSearchParams(window.location.search);
+        if (search) {
+            params.set('search', search);
+        } else {
+            params.delete('search');
+        }
+        window.location.search = params.toString();
+    }
+</script>
 @endsection

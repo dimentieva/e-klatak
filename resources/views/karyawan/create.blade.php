@@ -42,7 +42,7 @@
         <select name="role" class="w-full border px-3 py-2 rounded" required>
             <option value="" disabled selected>Pilih Role</option>
             <option value="admin">Admin</option>
-            <option value="karyawan">Karyawan</option>
+            <option value="karyawan">Kasir</option>
         </select>
     </div>
 

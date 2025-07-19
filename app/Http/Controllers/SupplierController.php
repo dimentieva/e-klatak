@@ -8,11 +8,23 @@ use Illuminate\Http\Request;
 class SupplierController extends Controller
 {
     // Tampilkan semua data supplier
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::orderBy('id', 'asc')->get(); 
+        $keyword = $request->input('search');
+
+        $suppliers = Supplier::query()
+            ->when($keyword, function ($query, $keyword) {
+                $query->where('nama_supp', 'like', "%{$keyword}%")
+                    ->orWhere('kontak', 'like', "%{$keyword}%")
+                    ->orWhere('alamat', 'like', "%{$keyword}%");
+            })
+            ->orderBy('id', 'asc')
+            ->paginate(10)
+            ->appends($request->only('search'));
+
         return view('supplier.supindex', compact('suppliers'));
     }
+
 
     // Tampilkan form tambah supplier
     public function create()

@@ -49,7 +49,7 @@
             </div>
 
             <div class="flex gap-3 mt-4">
-                <a href="{{ url()->previous() }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Kembali</a>
+                <a href="{{ route('produk.index') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Kembali</a>
                 <button type="reset" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">Batal</button>
                 <button type="submit" class="bg-[#0BB4B2] hover:bg-[#099e9c] text-white px-4 py-2 rounded">Simpan</button>
 
@@ -78,6 +78,11 @@
                 <option value="{{ $t }}" {{ request('tahun') == $t ? 'selected' : '' }}>{{ $t }}</option>
                 @endforeach
             </select>
+        </div>
+        <div>
+        <label for="tanggal" class="block text-sm font-semibold">Tanggal:</label>
+        <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
+            class="border border-gray-300 rounded p-2">
         </div>
         <button type="submit" class="bg-[#0BB4B2] hover:bg-[#099e9c] text-white px-4 py-2 rounded self-end">
             Filter
