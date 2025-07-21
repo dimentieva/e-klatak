@@ -69,9 +69,22 @@
             </button>
         </form>
     </aside>
+    
 
     <!-- Main Content -->
     <main class="ml-64 w-full h-screen overflow-y-auto p-6 bg-white">
+        {{-- Notifikasi Stok Menipis --}}
+        @if(auth()->check() && auth()->user()->role === 'admin' && isset($produkMenipis) && $produkMenipis->count())
+            <div class="bg-yellow-100 text-yellow-700 p-4 mb-4 rounded shadow">
+                <strong>⚠️ Stok Menipis:</strong>
+                <ul class="list-disc ml-5">
+                    @foreach($produkMenipis as $produk)
+                        <li>{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         @yield('content')
     </main>
 </body>
