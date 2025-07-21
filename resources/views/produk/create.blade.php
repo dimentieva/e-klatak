@@ -21,7 +21,14 @@
 
         <div>
             <label class="block text-sm font-medium">Kategori</label>
-            <input type="text" name="kategori" value="{{ old('kategori') }}" class="w-full border px-3 py-2 rounded" required>
+            <select name="id_categories" class="w-full border px-3 py-2 rounded" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ old('id_categories') == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+                @endforeach
+            </select>
         </div>
 
         <div>
@@ -71,8 +78,8 @@
         <div>
             <label class="block text-sm font-medium">Status</label>
             <select name="status" class="w-full border px-3 py-2 rounded" required>
-                <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                <option value="dijual" {{ old('status') == 'dijual' ? 'selected' : '' }}>Dijual</option>
+                <option value="tidak dijual" {{ old('status') == 'tidak dijual' ? 'selected' : '' }}>Tidak Terjual</option>
             </select>
         </div>
 

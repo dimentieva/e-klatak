@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\LogPerubahanStok;
 use App\Models\NotifikasiStok;
@@ -13,18 +14,20 @@ class ProdukController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Produk::with('supplier');
+        $query = Produk::with(['supplier', 'category']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('nama_produk', 'like', '%' . $search . '%')
-                ->orWhere('nomor_barcode', 'like', '%' . $search . '%')
-                ->orWhere('kategori', 'like', '%' . $search . '%')
-                ->orWhereHas('supplier', function ($q2) use ($search) {
-                    $q2->where('nama_supp', 'like', '%' . $search . '%');
-                });
+                  ->orWhere('nomor_barcode', 'like', '%' . $search . '%')
+                  ->orWhereHas('category', function ($q1) use ($search) {
+                      $q1->where('name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('supplier', function ($q2) use ($search) {
+                      $q2->where('nama_supp', 'like', '%' . $search . '%');
+                  });
             });
         }
 
@@ -32,30 +35,30 @@ class ProdukController extends Controller
         return view('produk.index', compact('produks'));
     }
 
-
-
     public function create()
     {
         $suppliers = Supplier::all();
-        return view('produk.create', compact('suppliers'));
+        $categories = Category::all();
+        return view('produk.create', compact('suppliers', 'categories'));
     }
+
     public function show($id)
     {
-        $produk = Produk::with('supplier')->findOrFail($id);
+        $produk = Produk::with(['supplier', 'category'])->findOrFail($id);
         return view('produk.show', compact('produk'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kategori' => 'required|string',
+            'id_categories' => 'required|exists:categories,id',
             'id_supplier' => 'required|exists:suppliers,id',
             'nomor_barcode' => 'required|unique:produk',
             'nama_produk' => 'required|string',
             'harga_jual' => 'required|numeric',
             'harga_beli' => 'required|numeric',
             'stok' => 'required|integer',
-            'status' => 'required|in:aktif,nonaktif',
+            'status' => 'required|in:dijual,tidak dijual',
             'batas_stok_minimal' => 'required|integer',
             'foto' => 'nullable|image|max:2048',
         ]);
@@ -65,7 +68,7 @@ class ProdukController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('foto_produk', $filename);
+            $file->storeAs('foto_produk', $filename, 'public');
             $data['foto'] = $filename;
         }
 
@@ -78,7 +81,8 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
         $suppliers = Supplier::all();
-        return view('produk.edit', compact('produk', 'suppliers'));
+        $categories = Category::all();
+        return view('produk.edit', compact('produk', 'suppliers', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -86,14 +90,14 @@ class ProdukController extends Controller
         $produk = Produk::findOrFail($id);
 
         $request->validate([
-            'kategori' => 'required|string',
+            'id_categories' => 'required|exists:categories,id',
             'id_supplier' => 'required|exists:suppliers,id',
             'nomor_barcode' => 'required|unique:produk,nomor_barcode,' . $produk->id_produk . ',id_produk',
             'nama_produk' => 'required|string',
             'harga_jual' => 'required|numeric',
             'harga_beli' => 'required|numeric',
             'stok' => 'required|integer',
-            'status' => 'required|in:aktif,nonaktif',
+            'status' => 'required|in:dijual,tidak dijual',
             'batas_stok_minimal' => 'required|integer',
             'foto' => 'nullable|image|max:2048',
         ]);
@@ -103,7 +107,7 @@ class ProdukController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('foto_produk', $filename);
+            $file->storeAs('foto_produk', $filename, 'public');
             $data['foto'] = $filename;
         }
 
@@ -129,14 +133,13 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
-    // Menampilkan form tambah stok
+
     public function tambahStok($id)
     {
         $produk = Produk::findOrFail($id);
         return view('produk.kelola_stok', compact('produk'));
     }
 
-    // Memproses penambahan stok
     public function updateStok(Request $request, $id)
     {
         $request->validate([
@@ -150,7 +153,6 @@ class ProdukController extends Controller
 
         $produk->update(['Stok' => $stok_baru]);
 
-        // Catat perubahan stok
         $log = LogPerubahanStok::create([
             'id_produk' => $produk->id_produk,
             'stok_awal' => $stok_lama,
@@ -158,7 +160,6 @@ class ProdukController extends Controller
             'alasan_perubahan' => $request->alasan,
         ]);
 
-        // Tambahkan notifikasi jika stok tetap rendah
         if ($stok_baru < $produk->batas_stok_minimal) {
             NotifikasiStok::create([
                 'id_perubahan_stok' => $log->id,
@@ -169,6 +170,7 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Stok produk berhasil ditambahkan.');
     }
+
     public function simpanStok(Request $request, $id)
     {
         $request->validate([
@@ -182,17 +184,13 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Stok berhasil ditambahkan.');
     }
 
-
     public function destroy($id)
     {
         $produk = Produk::findOrFail($id);
 
-        // Hapus foto dari storage jika ada
         if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
             Storage::disk('public')->delete('foto_produk/' . $produk->foto);
         }
-
-        // Hapus produk dari database
         $produk->delete();
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');

@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\LogPerubahanStokController;
+use App\Http\Controllers\CategoryController;
 
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -18,8 +19,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
-
-
+    Route::resource('categories', CategoryController::class);
     Route::resource('supplier', SupplierController::class);
     Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
     Route::resource('produk', ProdukController::class);

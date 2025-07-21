@@ -21,10 +21,16 @@
         @method('PUT')
 
         <div>
-            <label class="block text-sm font-medium">Kategori</label>
-            <input type="text" name="kategori" value="{{ old('kategori', $produk->kategori) }}" class="w-full border px-3 py-2 rounded" required>
+        <label class="block text-sm font-medium">Kategori</label>
+        <select name="id_categories" class="w-full border px-3 py-2 rounded" required>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ $produk->id_categories == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
         </div>
-
+        
         <div>
             <label class="block text-sm font-medium">Supplier</label>
             <select name="id_supplier" class="w-full border px-3 py-2 rounded" required>
@@ -71,8 +77,8 @@
         <div>
             <label class="block text-sm font-medium">Status</label>
             <select name="status" class="w-full border px-3 py-2 rounded" required>
-                <option value="aktif" {{ $produk->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="nonaktif" {{ $produk->status == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                <option value="dijual" {{ $produk->status == 'dijual' ? 'selected' : '' }}>Dijual</option>
+                <option value="tidak dijual" {{ $produk->status == 'tidak dijual' ? 'selected' : '' }}>Tidak Terjual</option>
             </select>
         </div>
 

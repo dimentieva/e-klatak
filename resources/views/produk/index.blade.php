@@ -5,9 +5,14 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-teal-600">Kelola Produk</h2>
-    <a href="{{ route('produk.create') }}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold">
-        + Tambah
-    </a>
+    <div class="flex gap-2">
+        <a href="{{ route('produk.create') }}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold">
+            + Tambah
+        </a>
+        <a href="{{ route('categories.index') }}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md font-semibold">
+            Kategori
+        </a>
+    </div>
 </div>
 
 {{-- Search --}}
@@ -18,7 +23,6 @@
         oninput="this.form.submit()"
         class="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring focus:border-teal-400" />
 </form>
-
 
 @if(session('success'))
 <div class="bg-green-100 text-green-800 p-3 rounded mb-4">
@@ -49,7 +53,7 @@
                 <td class="px-3 py-2 border">{{ $produks->firstItem() + $index }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nomor_barcode }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nama_produk }}</td>
-                <td class="px-3 py-2 border">{{ $produk->kategori }}</td>
+                <td class="px-3 py-2 border">{{  $produk->category->name }}</td>
                 <td class="px-3 py-2 border">{{ $produk->supplier->nama_supp ?? '-' }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_beli, 0, ',', '.') }}</td>
