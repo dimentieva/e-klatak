@@ -24,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
     Route::resource('produk', ProdukController::class);
 
-    Route::get('kelola_stok', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
-    Route::post('kelola_stok', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
+    Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
+    Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class LogPerubahanStokController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $produk_id)
     {
-        $query = LogPerubahanStok::with('produk');
+        $produk = Produk::findOrFail($produk_id); // penting!
+
+        $query = LogPerubahanStok::with('produk')->where('id_produk', $produk_id); // filter log hanya untuk produk ini
 
         // Filter berdasarkan tanggal, bulan, dan tahun jika tersedia
         if ($request->filled('tanggal')) {
@@ -26,19 +28,20 @@ class LogPerubahanStokController extends Controller
             $query->whereYear('created_at', $request->tahun);
         }
 
-        // Gunakan paginate agar bisa menampilkan pagination di view
+        // Ambil log perubahan stok, urutkan dari terbaru, dan paginasi
         $logs = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
 
+        // Ambil semua produk untuk ditampilkan (jika dibutuhkan)
         $produkList = Produk::all();
 
-        // Kirim nilai filter ke view untuk form input
+        // Simpan nilai filter untuk ditampilkan kembali di form
         $filter = [
             'tanggal' => $request->tanggal,
             'bulan' => $request->bulan,
             'tahun' => $request->tahun,
         ];
 
-        return view('produk.kelola_stok', compact('logs', 'produkList', 'filter'));
+        return view('produk.kelola_stok', compact('logs', 'produkList', 'filter', 'produk')); // Add 'produk' here
     }
 
     public function store(Request $request)
@@ -47,38 +50,40 @@ class LogPerubahanStokController extends Controller
             'produk_id' => 'required|exists:produk,id_produk',
             'jenis' => 'required|in:tambah,kurang',
             'jumlah_perubahan' => 'required|integer|min:1',
-            'keterangan' => 'nullable|string',
+            'keterangan' => 'required|string',
         ]);
 
-        $produk = Produk::findOrFail($request->produk_id);
-        $stoklama = $produk->stok;
+        // Ambil data produk berdasarkan ID
+        $produk = Produk::where('id_produk', $request->produk_id)->firstOrFail();
+        $stokLama = $produk->stok;
         $jumlah = $request->jumlah_perubahan;
 
-        // Hitung stok baru
+        // Hitung stok baru berdasarkan jenis perubahan
         if ($request->jenis === 'tambah') {
-            $stokbaru = $stoklama + $jumlah;
+            $stokBaru = $stokLama + $jumlah;
         } else {
-            if ($stoklama < $jumlah) {
-                return back()->with('error', 'Stok tidak mencukupi untuk dikurangi.');
+            if ($stokLama < $jumlah) {
+                return back()->with('error', 'Stok tidak mencukupi untuk dikurangi.')->withInput();
             }
-            $stokbaru = $stoklama - $jumlah;
+            $stokBaru = $stokLama - $jumlah;
         }
 
-        // Simpan ke produk
-        $produk->stok = $stokbaru;
+        // Update stok produk
+        $produk->stok = $stokBaru;
         $produk->save();
 
-        // Simpan ke log
+        // Simpan log perubahan stok
         LogPerubahanStok::create([
             'id_produk' => $produk->id_produk,
             'jenis' => $request->jenis,
-            'stok_awal' => $stoklama,
-            'stok_akhir' => $stokbaru,
+            'stok_awal' => $stokLama,
+            'stok_akhir' => $stokBaru,
             'jumlah_perubahan' => $jumlah,
             'keterangan' => $request->keterangan,
-            'created_by' => Auth::user()->role === 'kasir' ? 'kasir' : 'admin',
+            'created_by' => Auth::user()->role ?? 'admin',
+            'kasir' // fallback admin jika tidak ada
         ]);
 
-        return redirect()->route('produk.kelola_stok')->with('success', 'Perubahan stok berhasil disimpan.');
+        return redirect()->route('produk.kelola_stok', $produk->id_produk)->with('success', 'Perubahan stok berhasil disimpan.');
     }
 }

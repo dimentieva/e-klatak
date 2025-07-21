@@ -17,17 +17,14 @@
 
     {{-- Form Perubahan Stok --}}
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <form action="{{ route('produk.kelola_stok') }}" method="POST" class="space-y-4">
+        <form action="{{ route('produk.kelola_stok', $produk->id_produk) }}" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label for="produk_id" class="block font-semibold mb-1">Produk:</label>
-                <select name="produk_id" id="produk_id" required class="w-full border border-gray-300 rounded p-2">
-                    <option value="">-- Pilih Produk --</option>
-                    @foreach($produkList as $produk)
-                    <option value="{{ $produk->id_produk }}">{{ $produk->nama_produk }}</option>
-                    @endforeach
-                </select>
+                <label class="block font-semibold mb-1">Produk:</label>
+                <input type="text" value="{{ $produk->nama_produk }}" readonly class="w-full border border-gray-300 rounded p-2 bg-gray-100">
+                <input type="hidden" name="produk_id" value="{{ $produk->id_produk }}">
             </div>
+
 
             <div>
                 <label for="jenis" class="block font-semibold mb-1">Jenis Perubahan:</label>
@@ -44,7 +41,7 @@
             </div>
 
             <div>
-                <label for="keterangan" class="block font-semibold mb-1">Keterangan (opsional):</label>
+                <label for="keterangan" class="block font-semibold mb-1">Keterangan* :</label>
                 <input type="text" name="keterangan" id="keterangan" class="w-full border border-gray-300 rounded p-2">
             </div>
 
@@ -80,9 +77,9 @@
             </select>
         </div>
         <div>
-        <label for="tanggal" class="block text-sm font-semibold">Tanggal:</label>
-        <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
-            class="border border-gray-300 rounded p-2">
+            <label for="tanggal" class="block text-sm font-semibold">Tanggal:</label>
+            <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
+                class="border border-gray-300 rounded p-2">
         </div>
         <button type="submit" class="bg-[#0BB4B2] hover:bg-[#099e9c] text-white px-4 py-2 rounded self-end">
             Filter
