@@ -33,8 +33,15 @@ function renderKeranjang() {
         });
     }
 
-    document.getElementById('grandTotal').textContent = formatRupiah(total);
+    const pajak = total * 0.11;
+    const grandTotal = total + pajak;
+
+    // Update tampilan Grand Total
+    document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
+
+    // Jika ada detail di modal nanti, bisa ditambahkan pajak & total di situ juga
 }
+
 
 function tambahKeranjang(id, nama, harga) {
     const index = keranjang.findIndex(p => p.id == id);
