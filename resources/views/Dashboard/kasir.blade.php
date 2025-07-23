@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title', 'Halaman Kasir')
 
 @section('content')
@@ -41,12 +40,9 @@
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-[#0BB4B2] font-semibold dropdown-button">
                     <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 10a4 4 0 100-8 4 4 0 000 8zm-5.6 5a6.978 6.978 0 0111.2 0A2 2 0 0113 18H7a2 2 0 01-2.6-3z" clip-rule="evenodd" />
+                        <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-5.6 5a6.978 6.978 0 0111.2 0A2 2 0 0113 18H7a2 2 0 01-2.6-3z"/>
                     </svg>
-                    <span>{{ Auth::user()->name }}</span>
-                    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
+                    <span>{{ Auth::user()->name ?? '-' }}</span>
                 </button>
                 <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
                     <form method="POST" action="{{ route('logout') }}">
@@ -57,7 +53,6 @@
             </div>
         </div>
 
-        <!-- Kategori -->
         <div class="flex gap-2 mb-4 flex-wrap">
             <button onclick="filterKategori(0)" class="px-3 py-1 rounded kategori-button active-kategori text-sm">Semua</button>
             @foreach ($categories as $kat)
@@ -67,22 +62,20 @@
             @endforeach
         </div>
 
-        <!-- Search -->
         <div class="mb-4">
             <input type="text" id="searchInput" oninput="searchProduk()" placeholder="Cari nama / ID produk..." class="w-full border border-[#0BB4B2] rounded px-4 py-2 focus:ring-[#0BB4B2] focus:border-[#0BB4B2]">
         </div>
 
-        <!-- Produk -->
         <div id="produkList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach ($produk as $item)
                 <div class="produk-card bg-white rounded-lg p-3 flex flex-col items-center text-center"
                      data-kategori="{{ $item->id_categories }}"
                      data-nama="{{ strtolower($item->nama_produk) }}"
                      data-barcode="{{ $item->nomor_barcode }}">
-                    <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"class="w-[120px] h-[120px] object-cover rounded-lg mx-auto mb-3
-                         onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'"
-                         alt="foto">
-                    <div class="text-sm font-semibold leading-tight">{{ $item->nama_produk }}</div>
+                    <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"
+                         class="w-[120px] h-[120px] object-cover rounded-lg mb-3"
+                         onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'" />
+                    <div class="text-sm font-semibold">{{ $item->nama_produk }}</div>
                     <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
                     <div class="text-[#0BB4B2] font-bold mt-1">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
                     <button onclick="tambahKeranjang({{ $item->id_produk }}, '{{ $item->nama_produk }}', {{ $item->harga_jual }})"
@@ -93,142 +86,16 @@
             @endforeach
         </div>
 
-        <!-- Pagination -->
         <div class="flex justify-center mt-4">
             {{ $produk->links() }}
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<x-modal-pembayaran />
 @endsection
 
 @push('scripts')
-<script>
-    let keranjang = [];
-
-    function formatRupiah(angka) {
-        return angka.toLocaleString('id-ID');
-    }
-
-    function renderKeranjang() {
-        const tbody = document.getElementById('keranjang');
-        tbody.innerHTML = '';
-
-        let total = 0;
-        if (keranjang.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-3">Tidak ada data!</td></tr>';
-        } else {
-            keranjang.forEach((item, i) => {
-                const subtotal = item.harga * item.jumlah;
-                total += subtotal;
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${item.nama}</td>
-                        <td>Rp. ${formatRupiah(item.harga)}</td>
-                        <td>
-                            <div class="flex items-center gap-1">
-                                <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-2">-</button>
-                                ${item.jumlah}
-                                <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-2">+</button>
-                            </div>
-                        </td>
-                        <td>Rp. ${formatRupiah(subtotal)}</td>
-                        <td><button onclick="hapusItem(${item.id})" class="text-red-500">x</button></td>
-                    </tr>`;
-            });
-        }
-
-        document.getElementById('grandTotal').textContent = formatRupiah(total);
-    }
-
-    function tambahKeranjang(id, nama, harga) {
-        const index = keranjang.findIndex(p => p.id === id);
-        if (index !== -1) keranjang[index].jumlah += 1;
-        else keranjang.push({ id, nama, harga, jumlah: 1 });
-        renderKeranjang();
-    }
-
-    function ubahJumlah(id, delta) {
-        const index = keranjang.findIndex(p => p.id === id);
-        if (index !== -1) {
-            keranjang[index].jumlah += delta;
-            if (keranjang[index].jumlah <= 0) keranjang.splice(index, 1);
-        }
-        renderKeranjang();
-    }
-
-    function hapusItem(id) {
-        keranjang = keranjang.filter(p => p.id !== id);
-        renderKeranjang();
-    }
-
-    function resetKeranjang() {
-        keranjang = [];
-        renderKeranjang();
-    }
-
-    function bayar() {
-    if (keranjang.length === 0) return alert('Keranjang kosong!');
-    document.getElementById('inputPembayaran').value = '';
-    document.getElementById('bayarModal').classList.remove('hidden');
-}
-
-
-    function filterKategori(idKategori) {
-        document.querySelectorAll('.produk-card').forEach(card => {
-            const id = card.dataset.kategori;
-            card.style.display = (idKategori == 0 || id == idKategori) ? 'block' : 'none';
-        });
-    }
-
-    function searchProduk() {
-        const keyword = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.produk-card').forEach(card => {
-            const nama = card.dataset.nama;
-            const barcode = card.dataset.barcode;
-            card.style.display = nama.includes(keyword) || barcode.includes(keyword) ? 'block' : 'none';
-        });
-    }
-
-    renderKeranjang();
-    function tutupModal() {
-    document.getElementById('bayarModal').classList.add('hidden');
-}
-
-function konfirmasiBayar() {
-    const jumlah_pembayaran = document.getElementById('inputPembayaran').value;
-    if (!jumlah_pembayaran || isNaN(jumlah_pembayaran)) {
-        alert('Jumlah pembayaran tidak valid.');
-        return;
-    }
-
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = "{{ route('transaksi.store') }}";
-    form.innerHTML = `@csrf
-        <input type="hidden" name="metode_bayar" value="cash">
-        <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
-        ${keranjang.map((item, i) => `
-            <input type="hidden" name="produk[${i}][id_produk]" value="${item.id}">
-            <input type="hidden" name="produk[${i}][jumlah]" value="${item.jumlah}">
-        `).join('')}
-    `;
-    document.body.appendChild(form);
-    form.submit();
-}
-
-</script>
-<!-- Modal Input Pembayaran -->
-<div id="bayarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-md text-center">
-    <h2 class="text-lg font-semibold text-gray-700 mb-4">Masukkan Jumlah Pembayaran</h2>
-    <input type="number" id="inputPembayaran"
-           class="w-full border rounded px-3 py-2 mb-4 focus:outline-none focus:ring focus:border-[#0BB4B2]"
-           placeholder="Jumlah pembayaran...">
-    <div class="flex justify-end gap-2">
-      <button onclick="tutupModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Batal</button>
-      <button onclick="konfirmasiBayar()" class="bg-[#0BB4B2] text-white px-4 py-2 rounded hover:bg-[#099e9d]">Bayar</button>
-    </div>
-  </div>
-</div>
+<script src="{{ asset('js/kasir.js') }}"></script>
 @endpush
