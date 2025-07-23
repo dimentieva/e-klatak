@@ -37,14 +37,14 @@ function renderKeranjang() {
 }
 
 function tambahKeranjang(id, nama, harga) {
-    const index = keranjang.findIndex(p => p.id === id);
+    const index = keranjang.findIndex(p => p.id == id);
     if (index !== -1) keranjang[index].jumlah += 1;
     else keranjang.push({ id, nama, harga, jumlah: 1 });
     renderKeranjang();
 }
 
 function ubahJumlah(id, delta) {
-    const index = keranjang.findIndex(p => p.id === id);
+    const index = keranjang.findIndex(p => p.id == id);
     if (index !== -1) {
         keranjang[index].jumlah += delta;
         if (keranjang[index].jumlah <= 0) keranjang.splice(index, 1);
@@ -53,7 +53,7 @@ function ubahJumlah(id, delta) {
 }
 
 function hapusItem(id) {
-    keranjang = keranjang.filter(p => p.id !== id);
+    keranjang = keranjang.filter(p => p.id != id);
     renderKeranjang();
 }
 
