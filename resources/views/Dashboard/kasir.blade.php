@@ -168,24 +168,11 @@
     }
 
     function bayar() {
-        if (keranjang.length === 0) return alert('Keranjang kosong!');
-        const jumlah_pembayaran = prompt("Masukkan jumlah pembayaran:");
-        if (!jumlah_pembayaran || isNaN(jumlah_pembayaran)) return alert('Jumlah tidak valid.');
+    if (keranjang.length === 0) return alert('Keranjang kosong!');
+    document.getElementById('inputPembayaran').value = '';
+    document.getElementById('bayarModal').classList.remove('hidden');
+}
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{{ route('transaksi.store') }}";
-        form.innerHTML = `@csrf
-            <input type="hidden" name="metode_bayar" value="cash">
-            <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
-            ${keranjang.map((item, i) => `
-                <input type="hidden" name="produk[${i}][id_produk]" value="${item.id}">
-                <input type="hidden" name="produk[${i}][jumlah]" value="${item.jumlah}">
-            `).join('')}
-        `;
-        document.body.appendChild(form);
-        form.submit();
-    }
 
     function filterKategori(idKategori) {
         document.querySelectorAll('.produk-card').forEach(card => {
@@ -204,5 +191,44 @@
     }
 
     renderKeranjang();
+    function tutupModal() {
+    document.getElementById('bayarModal').classList.add('hidden');
+}
+
+function konfirmasiBayar() {
+    const jumlah_pembayaran = document.getElementById('inputPembayaran').value;
+    if (!jumlah_pembayaran || isNaN(jumlah_pembayaran)) {
+        alert('Jumlah pembayaran tidak valid.');
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{{ route('transaksi.store') }}";
+    form.innerHTML = `@csrf
+        <input type="hidden" name="metode_bayar" value="cash">
+        <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
+        ${keranjang.map((item, i) => `
+            <input type="hidden" name="produk[${i}][id_produk]" value="${item.id}">
+            <input type="hidden" name="produk[${i}][jumlah]" value="${item.jumlah}">
+        `).join('')}
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+
 </script>
+<!-- Modal Input Pembayaran -->
+<div id="bayarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-md text-center">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">Masukkan Jumlah Pembayaran</h2>
+    <input type="number" id="inputPembayaran"
+           class="w-full border rounded px-3 py-2 mb-4 focus:outline-none focus:ring focus:border-[#0BB4B2]"
+           placeholder="Jumlah pembayaran...">
+    <div class="flex justify-end gap-2">
+      <button onclick="tutupModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Batal</button>
+      <button onclick="konfirmasiBayar()" class="bg-[#0BB4B2] text-white px-4 py-2 rounded hover:bg-[#099e9d]">Bayar</button>
+    </div>
+  </div>
+</div>
 @endpush
