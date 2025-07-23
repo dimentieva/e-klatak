@@ -36,12 +36,8 @@ function renderKeranjang() {
     const pajak = total * 0.11;
     const grandTotal = total + pajak;
 
-    // Update tampilan Grand Total
     document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
-
-    // Jika ada detail di modal nanti, bisa ditambahkan pajak & total di situ juga
 }
-
 
 function tambahKeranjang(id, nama, harga) {
     const index = keranjang.findIndex(p => p.id == id);
@@ -71,8 +67,29 @@ function resetKeranjang() {
 
 function bayar() {
     if (keranjang.length === 0) return alert('Keranjang kosong!');
+
+    // Hitung total dan pajak
+    const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
+    const pajak = total * 0.11;
+    const grandTotal = total + pajak;
+
+    // Tampilkan data ke modal
+    document.getElementById('modalGrandTotal').textContent = 'Rp. ' + formatRupiah(grandTotal);
+    document.getElementById('grandTotalModal2').textContent = 'Rp. ' + formatRupiah(grandTotal);
+    document.getElementById('pajakDisplay').textContent = 'Rp. ' + formatRupiah(pajak);
+    document.getElementById('jumlahProduk').textContent = keranjang.reduce((acc, item) => acc + item.jumlah, 0);
+    document.getElementById('kembalianDisplay').textContent = 'Rp. 0';
+    document.getElementById('notaDisplay').textContent = 'NOTA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
     document.getElementById('inputPembayaran').value = '';
     document.getElementById('bayarModal').classList.remove('hidden');
+
+    // Hitung kembalian saat input berubah
+    document.getElementById('inputPembayaran').oninput = () => {
+        const bayar = parseFloat(document.getElementById('inputPembayaran').value) || 0;
+        const kembalian = bayar - grandTotal;
+        document.getElementById('kembalianDisplay').textContent = 'Rp. ' + formatRupiah(kembalian > 0 ? kembalian : 0);
+    };
 }
 
 function tutupModal() {
@@ -90,7 +107,7 @@ function konfirmasiBayar() {
     form.method = 'POST';
     form.action = window.location.origin + '/transaksi';
     form.innerHTML = `
-        <input type="hidden" name="_token" value="${document.querySelector('meta[name=\"csrf-token\"]').content}">
+        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
         <input type="hidden" name="metode_bayar" value="cash">
         <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
         ${keranjang.map((item, i) => `
@@ -112,8 +129,8 @@ function filterKategori(idKategori) {
 function searchProduk() {
     const keyword = document.getElementById('searchInput').value.toLowerCase();
     document.querySelectorAll('.produk-card').forEach(card => {
-        const nama = card.dataset.nama;
-        const barcode = card.dataset.barcode;
+        const nama = card.dataset.nama.toLowerCase();
+        const barcode = card.dataset.barcode.toLowerCase();
         card.style.display = nama.includes(keyword) || barcode.includes(keyword) ? 'block' : 'none';
     });
 }

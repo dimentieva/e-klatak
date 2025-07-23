@@ -10,7 +10,7 @@
             <h1 class="text-2xl font-bold text-[#0BB4B2]">E-Klatak</h1>
         </div>
 
-        <table class="w-full text-left border mb-2 text-sm">
+        <table class="w-full text-middle border mb-2 text-sm">
             <thead>
                 <tr class="bg-gray-100">
                     <th class="p-2">Produk</th>
