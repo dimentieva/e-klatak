@@ -1,10 +1,31 @@
+// Replace the entire js section with this updated version
+
 let keranjang = [];
 
 function formatRupiah(angka) {
-    return angka.toLocaleString('id-ID');
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
 }
 
-function renderKeranjang() {
+async function updateServerCart() {
+    try {
+        const response = await fetch('/cart/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+            },
+            body: JSON.stringify({ cart: keranjang })
+        });
+        
+        if (!response.ok) {
+            console.error('Failed to update server cart');
+        }
+    } catch (error) {
+        console.error('Error updating server cart:', error);
+    }
+}
+
+async function renderKeranjang() {
     const tbody = document.getElementById('keranjang');
     tbody.innerHTML = '';
 
@@ -19,7 +40,7 @@ function renderKeranjang() {
             tbody.innerHTML += `
                 <tr>
                     <td>${item.nama}</td>
-                    <td>Rp. ${formatRupiah(item.harga)}</td>
+                    <td>Rp. ${item.harga.toLocaleString('id-ID')}</td>
                     <td>
                         <div class="flex items-center gap-1">
                             <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-2">-</button>
@@ -27,7 +48,7 @@ function renderKeranjang() {
                             <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-2">+</button>
                         </div>
                     </td>
-                    <td>Rp. ${formatRupiah(subtotal)}</td>
+                    <td>Rp. ${(subtotal).toLocaleString('id-ID')}</td>
                     <td><button onclick="hapusItem(${item.id})" class="text-red-500">x</button></td>
                 </tr>`;
         });
@@ -37,27 +58,30 @@ function renderKeranjang() {
     const grandTotal = total + pajak;
 
     document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
+    
+    // Update server cart
+    await updateServerCart();
 }
 
-function tambahKeranjang(id, nama, harga) {
+async function tambahKeranjang(id, nama, harga) {
     const index = keranjang.findIndex(p => p.id == id);
     if (index !== -1) keranjang[index].jumlah += 1;
     else keranjang.push({ id, nama, harga, jumlah: 1 });
-    renderKeranjang();
+    await renderKeranjang();
 }
 
-function ubahJumlah(id, delta) {
+async function ubahJumlah(id, delta) {
     const index = keranjang.findIndex(p => p.id == id);
     if (index !== -1) {
         keranjang[index].jumlah += delta;
         if (keranjang[index].jumlah <= 0) keranjang.splice(index, 1);
     }
-    renderKeranjang();
+    await renderKeranjang();
 }
 
-function hapusItem(id) {
+async function hapusItem(id) {
     keranjang = keranjang.filter(p => p.id != id);
-    renderKeranjang();
+    await renderKeranjang();
 }
 
 function resetKeranjang() {
@@ -68,27 +92,30 @@ function resetKeranjang() {
 function bayar() {
     if (keranjang.length === 0) return alert('Keranjang kosong!');
 
-    // Hitung total dan pajak
     const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
     const pajak = total * 0.11;
     const grandTotal = total + pajak;
+    const jumlahProduk = keranjang.reduce((acc, item) => acc + item.jumlah, 0);
+    const nota = 'NOTA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    // Tampilkan data ke modal
-    document.getElementById('modalGrandTotal').textContent = 'Rp. ' + formatRupiah(grandTotal);
-    document.getElementById('grandTotalModal2').textContent = 'Rp. ' + formatRupiah(grandTotal);
-    document.getElementById('pajakDisplay').textContent = 'Rp. ' + formatRupiah(pajak);
-    document.getElementById('jumlahProduk').textContent = keranjang.reduce((acc, item) => acc + item.jumlah, 0);
-    document.getElementById('kembalianDisplay').textContent = 'Rp. 0';
-    document.getElementById('notaDisplay').textContent = 'NOTA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-
+    // Set isi modal
+    document.getElementById('modalTotalSebelumPajak').textContent = formatRupiah(total);
+    document.getElementById('modalGrandTotal').textContent = formatRupiah(grandTotal);
+    document.getElementById('grandTotalModal2').textContent = formatRupiah(grandTotal);
+    document.getElementById('pajakDisplay').textContent = formatRupiah(pajak);
+    document.getElementById('jumlahProduk').textContent = jumlahProduk;
+    document.getElementById('kembalianDisplay').textContent = formatRupiah(0);
+    document.getElementById('notaDisplay').textContent = nota;
     document.getElementById('inputPembayaran').value = '';
+
+    // Tampilkan modal
     document.getElementById('bayarModal').classList.remove('hidden');
 
     // Hitung kembalian saat input berubah
     document.getElementById('inputPembayaran').oninput = () => {
         const bayar = parseFloat(document.getElementById('inputPembayaran').value) || 0;
         const kembalian = bayar - grandTotal;
-        document.getElementById('kembalianDisplay').textContent = 'Rp. ' + formatRupiah(kembalian > 0 ? kembalian : 0);
+        document.getElementById('kembalianDisplay').textContent = formatRupiah(kembalian > 0 ? kembalian : 0);
     };
 }
 
@@ -97,42 +124,29 @@ function tutupModal() {
 }
 
 function konfirmasiBayar() {
-    const jumlah_pembayaran = document.getElementById('inputPembayaran').value;
+    const jumlah_pembayaran = parseFloat(document.getElementById('inputPembayaran').value);
     if (!jumlah_pembayaran || isNaN(jumlah_pembayaran)) {
         alert('Jumlah pembayaran tidak valid.');
         return;
     }
 
+    const metode_bayar = document.querySelector('input[name="metode_bayar"]:checked')?.value || 'cash';
+
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = window.location.origin + '/transaksi';
+    form.action = "{{ route('transaksi.store') }}";
     form.innerHTML = `
-        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-        <input type="hidden" name="metode_bayar" value="cash">
+        @csrf
+        <input type="hidden" name="metode_bayar" value="${metode_bayar}">
         <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
-        ${keranjang.map((item, i) => `
-            <input type="hidden" name="produk[${i}][id_produk]" value="${item.id}">
-            <input type="hidden" name="produk[${i}][jumlah]" value="${item.jumlah}">
-        `).join('')}
     `;
+    
     document.body.appendChild(form);
     form.submit();
 }
 
-function filterKategori(idKategori) {
-    document.querySelectorAll('.produk-card').forEach(card => {
-        const id = card.dataset.kategori;
-        card.style.display = (idKategori == 0 || id == idKategori) ? 'block' : 'none';
-    });
-}
-
-function searchProduk() {
-    const keyword = document.getElementById('searchInput').value.toLowerCase();
-    document.querySelectorAll('.produk-card').forEach(card => {
-        const nama = card.dataset.nama.toLowerCase();
-        const barcode = card.dataset.barcode.toLowerCase();
-        card.style.display = nama.includes(keyword) || barcode.includes(keyword) ? 'block' : 'none';
-    });
-}
-
-renderKeranjang();
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Load initial cart from server if needed
+    renderKeranjang();
+});

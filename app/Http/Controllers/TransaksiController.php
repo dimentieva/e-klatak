@@ -13,30 +13,32 @@ use Illuminate\Support\Str;
 
 class TransaksiController extends Controller
 {
+    // Halaman utama kasir (menampilkan produk dan keranjang)
     public function index(Request $request)
-{
-    $query = Produk::query();
+    {
+        $query = Produk::query();
 
-    // Filter kategori
-    if ($request->has('categories')) {
-        $query->where('id_categories', $request->categories);
+        // Filter berdasarkan kategori
+        if ($request->has('categories') && $request->categories != '') {
+            $query->where('id_categories', $request->categories);
+        }
+
+        // Pencarian berdasarkan nama produk atau barcode
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_produk', 'like', '%' . $request->search . '%')
+                    ->orWhere('nomor_barcode', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $produk = $query->paginate(8);
+        $categories = Category::all();
+        $cart = session()->get('cart', []);
+
+        return view('dashboard.kasir', compact('produk', 'categories', 'cart'));
     }
 
-    // Pencarian
-    if ($request->has('search')) {
-        $query->where(function($q) use ($request) {
-            $q->where('nama_produk', 'like', '%' . $request->search . '%')
-              ->orWhere('nomor_barcode', 'like', '%' . $request->search . '%');
-        });
-    }
-
-    $produk = $query->paginate(8); // gunakan query yang sudah difilter
-    $categories = Category::all(); // ambil semua kategori
-    $cart = session()->get('cart', []); // ambil isi keranjang
-
-    return view('dashboard.kasir', compact('produk', 'categories', 'cart')); // ✅ hanya return ini
-}
-
+    // Tambahkan produk ke keranjang
     public function addToCart(Request $request, $id)
     {
         $produk = Produk::findOrFail($id);
@@ -57,16 +59,37 @@ class TransaksiController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
+    // Hapus produk dari keranjang
     public function remove(Request $request, $id)
     {
         $cart = session()->get('cart', []);
+
         if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
         }
+
         return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang.');
     }
 
+    // Add this method to your TransaksiController
+    public function updateCart(Request $request)
+    {
+        $cart = [];
+        foreach ($request->cart as $item) {
+            $cart[$item['id']] = [
+                'id_produk' => $item['id'],
+                'nama_produk' => $item['nama'],
+                'harga' => $item['harga'],
+                'jumlah' => $item['jumlah'],
+            ];
+        }
+
+        session()->put('cart', $cart);
+        return response()->json(['success' => true]);
+    }
+
+    // Update your store method to handle the form submission properly
     public function store(Request $request)
     {
         $cart = session()->get('cart', []);
@@ -81,16 +104,16 @@ class TransaksiController extends Controller
 
         DB::beginTransaction();
         try {
-            $total_harga = 0;
+            $totalHarga = 0;
 
             foreach ($cart as $item) {
                 $subtotal = $item['harga'] * $item['jumlah'];
-                $total_harga += $subtotal;
+                $totalHarga += $subtotal;
             }
 
-            $pajak = $total_harga * 0.11;
-            $grand_total = $total_harga + $pajak;
-            $kembalian = $request->jumlah_pembayaran - $grand_total;
+            $pajak = $totalHarga * 0.11;
+            $grandTotal = $totalHarga + $pajak;
+            $kembalian = $request->jumlah_pembayaran - $grandTotal;
 
             if ($kembalian < 0) {
                 return back()->with('error', 'Jumlah pembayaran kurang.');
@@ -101,7 +124,7 @@ class TransaksiController extends Controller
                 'waktu_transaksi' => now(),
                 'nomor_nota' => 'NOTA-' . strtoupper(Str::random(6)),
                 'metode_bayar' => $request->metode_bayar,
-                'total_harga' => $grand_total,
+                'total_harga' => $grandTotal,
                 'jumlah_pembayaran' => $request->jumlah_pembayaran,
                 'kembalian' => $kembalian,
                 'pajak' => $pajak,
@@ -117,7 +140,6 @@ class TransaksiController extends Controller
                     'sub_total' => $item['harga'] * $item['jumlah'],
                 ]);
 
-                // Kurangi stok produk
                 $produk = Produk::find($item['id_produk']);
                 if ($produk) {
                     $produk->stok -= $item['jumlah'];
@@ -126,9 +148,11 @@ class TransaksiController extends Controller
             }
 
             session()->forget('cart');
-
             DB::commit();
-            return redirect()->route('kasir.index')->with('success', 'Transaksi berhasil disimpan.');
+
+            return redirect()->route('dashboard.kasir')
+                ->with('success', 'Transaksi berhasil disimpan.')
+                ->with('nota', $transaksi->nomor_nota);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());

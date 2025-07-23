@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
     Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
 
-    // Logout
+
+    Route::post('/transaksi/simpan', [TransaksiController::class, 'store'])->name('components.modal-pembayaran');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

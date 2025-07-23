@@ -1,4 +1,4 @@
-<!-- resources/views/components/modal-pembayaran.blade.php -->
+<!-- Modal Pembayaran -->
 <div id="bayarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white p-6 rounded-lg shadow-md w-[95%] max-w-3xl">
     <h2 class="text-xl font-bold mb-4 text-gray-800">Pembayaran</h2>
@@ -9,6 +9,10 @@
         <div>
           <label class="text-sm font-semibold">No Nota:</label>
           <div id="notaDisplay" class="font-mono text-blue-700">-</div>
+        </div>
+        <div>
+          <label class="text-sm font-semibold">Total Sebelum Pajak:</label>
+          <div id="modalTotalSebelumPajak" class="bg-yellow-100 text-yellow-800 font-semibold p-2 rounded">Rp. 0</div>
         </div>
         <div>
           <label class="text-sm font-semibold">Grand Total:</label>
@@ -25,8 +29,8 @@
           <div id="kembalianDisplay" class="text-gray-700 font-medium">Rp. 0</div>
         </div>
         <div>
-          <label class="text-sm font-semibold">Note:</label>
-          <textarea rows="3" class="w-full border rounded p-2"></textarea>
+          <label class="text-sm font-semibold">Metode Bayar:</label>
+          <textarea rows="3" class="w-full border rounded p-2" placeholder="Catatan tambahan..."></textarea>
         </div>
         <div class="flex justify-end gap-2 mt-2">
           <button onclick="tutupModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Batal</button>
