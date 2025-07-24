@@ -13,8 +13,9 @@ class DashboardController extends Controller
     public function index()
     {
         $totalProduk = Produk::count();
-        $totalPendapatan = Transaksi::sum('total'); // Pastikan kolom 'total' benar
-        $totalKaryawan = User::where('role', 'karyawan')->count();
+        $totalPendapatan = Transaksi::sum('total_harga'); // Pastikan kolom 'total' benar
+        $totalKaryawan = User::whereIn('role', ['kasir', 'admin'])->count();
+
         $totalSupplier = Supplier::count();
 
         $penjualanTerbaru = Transaksi::with(['user', 'detailTransaksi.produk'])
@@ -22,7 +23,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact(
+        return view('dashboard.admin', compact(
             'totalProduk',
             'totalPendapatan',
             'totalKaryawan',

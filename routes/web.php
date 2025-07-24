@@ -8,7 +8,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\LogPerubahanStokController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransaksiController;
-
+use App\Http\Controllers\DashboardController;
 // Halaman login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard admin dan kasir
     Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
     Route::get('/dashboard/kasir', [TransaksiController::class, 'index'])->name('dashboard.kasir');
-
+    Route::get('/dashboard/admin', [DashboardController::class, 'index'])->name('dashboard.admin');
     // Profil
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
