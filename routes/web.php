@@ -9,6 +9,8 @@ use App\Http\Controllers\LogPerubahanStokController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
+
 // Halaman login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
@@ -41,7 +43,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
     Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
 
-
+    //laporan
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
+    
     Route::post('/transaksi/simpan', [TransaksiController::class, 'store'])->name('components.modal-pembayaran');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
