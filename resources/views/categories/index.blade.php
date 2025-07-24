@@ -6,12 +6,14 @@
 <div x-data="{ showModal: false }">
 
     {{-- Tombol Kembali --}}
-    <div class="mb-4">
-        <a href="{{ route('produk.index') }}"
-           class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-semibold">
-            ← Kembali ke Produk
-        </a>
-    </div>
+    <a href="{{ route('produk.index') }}"
+        class="inline-flex items-center gap-2 bg-teal-100 hover:bg-teal-200 text-teal-700 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shadow-sm border border-teal-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Kembali</span>
+    </a>
+
 
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">

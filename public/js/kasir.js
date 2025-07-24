@@ -128,7 +128,7 @@ function tutupModal() {
     document.getElementById('bayarModal').classList.add('hidden');
 }
 
-function konfirmasiBayar() {
+async function konfirmasiBayar() {
     const metode = document.getElementById('metodePembayaran').value;
     const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
     const pajak = total * 0.11;
@@ -136,8 +136,12 @@ function konfirmasiBayar() {
     const uangDiterima = parseFloat(document.getElementById('inputPembayaran').value);
     const kembalian = uangDiterima - grandTotal;
 
-    if (uangDiterima < grandTotal) {
-        alert("Uang diterima kurang dari total pembayaran.");
+    if (isNaN(uangDiterima) || uangDiterima < grandTotal) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Pembayaran Kurang',
+            text: 'Uang diterima kurang dari total yang harus dibayar!',
+        });
         return;
     }
 
@@ -149,39 +153,56 @@ function konfirmasiBayar() {
         sub_total: item.harga * item.jumlah
     }));
 
-    fetch('/kasir', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            total_harga: grandTotal,
-            jumlah_pembayaran: uangDiterima,
-            kembalian: kembalian,
-            metode_bayar: metode,
-            pajak: pajak,
-            keranjang: keranjangPayload
-        })
-    })
-    .then(res => res.json())
-    .then(async data => {
+    try {
+        const response = await fetch('/kasir', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                total_harga: grandTotal,
+                jumlah_pembayaran: uangDiterima,
+                kembalian: kembalian,
+                metode_bayar: metode,
+                pajak: pajak,
+                keranjang: keranjangPayload
+            })
+        });
+
+        const data = await response.json();
+
         if (data.success) {
-            alert("Transaksi berhasil!");
+            // Langsung tampilkan notifikasi sukses tanpa konfirmasi
+            Swal.fire({
+                icon: 'success',
+                title: 'Pembayaran Berhasil!',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
             tutupModal();
             keranjang = [];
-            await renderKeranjang();
+            renderKeranjang();
         } else {
-            alert("Gagal menyimpan transaksi: " + data.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menyimpan Transaksi',
+                text: data.message || 'Terjadi kesalahan.',
+            });
             console.error(data.error);
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
-        alert("Terjadi kesalahan saat menyimpan transaksi.");
-    });
+        Swal.fire({
+            icon: 'error',
+            title: 'Kesalahan Server',
+            text: 'Tidak dapat terhubung ke server.',
+        });
+    }
 }
+
 
 function filterKategori(idKategori) {
     const buttons = document.querySelectorAll('.kategori-button');

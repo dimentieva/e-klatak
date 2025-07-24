@@ -45,15 +45,15 @@
                 </a>
 
                 <p class="mt-4 text-sm text-white uppercase">Produk</p>
-                <a href="{{ route('produk.index') }}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-white hover:text-[#0bb4b2]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <a href="{{ route('produk.index') }}" class="flex items-center space-x-2 px-3 py-2 rounded-md {{ Route::is('produk.*') ? 'bg-white text-[#0bb4b2] font-semibold' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M4 3a2 2 0 00-2 2v3a2 2 0 001 1.732V14a2 2 0 002 2h2a2 2 0 002-2v-4.268A2 2 0 0010 8V5a2 2 0 00-2-2H4zM8 5v3H4V5h4zM18 8h-4V5h4v3zM18 10a2 2 0 01-1 1.732V14a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4.268A2 2 0 0112 10V5a2 2 0 012-2h2a2 2 0 012 2v5z" />
                     </svg>
                     <span>Kelola Produk</span>
                 </a>
 
                 <p class="mt-4 text-sm text-white uppercase">Laporan</p>
-                <a href="{{ route('laporan.index') }}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-white hover:text-[#0bb4b2]">
+                <a href="{{ route('laporan.index') }}" class="flex items-center space-x-2 px-3 py-2 rounded-md {{ Route::is('laporan.*') ? 'bg-white text-[#0bb4b2] font-semibold' : 'hover:bg-white hover:text-[#0bb4b2]' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6a2 2 0 00-2-2H5m0 8h2a2 2 0 002-2v-6a2 2 0 012-2h2m0 8h2a2 2 0 002-2v-4a2 2 0 00-2-2h-2" />
                     </svg>
@@ -70,20 +70,20 @@
             </button>
         </form>
     </aside>
-    
+
 
     <!-- Main Content -->
     <main class="ml-64 w-full h-screen overflow-y-auto p-6 bg-white">
         {{-- Notifikasi Stok Menipis --}}
         @if(auth()->check() && auth()->user()->role === 'admin' && isset($produkMenipis) && $produkMenipis->count())
-            <div class="bg-yellow-100 text-yellow-700 p-4 mb-4 rounded shadow">
-                <strong>⚠️ Stok Menipis:</strong>
-                <ul class="list-disc ml-5">
-                    @foreach($produkMenipis as $produk)
-                        <li>{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="bg-yellow-100 text-yellow-700 p-4 mb-4 rounded shadow">
+            <strong>⚠️ Stok Menipis:</strong>
+            <ul class="list-disc ml-5">
+                @foreach($produkMenipis as $produk)
+                <li>{{ $produk->nama_produk }} (Stok: {{ $produk->stok }})</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         @yield('content')
