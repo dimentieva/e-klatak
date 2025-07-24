@@ -22,16 +22,23 @@
           <label class="text-sm font-semibold">Uang Diterima:</label>
           <input type="number" id="inputPembayaran"
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-[#0BB4B2]"
-            placeholder="Rp...">
+            placeholder="Rp..." required>
         </div>
         <div>
           <label class="text-sm font-semibold">Kembalian:</label>
           <div id="kembalianDisplay" class="text-gray-700 font-medium">Rp. 0</div>
         </div>
+
+        <!-- Metode Pembayaran (cash/qris) -->
         <div>
-          <label class="text-sm font-semibold">Metode Bayar:</label>
-          <textarea rows="3" class="w-full border rounded p-2" placeholder="Catatan tambahan..."></textarea>
+          <label class="text-sm font-semibold">Metode Pembayaran:</label>
+          <select id="metodePembayaran"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-[#0BB4B2]">
+            <option value="cash">Cash</option>
+            <option value="qris">QRIS</option>
+          </select>
         </div>
+
         <div class="flex justify-end gap-2 mt-2">
           <button onclick="tutupModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Batal</button>
           <button onclick="konfirmasiBayar()" class="bg-[#0BB4B2] text-white px-4 py-2 rounded hover:bg-[#099e9d]">Submit</button>

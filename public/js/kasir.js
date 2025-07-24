@@ -1,9 +1,11 @@
-// Replace the entire js section with this updated version
-
+// kasir.js
 let keranjang = [];
 
 function formatRupiah(angka) {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+    }).format(angka);
 }
 
 async function updateServerCart() {
@@ -16,7 +18,7 @@ async function updateServerCart() {
             },
             body: JSON.stringify({ cart: keranjang })
         });
-        
+
         if (!response.ok) {
             console.error('Failed to update server cart');
         }
@@ -30,6 +32,7 @@ async function renderKeranjang() {
     tbody.innerHTML = '';
 
     let total = 0;
+
     if (keranjang.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-3">Tidak ada data!</td></tr>';
     } else {
@@ -37,20 +40,21 @@ async function renderKeranjang() {
             const subtotal = item.harga * item.jumlah;
             total += subtotal;
 
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.nama}</td>
-                    <td>Rp. ${item.harga.toLocaleString('id-ID')}</td>
-                    <td>
-                        <div class="flex items-center gap-1">
-                            <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-2">-</button>
-                            ${item.jumlah}
-                            <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-2">+</button>
-                        </div>
-                    </td>
-                    <td>Rp. ${(subtotal).toLocaleString('id-ID')}</td>
-                    <td><button onclick="hapusItem(${item.id})" class="text-red-500">x</button></td>
-                </tr>`;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.nama}</td>
+                <td>Rp. ${item.harga.toLocaleString('id-ID')}</td>
+                <td>
+                    <div class="flex items-center gap-1">
+                        <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-2">-</button>
+                        ${item.jumlah}
+                        <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-2">+</button>
+                    </div>
+                </td>
+                <td>Rp. ${subtotal.toLocaleString('id-ID')}</td>
+                <td><button onclick="hapusItem(${item.id})" class="text-red-500">x</button></td>
+            `;
+            tbody.appendChild(row);
         });
     }
 
@@ -58,15 +62,17 @@ async function renderKeranjang() {
     const grandTotal = total + pajak;
 
     document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
-    
-    // Update server cart
-    await updateServerCart();
+
+    // await updateServerCart();
 }
 
 async function tambahKeranjang(id, nama, harga) {
     const index = keranjang.findIndex(p => p.id == id);
-    if (index !== -1) keranjang[index].jumlah += 1;
-    else keranjang.push({ id, nama, harga, jumlah: 1 });
+    if (index !== -1) {
+        keranjang[index].jumlah += 1;
+    } else {
+        keranjang.push({ id, nama, harga, jumlah: 1 });
+    }
     await renderKeranjang();
 }
 
@@ -74,7 +80,9 @@ async function ubahJumlah(id, delta) {
     const index = keranjang.findIndex(p => p.id == id);
     if (index !== -1) {
         keranjang[index].jumlah += delta;
-        if (keranjang[index].jumlah <= 0) keranjang.splice(index, 1);
+        if (keranjang[index].jumlah <= 0) {
+            keranjang.splice(index, 1);
+        }
     }
     await renderKeranjang();
 }
@@ -98,7 +106,6 @@ function bayar() {
     const jumlahProduk = keranjang.reduce((acc, item) => acc + item.jumlah, 0);
     const nota = 'NOTA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    // Set isi modal
     document.getElementById('modalTotalSebelumPajak').textContent = formatRupiah(total);
     document.getElementById('modalGrandTotal').textContent = formatRupiah(grandTotal);
     document.getElementById('grandTotalModal2').textContent = formatRupiah(grandTotal);
@@ -108,10 +115,8 @@ function bayar() {
     document.getElementById('notaDisplay').textContent = nota;
     document.getElementById('inputPembayaran').value = '';
 
-    // Tampilkan modal
     document.getElementById('bayarModal').classList.remove('hidden');
 
-    // Hitung kembalian saat input berubah
     document.getElementById('inputPembayaran').oninput = () => {
         const bayar = parseFloat(document.getElementById('inputPembayaran').value) || 0;
         const kembalian = bayar - grandTotal;
@@ -124,29 +129,86 @@ function tutupModal() {
 }
 
 function konfirmasiBayar() {
-    const jumlah_pembayaran = parseFloat(document.getElementById('inputPembayaran').value);
-    if (!jumlah_pembayaran || isNaN(jumlah_pembayaran)) {
-        alert('Jumlah pembayaran tidak valid.');
+    const metode = document.getElementById('metodePembayaran').value;
+    const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
+    const pajak = total * 0.11;
+    const grandTotal = total + pajak;
+    const uangDiterima = parseFloat(document.getElementById('inputPembayaran').value);
+    const kembalian = uangDiterima - grandTotal;
+
+    if (uangDiterima < grandTotal) {
+        alert("Uang diterima kurang dari total pembayaran.");
         return;
     }
 
-    const metode_bayar = document.querySelector('input[name="metode_bayar"]:checked')?.value || 'cash';
+    const keranjangPayload = keranjang.map(item => ({
+        id_produk: item.id,
+        jumlah: item.jumlah,
+        harga: item.harga,
+        diskon: 0,
+        sub_total: item.harga * item.jumlah
+    }));
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = "{{ route('transaksi.store') }}";
-    form.innerHTML = `
-        @csrf
-        <input type="hidden" name="metode_bayar" value="${metode_bayar}">
-        <input type="hidden" name="jumlah_pembayaran" value="${jumlah_pembayaran}">
-    `;
-    
-    document.body.appendChild(form);
-    form.submit();
+    fetch('/kasir', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            total_harga: grandTotal,
+            jumlah_pembayaran: uangDiterima,
+            kembalian: kembalian,
+            metode_bayar: metode,
+            pajak: pajak,
+            keranjang: keranjangPayload
+        })
+    })
+    .then(res => res.json())
+    .then(async data => {
+        if (data.success) {
+            alert("Transaksi berhasil!");
+            tutupModal();
+            keranjang = [];
+            await renderKeranjang();
+        } else {
+            alert("Gagal menyimpan transaksi: " + data.message);
+            console.error(data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
+        alert("Terjadi kesalahan saat menyimpan transaksi.");
+    });
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    // Load initial cart from server if needed
+function filterKategori(idKategori) {
+    const buttons = document.querySelectorAll('.kategori-button');
+    buttons.forEach(btn => btn.classList.remove('active-kategori'));
+
+    const selectedBtn = [...buttons].find(btn => btn.getAttribute('onclick')?.includes(idKategori));
+    if (selectedBtn) selectedBtn.classList.add('active-kategori');
+
+    const produkCards = document.querySelectorAll('.produk-card');
+    produkCards.forEach(card => {
+        const kategoriId = card.getAttribute('data-kategori');
+        card.style.display = (idKategori == 0 || kategoriId == idKategori) ? 'flex' : 'none';
+    });
+}
+
+function searchProduk() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const produkCards = document.querySelectorAll(".produk-card");
+
+    produkCards.forEach(card => {
+        const nama = card.getAttribute("data-nama");
+        const barcode = card.getAttribute("data-barcode");
+
+        card.style.display = (nama.includes(input) || barcode.includes(input)) ? 'flex' : 'none';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     renderKeranjang();
 });

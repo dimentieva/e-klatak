@@ -10,24 +10,23 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
-    // Halaman utama kasir (menampilkan produk dan keranjang)
     public function index(Request $request)
     {
         $query = Produk::query();
 
-        // Filter berdasarkan kategori
         if ($request->has('categories') && $request->categories != '') {
             $query->where('id_categories', $request->categories);
         }
 
-        // Pencarian berdasarkan nama produk atau barcode
         if ($request->has('search') && $request->search != '') {
             $query->where(function ($q) use ($request) {
                 $q->where('nama_produk', 'like', '%' . $request->search . '%')
-                    ->orWhere('nomor_barcode', 'like', '%' . $request->search . '%');
+                  ->orWhere('nomor_barcode', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -38,7 +37,6 @@ class TransaksiController extends Controller
         return view('dashboard.kasir', compact('produk', 'categories', 'cart'));
     }
 
-    // Tambahkan produk ke keranjang
     public function addToCart(Request $request, $id)
     {
         $produk = Produk::findOrFail($id);
@@ -48,7 +46,7 @@ class TransaksiController extends Controller
             $cart[$id]['jumlah']++;
         } else {
             $cart[$id] = [
-                'id_produk' => $produk->id,
+                'id_produk' => $produk->id_produk,
                 'nama_produk' => $produk->nama_produk,
                 'harga' => $produk->harga,
                 'jumlah' => 1,
@@ -59,11 +57,9 @@ class TransaksiController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
-    // Hapus produk dari keranjang
     public function remove(Request $request, $id)
     {
         $cart = session()->get('cart', []);
-
         if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
@@ -72,7 +68,6 @@ class TransaksiController extends Controller
         return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang.');
     }
 
-    // Add this method to your TransaksiController
     public function updateCart(Request $request)
     {
         $cart = [];
@@ -89,73 +84,47 @@ class TransaksiController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // Update your store method to handle the form submission properly
     public function store(Request $request)
-    {
-        $cart = session()->get('cart', []);
-        if (empty($cart)) {
-            return back()->with('error', 'Keranjang kosong.');
-        }
+{
+    \Log::debug('Request masuk:', $request->all());
+    \Log::debug('Data keranjang:', $request->keranjang);
+    try {
+        
+        DB::beginTransaction();
 
-        $request->validate([
-            'metode_bayar' => 'required|string',
-            'jumlah_pembayaran' => 'required|numeric|min:0',
+        $transaksi = Transaksi::create([
+            'id_user' => Auth::id(),
+            'waktu_transaksi' => now(),
+            'nomor_nota' => Str::random(10),
+            'metode_bayar' => $request->metode_bayar,
+            'total_harga' => $request->total_harga,
+            'jumlah_pembayaran' => $request->jumlah_pembayaran,
+            'kembalian' => $request->kembalian,
+            'pajak' => $request->pajak,
         ]);
 
-        DB::beginTransaction();
-        try {
-            $totalHarga = 0;
-
-            foreach ($cart as $item) {
-                $subtotal = $item['harga'] * $item['jumlah'];
-                $totalHarga += $subtotal;
-            }
-
-            $pajak = $totalHarga * 0.11;
-            $grandTotal = $totalHarga + $pajak;
-            $kembalian = $request->jumlah_pembayaran - $grandTotal;
-
-            if ($kembalian < 0) {
-                return back()->with('error', 'Jumlah pembayaran kurang.');
-            }
-
-            $transaksi = Transaksi::create([
-                'id_user' => Auth::id(),
-                'waktu_transaksi' => now(),
-                'nomor_nota' => 'NOTA-' . strtoupper(Str::random(6)),
-                'metode_bayar' => $request->metode_bayar,
-                'total_harga' => $grandTotal,
-                'jumlah_pembayaran' => $request->jumlah_pembayaran,
-                'kembalian' => $kembalian,
-                'pajak' => $pajak,
+        foreach ($request->keranjang as $item) {
+            DetailTransaksi::create([
+                'id_transaksi' => $transaksi->id_transaksi,
+                'id_produk' => $item['id_produk'],
+                'jumlah' => $item['jumlah'],
+                'harga_satuan' => $item['harga'],
+                'diskon' => $item['diskon'] ?? 0,
+                'sub_total' => $item['sub_total'],
             ]);
-
-            foreach ($cart as $item) {
-                DetailTransaksi::create([
-                    'id_transaksi' => $transaksi->id_transaksi,
-                    'id_produk' => $item['id_produk'],
-                    'jumlah' => $item['jumlah'],
-                    'harga_satuan' => $item['harga'],
-                    'diskon' => 0,
-                    'sub_total' => $item['harga'] * $item['jumlah'],
-                ]);
-
-                $produk = Produk::find($item['id_produk']);
-                if ($produk) {
-                    $produk->stok -= $item['jumlah'];
-                    $produk->save();
-                }
-            }
-
-            session()->forget('cart');
-            DB::commit();
-
-            return redirect()->route('dashboard.kasir')
-                ->with('success', 'Transaksi berhasil disimpan.')
-                ->with('nota', $transaksi->nomor_nota);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        DB::commit();
+        return response()->json(['success' => true]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error("Gagal menyimpan transaksi: " . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan saat menyimpan transaksi.',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 }

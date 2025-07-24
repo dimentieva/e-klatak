@@ -29,7 +29,7 @@
             </div>
             <div class="flex gap-2">
                 <button onclick="resetKeranjang()" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded w-full">Reset</button>
-                <button onclick="bayar()" class="btn-primary py-2 px-4 rounded w-full">Bayar</button>
+                <button onclick="bayar()" class="bg-[#0BB4B2] hover:bg-[#099d9c] text-white py-2 px-4 rounded w-full">Bayar</button>
             </div>
         </div>
     </div>
@@ -37,14 +37,16 @@
     <!-- Konten Produk -->
     <div class="w-1/2 bg-white p-6 overflow-auto">
         <div class="flex justify-end mb-4">
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-[#0BB4B2] font-semibold dropdown-button">
+            <div class="relative" x-data="{ open: false }" x-cloak>
+                <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-[#0BB4B2] font-semibold">
                     <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-5.6 5a6.978 6.978 0 0111.2 0A2 2 0 0113 18H7a2 2 0 01-2.6-3z" />
                     </svg>
                     <span>{{ Auth::user()->name ?? '-' }}</span>
                 </button>
-                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
+                <div x-show="open" @click.away="open = false"
+                    x-transition
+                    class="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-10">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-100">Logout</button>
@@ -54,9 +56,9 @@
         </div>
 
         <div class="flex gap-2 mb-4 flex-wrap">
-            <button onclick="filterKategori(0)" class="px-3 py-1 rounded kategori-button active-kategori text-sm">Semua</button>
+            <button onclick="filterKategori(0)" class="px-3 py-1 rounded kategori-button active-kategori text-sm bg-[#0BB4B2] text-white">Semua</button>
             @foreach ($categories as $kat)
-            <button onclick="filterKategori('{ $kat->id }')" class="px-3 py-1 rounded kategori-button text-sm">
+            <button onclick="filterKategori('{{ $kat->id }}')" class="px-3 py-1 rounded kategori-button text-sm bg-gray-200 hover:bg-[#0BB4B2] hover:text-white">
                 {{ $kat->name }}
             </button>
             @endforeach
@@ -74,17 +76,15 @@
                 data-barcode="{{ $item->nomor_barcode }}">
                 <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"
                     class="w-[120px] h-[120px] object-cover rounded-lg mb-3"
-                    onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'" />
+                    onerror="this.src='https://via.placeholder.com/120x120?text=No+Image'" />
                 <div class="text-sm font-semibold">{{ $item->nama_produk }}</div>
                 <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
                 <div class="text-[#0BB4B2] font-bold mt-1">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
                 <button
-                    onclick='tambahKeranjang("{{ $item->id_produk }}", "{{ addslashes($item->nama_produk) }}", "{{ $item->harga_jual }}")'
+                    onclick='tambahKeranjang("{{ $item->id_produk }}", "{{ addslashes($item->nama_produk) }}", {{ $item->harga_jual }})'
                     class="btn-primary mt-2 w-full py-1 rounded text-sm">
                     Tambah
                 </button>
-
-
             </div>
             @endforeach
         </div>

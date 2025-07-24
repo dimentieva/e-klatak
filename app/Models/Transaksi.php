@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaksi extends Model
 {
     protected $primaryKey = 'id_transaksi';
+    protected $table = 'transaksi';
     public $incrementing = true;
     protected $keyType = 'int';
 
