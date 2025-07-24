@@ -25,16 +25,16 @@ class DashboardController extends Controller
 
         // Tambahan untuk grafik pendapatan 7 hari terakhir
         $chartLabels = [];
-        $chartData = [];
+    $chartData = [];
 
-        for ($i = 6; $i >= 0; $i--) {
-            $tanggal = Carbon::now()->subDays($i);
-            $label = $tanggal->format('d M');
-            $total = Transaksi::whereDate('created_at', $tanggal->toDateString())->sum('total_harga');
+    for ($i = 6; $i >= 0; $i--) {
+        $tanggal = Carbon::now()->subDays($i);
+        $label = $tanggal->format('D, d M'); // Contoh: Thu, 18 Jul
+        $total = Transaksi::whereDate('created_at', $tanggal->toDateString())->sum('total_harga');
 
-            $chartLabels[] = $label;
-            $chartData[] = $total;
-        }
+        $chartLabels[] = $label;
+        $chartData[] = $total;
+    }
 
         return view('dashboard.admin', compact(
             'totalProduk',

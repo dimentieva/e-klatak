@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    {{-- Cards --}}
+    <!-- Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
             <p class="text-sm">Total Produk</p>
@@ -45,11 +45,14 @@
         </div>
     </div>
 
-    {{-- Table + Chart --}}
+    <!-- Table + Chart -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {{-- Table --}}
+        <!-- Table -->
         <div class="md:col-span-2 bg-gray-50 rounded-lg p-4 shadow">
-            <h3 class="font-semibold text-gray-700 mb-2">Data Penjualan Terbaru</h3>
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-semibold text-gray-700">Data Penjualan Terbaru</h3>
+                <a href="{{ route('laporan.index') }}" class="text-sm text-[#0BB4B2] hover:underline">Lihat Semua</a>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-600">
                     <thead class="bg-gray-200 text-xs uppercase">
@@ -64,25 +67,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($penjualanTerbaru as $index => $transaksi)
+                        @forelse ($penjualanTerbaru->take(10) as $index => $transaksi)
                             @foreach ($transaksi->detailTransaksi as $detail)
-                            <tr class="border-b">
-                                <td class="px-3 py-2">{{ $index + 1 }}</td>
-                                <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
-                                <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
-                                <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
-                                <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
-                                <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + $transaksi->pajak, 0, ',', '.') }}</td>
-                            </tr>
+                                <tr class="border-b">
+                                    <td class="px-3 py-2">{{ $index + 1 }}</td>
+                                    <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
+                                    <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
+                                    <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
+                                    <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
+                                    <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                    <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + $transaksi->pajak, 0, ',', '.') }}</td>
+                                </tr>
                             @endforeach
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center text-gray-500 py-4">Belum ada data penjualan.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
 
-        {{-- Chart --}}
+        <!-- Chart -->
         <div class="bg-gray-50 rounded-lg p-4 shadow">
             <h3 class="font-semibold text-gray-700 mb-2">Statistik Penjualan</h3>
             <canvas id="penjualanChart" class="w-full h-48"></canvas>
@@ -90,7 +97,7 @@
     </div>
 </div>
 
-{{-- Chart.js CDN --}}
+{{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 {{-- Chart Script --}}
@@ -110,9 +117,7 @@
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
