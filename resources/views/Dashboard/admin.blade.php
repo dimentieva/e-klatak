@@ -9,18 +9,13 @@
         <h2 class="text-2xl font-bold text-[#0BB4B2]">Dashboard Admin</h2>
 
         <div class="flex items-center space-x-4 mt-4 md:mt-0 bg-white px-4 py-2 rounded shadow-sm border border-gray-200">
-            <!-- Avatar user -->
             <div class="w-8 h-8 rounded-full bg-[#0BB4B2] text-white flex items-center justify-center font-semibold">
                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
             </div>
-
-            <!-- Nama dan email -->
             <div class="text-sm text-gray-700">
                 <div class="font-medium">{{ Auth::user()->name }}</div>
                 <div class="text-gray-500 text-xs">{{ Auth::user()->email }}</div>
             </div>
-
-            <!-- Tombol edit -->
             <a href="{{ route('profile.edit') }}" class="text-[#0BB4B2] hover:text-teal-800 text-sm font-medium flex items-center space-x-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 11l6 6M4 20h4l10-10a1.414 1.414 0 00-2-2L6 18v2z" />
@@ -70,32 +65,71 @@
                     </thead>
                     <tbody>
                         @foreach ($penjualanTerbaru as $index => $transaksi)
-                        @foreach ($transaksi->detailTransaksi as $detail)
-                        <tr class="border-b">
-                            <td class="px-3 py-2">{{ $index + 1 }}</td>
-                            <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
-                            <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
-                            <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
-                            <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
-                            <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                            <td class="px-3 py-2">
-                                Rp {{ number_format($detail->sub_total + $transaksi->pajak, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                        @endforeach
+                            @foreach ($transaksi->detailTransaksi as $detail)
+                            <tr class="border-b">
+                                <td class="px-3 py-2">{{ $index + 1 }}</td>
+                                <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
+                                <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
+                                <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
+                                <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
+                                <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + $transaksi->pajak, 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
-        {{-- Chart Placeholder --}}
+        {{-- Chart --}}
         <div class="bg-gray-50 rounded-lg p-4 shadow">
             <h3 class="font-semibold text-gray-700 mb-2">Statistik Penjualan</h3>
-            <div class="h-40 flex items-center justify-center bg-white border rounded-md">
-                <span class="text-gray-400 text-sm">[ Grafik penjualan ]</span>
-            </div>
+            <canvas id="penjualanChart" class="w-full h-48"></canvas>
         </div>
     </div>
 </div>
+
+{{-- Chart.js CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{-- Chart Script --}}
+<script>
+    const ctx = document.getElementById('penjualanChart').getContext('2d');
+    const penjualanChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($chartLabels) !!},
+            datasets: [{
+                label: 'Jumlah Penjualan',
+                data: {!! json_encode($chartData) !!},
+                backgroundColor: '#0BB4B2',
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return ' ' + context.parsed.y + ' transaksi';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection
