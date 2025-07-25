@@ -85,6 +85,11 @@ async function tambahKeranjang(id, nama, harga, stok) {
                 icon: 'warning',
                 title: 'Stok Kosong',
                 text: `Stok produk "${nama}" tidak tersedia.`,
+                confirmButtonText: 'OK',
+    customClass: {
+        confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
+    },
+    buttonsStyling: false
             });
             return;
         }
@@ -159,6 +164,11 @@ async function konfirmasiBayar() {
             icon: 'warning',
             title: 'Pembayaran Kurang',
             text: 'Uang diterima kurang dari total yang harus dibayar!',
+            confirmButtonText: 'OK',
+    customClass: {
+        confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
+    },
+    buttonsStyling: false
         });
         return;
     }
@@ -190,27 +200,38 @@ async function konfirmasiBayar() {
         });
 
         const data = await response.json();
-
         if (data.success) {
-            // Langsung tampilkan notifikasi sukses tanpa konfirmasi
-            Swal.fire({
-                icon: 'success',
-                title: 'Pembayaran Berhasil!',
-                showConfirmButton: false,
-                timer: 2000
-            });
+    // Notifikasi sukses
+    Swal.fire({
+        icon: 'success',
+        title: 'Pembayaran Berhasil!',
+        showConfirmButton: false,
+        timer: 2000
+    }).then(() => {
+        // Cetak struk setelah alert sukses selesai
+        cetakStruk(
+            document.getElementById('notaDisplay')?.textContent || '',
+            grandTotal,
+            pajak,
+            uangDiterima,
+            kembalian
+        );
 
-            tutupModal();
-            keranjang = [];
-            renderKeranjang();
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal Menyimpan Transaksi',
-                text: data.message || 'Terjadi kesalahan.',
-            });
-            console.error(data.error);
-        }
+        // Kosongkan keranjang setelah cetak
+        keranjang = [];
+        renderKeranjang();
+    });
+
+    tutupModal();
+} else {
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal Menyimpan Transaksi',
+        text: data.message || 'Terjadi kesalahan.',
+    });
+    console.error(data.error);
+}
+
     } catch (error) {
         console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
         Swal.fire({
@@ -239,6 +260,113 @@ function filterKategori(idKategori) {
         const kategoriId = card.getAttribute('data-kategori');
         card.style.display = (idKategori == 0 || kategoriId == idKategori) ? 'flex' : 'none';
     });
+}
+
+function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
+
+    const itemsHtml = keranjang.map(item => `
+        <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <div style="flex: 1;">${item.nama} x${item.jumlah}</div>
+            <div style="text-align: right; flex-shrink: 0;">Rp ${(item.harga * item.jumlah).toLocaleString('id-ID')}</div>
+        </div>
+        <div style="font-size: 11px; color: gray; margin-bottom: 4px;">
+            &nbsp;&nbsp;&nbsp;@ Rp ${item.harga.toLocaleString('id-ID')}
+        </div>
+    `).join('');
+
+    const printWindow = window.open('', '', 'width=300,height=600');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Struk Pembayaran</title>
+            <style>
+                body {
+                    font-family: monospace;
+                    width: 250px;
+                    padding: 10px;
+                    color: #000;
+                }
+                h2 {
+                    text-align: center;
+                    margin: 5px 0;
+                }
+                .center {
+                    text-align: center;
+                }
+                .logo {
+                    width: 60px;
+                    height: 60px;
+                    object-fit: cover;
+                    display: block;
+                    margin: 0 auto 5px auto;
+                }
+                hr {
+                    border-top: 1px dashed #000;
+                    margin: 6px 0;
+                }
+                .summary-table {
+                    width: 100%;
+                    font-size: 12px;
+                    border-collapse: collapse;
+                }
+                .summary-table td {
+                    padding: 2px 0;
+                }
+                .summary-table td:last-child {
+                    text-align: right;
+                }
+            </style>
+        </head>
+        <body>
+
+            <!-- Header -->
+            <h2>E-Klatak</h2>
+            <p class="center" style="margin: 0;">Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kab.Tulungagung</p>
+            <hr>
+
+            <!-- Info Transaksi -->
+            <p>Nota: <span>${nota}</span></p>
+            <p>Tanggal: <span>${new Date().toLocaleString('id-ID')}</span></p>
+            <hr>
+
+            <!-- Items -->
+            ${itemsHtml}
+            <hr>
+
+            <!-- Summary -->
+            <table class="summary-table">
+                <tr>
+                    <td>Total</td>
+                    <td>Rp ${formatRupiah(grandTotal - pajak)}</td>
+                </tr>
+                <tr>
+                    <td>Pajak (11%)</td>
+                    <td>Rp ${formatRupiah(pajak)}</td>
+                </tr>
+                <tr>
+                    <td><strong>Grand Total</strong></td>
+                    <td><strong>Rp ${formatRupiah(grandTotal)}</strong></td>
+                </tr>
+                <tr>
+                    <td>Bayar</td>
+                    <td>Rp ${formatRupiah(bayar)}</td>
+                </tr>
+                <tr>
+                    <td>Kembalian</td>
+                    <td>Rp ${formatRupiah(kembalian)}</td>
+                </tr>
+            </table>
+            <hr>
+            <p class="center">Terima kasih telah berbelanja!</p>
+            <p class="center">~ E-Klatak POS ~</p>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
 }
 
 

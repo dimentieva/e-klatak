@@ -115,19 +115,59 @@
             </div>
             @endforeach
         </div>
-        <style>
-            .active-kategori {
-                background-color: #0BB4B2 !important;
-                color: white !important;
-            }
-        </style>
+        <!-- Print Area -->
+        <div id="printArea" class="hidden">
+            <div style="font-family: monospace; width: 250px; padding: 10px;">
+                <!-- Header -->
+                <h2 style="text-align: center; margin: 5px 0;">E-Klatak</h2>
+                <p style="text-align: center; margin: 0;">Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kab. Tulungagung</p>
+                <hr>
+
+                <!-- Info Transaksi -->
+                <p>Nota: <span id="printNota"></span></p>
+                <p>Tanggal: <span id="printTanggal"></span></p>
+                <hr>
+
+                <!-- Daftar Item -->
+                <div id="printItems"></div>
+
+                <hr>
+                <!-- Total dan Pembayaran -->
+                <table style="width: 100%; font-size: 12px;">
+                    <tr>
+                        <td>Total</td>
+                        <td style="text-align: right;"><span id="printTotal"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Pajak (11%)</td>
+                        <td style="text-align: right;"><span id="printPajak"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grand Total</strong></td>
+                        <td style="text-align: right;"><strong><span id="printGrandTotal"></span></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Bayar</td>
+                        <td style="text-align: right;"><span id="printBayar"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Kembalian</td>
+                        <td style="text-align: right;"><span id="printKembalian"></span></td>
+                    </tr>
+                </table>
+
+                <hr>
+                <p style="text-align: center;">Terima kasih telah berbelanja!</p>
+                <p style="text-align: center;">~ E-Klatak POS ~</p>
+            </div>
+        </div>
+
         <!-- Pagination -->
         <div class="flex justify-center mt-6">
             {{ $produk->links() }}
         </div>
     </div>
 </div>
-
 <!-- Modal Pembayaran -->
 <x-modal-pembayaran />
 @endsection
@@ -135,3 +175,10 @@
 @push('scripts')
 <script src="{{ asset('js/kasir.js') }}"></script>
 @endpush
+
+<style>
+    .active-kategori {
+        background-color: #0BB4B2 !important;
+        color: white !important;
+    }
+</style>

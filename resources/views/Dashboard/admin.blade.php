@@ -121,7 +121,14 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return ' ' + context.parsed.y + ' transaksi';
+                            // Format angka jadi Rp xxx.xxx
+                            const value = context.parsed.y;
+                            const formatted = new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            }).format(value);
+                            return ' ' + formatted;
                         }
                     }
                 }
