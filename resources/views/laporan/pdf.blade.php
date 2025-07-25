@@ -44,7 +44,7 @@
             background-color: #f9f9f9;
         }
 
-         .summary-container {
+        .summary-container {
             margin-top: 40px;
             display: flex;
             justify-content: space-between;
@@ -103,11 +103,18 @@
                 $totalPendapatan = 0;
                 $totalBarangTerjual = 0;
             @endphp
+
             @foreach($semuaTransaksi as $transaksi)
+                @php
+                    $subtotalTransaksi = 0;
+                    $jumlahDetail = count($transaksi->detailTransaksi);
+                    $pajakPerDetail = $jumlahDetail > 0 ? $transaksi->pajak / $jumlahDetail : 0;
+                @endphp
+
                 @foreach($transaksi->detailTransaksi as $detail)
                     @php
-                        $subtotal = $detail->sub_total + $transaksi->pajak;
-                        $totalPendapatan += $subtotal;
+                        $subtotal = $detail->sub_total + $pajakPerDetail;
+                        $subtotalTransaksi += $subtotal;
                         $totalBarangTerjual += $detail->jumlah;
                     @endphp
                     <tr>
@@ -121,6 +128,10 @@
                         <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
+
+                @php
+                    $totalPendapatan += $subtotalTransaksi;
+                @endphp
             @endforeach
         </tbody>
     </table>

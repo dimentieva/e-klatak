@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
+use App\Models\LogPerubahanStok;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,18 +85,29 @@ class TransaksiController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
 {
-    \Log::debug('Request masuk:', $request->all());
-    \Log::debug('Data keranjang:', $request->keranjang);
     try {
-        
+        // Validasi data dasar
+        $request->validate([
+            'total_harga' => 'required|numeric',
+            'jumlah_pembayaran' => 'required|numeric',
+            'kembalian' => 'required|numeric',
+            'metode_bayar' => 'required|string',
+            'pajak' => 'required|numeric',
+            'keranjang' => 'required|array|min:1',
+            'keranjang.*.id_produk' => 'required|exists:produk,id_produk',
+            'keranjang.*.jumlah' => 'required|integer|min:1',
+            'keranjang.*.harga' => 'required|numeric|min:0',
+        ]);
+
         DB::beginTransaction();
 
+        // Simpan transaksi utama
         $transaksi = Transaksi::create([
             'id_user' => Auth::id(),
             'waktu_transaksi' => now(),
-            'nomor_nota' => Str::random(10),
+            'nomor_nota' => 'NOTA-' . strtoupper(Str::random(8)),
             'metode_bayar' => $request->metode_bayar,
             'total_harga' => $request->total_harga,
             'jumlah_pembayaran' => $request->jumlah_pembayaran,
@@ -103,7 +115,20 @@ class TransaksiController extends Controller
             'pajak' => $request->pajak,
         ]);
 
+        // Loop setiap produk di keranjang
         foreach ($request->keranjang as $item) {
+            $produk = Produk::findOrFail($item['id_produk']);
+            $stokAwal = $produk->stok;
+
+            // Kurangi stok
+            if ($produk->stok < $item['jumlah']) {
+                throw new \Exception("Stok produk {$produk->nama_produk} tidak mencukupi.");
+            }
+
+            $produk->stok -= $item['jumlah'];
+            $produk->save();
+
+            // Simpan detail transaksi
             DetailTransaksi::create([
                 'id_transaksi' => $transaksi->id_transaksi,
                 'id_produk' => $item['id_produk'],
@@ -112,19 +137,33 @@ class TransaksiController extends Controller
                 'diskon' => $item['diskon'] ?? 0,
                 'sub_total' => $item['sub_total'],
             ]);
+
+            // Simpan log stok
+            LogPerubahanStok::create([
+                'id_produk' => $item['id_produk'],
+                'jenis' => 'kurang',
+                'jumlah_perubahan' => -$item['jumlah'],
+                'stok_awal' => $stokAwal,
+                'stok_akhir' => $produk->stok,
+                'keterangan' => 'Transaksi #' . $transaksi->nomor_nota,
+                'created_by' => Auth::check() ? Auth::user()->name : 'admin',
+            ]);
         }
 
         DB::commit();
-        return response()->json(['success' => true]);
 
+        return response()->json(['success' => true, 'message' => 'Transaksi berhasil disimpan']);
     } catch (\Exception $e) {
         DB::rollBack();
-        \Log::error("Gagal menyimpan transaksi: " . $e->getMessage());
         return response()->json([
             'success' => false,
-            'message' => 'Terjadi kesalahan saat menyimpan transaksi.',
-            'error' => $e->getMessage(),
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
         ], 500);
     }
 }
+    public function getSubtotalDashboard()
+    {
+        $subtotal = DetailTransaksi::sum('sub_total');
+        return $subtotal;
+    }
 }

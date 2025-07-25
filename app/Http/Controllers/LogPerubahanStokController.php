@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LogPerubahanStok;
 use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,8 +81,7 @@ class LogPerubahanStokController extends Controller
             'stok_akhir' => $stokBaru,
             'jumlah_perubahan' => $jumlah,
             'keterangan' => $request->keterangan,
-            'created_by' => Auth::user()->role ?? 'admin',
-            'kasir' // fallback admin jika tidak ada
+            'created_by' => Auth::check() ? Auth::user()->name : 'admin',
         ]);
 
         return redirect()->route('produk.kelola_stok', $produk->id_produk)->with('success', 'Perubahan stok berhasil disimpan.');

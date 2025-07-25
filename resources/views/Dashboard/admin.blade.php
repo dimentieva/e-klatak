@@ -76,7 +76,7 @@
                                     <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
                                     <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
                                     <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                    <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + $transaksi->pajak, 0, ',', '.') }}</td>
+                                   <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + ($transaksi->pajak / max(count($transaksi->detailTransaksi), 1)), 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                         @empty
