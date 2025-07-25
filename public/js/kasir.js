@@ -66,13 +66,31 @@ async function renderKeranjang() {
     // await updateServerCart();
 }
 
-async function tambahKeranjang(id, nama, harga) {
+async function tambahKeranjang(id, nama, harga, stok) {
     const index = keranjang.findIndex(p => p.id == id);
+
     if (index !== -1) {
+        if (keranjang[index].jumlah >= stok) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stok Habis',
+                text: `Stok produk "${nama}" tidak mencukupi.`,
+            });
+            return;
+        }
         keranjang[index].jumlah += 1;
     } else {
+        if (stok <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stok Kosong',
+                text: `Stok produk "${nama}" tidak tersedia.`,
+            });
+            return;
+        }
         keranjang.push({ id, nama, harga, jumlah: 1 });
     }
+
     await renderKeranjang();
 }
 
@@ -206,10 +224,15 @@ async function konfirmasiBayar() {
 
 function filterKategori(idKategori) {
     const buttons = document.querySelectorAll('.kategori-button');
-    buttons.forEach(btn => btn.classList.remove('active-kategori'));
 
-    const selectedBtn = [...buttons].find(btn => btn.getAttribute('onclick')?.includes(idKategori));
-    if (selectedBtn) selectedBtn.classList.add('active-kategori');
+    buttons.forEach(btn => {
+        const btnId = btn.getAttribute('data-id');
+        if (btnId == idKategori) {
+            btn.classList.add('active-kategori');
+        } else {
+            btn.classList.remove('active-kategori');
+        }
+    });
 
     const produkCards = document.querySelectorAll('.produk-card');
     produkCards.forEach(card => {
@@ -217,6 +240,7 @@ function filterKategori(idKategori) {
         card.style.display = (idKategori == 0 || kategoriId == idKategori) ? 'flex' : 'none';
     });
 }
+
 
 function searchProduk() {
     const input = document.getElementById("searchInput").value.toLowerCase();

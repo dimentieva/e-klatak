@@ -70,17 +70,22 @@
 
         <!-- Filter Kategori -->
         <div class="flex gap-2 mb-4 flex-wrap">
-            <button onclick="filterKategori(0)"
-                class="px-4 py-2 rounded-full kategori-button active-kategori text-sm bg-[#0BB4B2] text-white shadow hover:brightness-110 transition">
+            <button
+                onclick="filterKategori(0)"
+                class="px-4 py-2 rounded-full kategori-button text-sm shadow hover:brightness-110 transition active-kategori"
+                data-id="0">
                 Semua
             </button>
             @foreach ($categories as $kat)
-            <button onclick="filterKategori('{{ $kat->id }}')"
-                class="px-4 py-2 rounded-full kategori-button text-sm bg-gray-200 text-gray-700 hover:bg-[#0BB4B2] hover:text-white transition shadow-sm">
+            <button
+                onclick="filterKategori('{{ $kat->id }}')"
+                class="px-4 py-2 rounded-full kategori-button text-sm bg-gray-200 text-gray-700 hover:bg-[#0BB4B2] hover:text-white transition shadow-sm"
+                data-id="{{ $kat->id }}">
                 {{ $kat->name }}
             </button>
             @endforeach
         </div>
+
 
         <!-- Search Produk -->
         <div class="mb-6">
@@ -103,14 +108,19 @@
                 <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
                 <div class="text-[#0BB4B2] font-bold mt-1 text-sm">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
                 <button
-                    onclick='tambahKeranjang("{{ $item->id_produk }}", "{{ addslashes($item->nama_produk) }}", {{ $item->harga_jual }})'
+                    onclick="tambahKeranjang({{ $item->id_produk }}, '{{ addslashes($item->nama_produk) }}', {{ $item->harga_jual }}, {{ $item->stok }})"
                     class="mt-3 w-full py-1.5 rounded-lg text-sm bg-[#0BB4B2] text-white hover:bg-[#099d9c] transition shadow">
                     Tambah
                 </button>
             </div>
             @endforeach
         </div>
-
+        <style>
+            .active-kategori {
+                background-color: #0BB4B2 !important;
+                color: white !important;
+            }
+        </style>
         <!-- Pagination -->
         <div class="flex justify-center mt-6">
             {{ $produk->links() }}
