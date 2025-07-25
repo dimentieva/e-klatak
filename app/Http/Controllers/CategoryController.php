@@ -8,11 +8,21 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     // Menampilkan daftar kategori dengan pagination
-    public function index()
-    {
-        $categories = Category::orderBy('created_at', 'asc')->paginate(10); 
-        return view('categories.index', compact('categories'));
+    public function index(Request $request)
+{
+    $query = Category::query();
+
+    // Tambahkan fitur pencarian
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%');
     }
+
+    // Ambil data kategori yang sudah difilter dan paginasi
+    $categories = $query->orderBy('created_at', 'asc')->paginate(10);
+
+    return view('categories.index', compact('categories'));
+}
+
 
     // Menampilkan form tambah kategori
     public function create()

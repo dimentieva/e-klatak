@@ -62,8 +62,6 @@ async function renderKeranjang() {
     const grandTotal = total + pajak;
 
     document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
-
-    // await updateServerCart();
 }
 
 async function tambahKeranjang(id, nama, harga, stok) {
@@ -86,10 +84,10 @@ async function tambahKeranjang(id, nama, harga, stok) {
                 title: 'Stok Kosong',
                 text: `Stok produk "${nama}" tidak tersedia.`,
                 confirmButtonText: 'OK',
-    customClass: {
-        confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
-    },
-    buttonsStyling: false
+                customClass: {
+                    confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
+                },
+                buttonsStyling: false
             });
             return;
         }
@@ -165,10 +163,10 @@ async function konfirmasiBayar() {
             title: 'Pembayaran Kurang',
             text: 'Uang diterima kurang dari total yang harus dibayar!',
             confirmButtonText: 'OK',
-    customClass: {
-        confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
-    },
-    buttonsStyling: false
+            customClass: {
+                confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
+            },
+            buttonsStyling: false
         });
         return;
     }
@@ -201,36 +199,38 @@ async function konfirmasiBayar() {
 
         const data = await response.json();
         if (data.success) {
-    // Notifikasi sukses
-    Swal.fire({
-        icon: 'success',
-        title: 'Pembayaran Berhasil!',
-        showConfirmButton: false,
-        timer: 2000
-    }).then(() => {
-        // Cetak struk setelah alert sukses selesai
-        cetakStruk(
-            document.getElementById('notaDisplay')?.textContent || '',
-            grandTotal,
-            pajak,
-            uangDiterima,
-            kembalian
-        );
+            Swal.fire({
+                icon: 'success',
+                title: 'Pembayaran Berhasil!',
+                showConfirmButton: false,
+                timer: 2000
+            }).then(() => {
+                cetakStruk(
+                    document.getElementById('notaDisplay')?.textContent || '',
+                    grandTotal,
+                    pajak,
+                    uangDiterima,
+                    kembalian
+                );
 
-        // Kosongkan keranjang setelah cetak
-        keranjang = [];
-        renderKeranjang();
-    });
+                keranjang = [];
+                renderKeranjang();
 
-    tutupModal();
-} else {
-    Swal.fire({
-        icon: 'error',
-        title: 'Gagal Menyimpan Transaksi',
-        text: data.message || 'Terjadi kesalahan.',
-    });
-    console.error(data.error);
-}
+                // ✅ RELOAD halaman setelah cetak dan reset keranjang
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            });
+
+            tutupModal();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menyimpan Transaksi',
+                text: data.message || 'Terjadi kesalahan.',
+            });
+            console.error(data.error);
+        }
 
     } catch (error) {
         console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
@@ -241,7 +241,6 @@ async function konfirmasiBayar() {
         });
     }
 }
-
 
 function filterKategori(idKategori) {
     const buttons = document.querySelectorAll('.kategori-button');
@@ -263,7 +262,6 @@ function filterKategori(idKategori) {
 }
 
 function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
-
     const itemsHtml = keranjang.map(item => `
         <div style="display: flex; justify-content: space-between; font-size: 12px;">
             <div style="flex: 1;">${item.nama} x${item.jumlah}</div>
@@ -318,43 +316,20 @@ function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
             </style>
         </head>
         <body>
-
-            <!-- Header -->
             <h2>E-Klatak</h2>
             <p class="center" style="margin: 0;">Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kab.Tulungagung</p>
             <hr>
-
-            <!-- Info Transaksi -->
             <p>Nota: <span>${nota}</span></p>
             <p>Tanggal: <span>${new Date().toLocaleString('id-ID')}</span></p>
             <hr>
-
-            <!-- Items -->
             ${itemsHtml}
             <hr>
-
-            <!-- Summary -->
             <table class="summary-table">
-                <tr>
-                    <td>Total</td>
-                    <td>Rp ${formatRupiah(grandTotal - pajak)}</td>
-                </tr>
-                <tr>
-                    <td>Pajak (11%)</td>
-                    <td>Rp ${formatRupiah(pajak)}</td>
-                </tr>
-                <tr>
-                    <td><strong>Grand Total</strong></td>
-                    <td><strong>Rp ${formatRupiah(grandTotal)}</strong></td>
-                </tr>
-                <tr>
-                    <td>Bayar</td>
-                    <td>Rp ${formatRupiah(bayar)}</td>
-                </tr>
-                <tr>
-                    <td>Kembalian</td>
-                    <td>Rp ${formatRupiah(kembalian)}</td>
-                </tr>
+                <tr><td>Total</td><td>Rp ${formatRupiah(grandTotal - pajak)}</td></tr>
+                <tr><td>Pajak (11%)</td><td>Rp ${formatRupiah(pajak)}</td></tr>
+                <tr><td><strong>Grand Total</strong></td><td><strong>Rp ${formatRupiah(grandTotal)}</strong></td></tr>
+                <tr><td>Bayar</td><td>Rp ${formatRupiah(bayar)}</td></tr>
+                <tr><td>Kembalian</td><td>Rp ${formatRupiah(kembalian)}</td></tr>
             </table>
             <hr>
             <p class="center">Terima kasih telah berbelanja!</p>
@@ -362,13 +337,11 @@ function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
         </body>
         </html>
     `);
-
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
     printWindow.close();
 }
-
 
 function searchProduk() {
     const input = document.getElementById("searchInput").value.toLowerCase();

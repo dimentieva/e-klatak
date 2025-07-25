@@ -79,7 +79,7 @@
     </style>
 </head>
 <body>
-    <h2>Laporan Seluruh Penjualan</h2>
+    <h2>Laporan Penjualan Fresh Market Klatak</h2>
     <div class="printed">
         Dicetak tanggal: {{ now()->format('d-m-Y H:i') }}
     </div>

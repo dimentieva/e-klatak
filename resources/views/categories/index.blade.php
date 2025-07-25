@@ -7,13 +7,12 @@
 
     {{-- Tombol Kembali --}}
     <a href="{{ route('produk.index') }}"
-        class="inline-flex items-center gap-2 bg-teal-100 hover:bg-teal-200 text-teal-700 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shadow-sm border border-teal-200">
+        class="inline-flex items-center gap-2 bg-teal-100 hover:bg-teal-200 text-teal-700 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shadow-sm border border-teal-200 mb-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         <span>Kembali</span>
     </a>
-
 
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
@@ -25,12 +24,14 @@
     </div>
 
     {{-- Search --}}
-    <form method="GET" action="{{ route('categories.index') }}" class="mb-4">
-        <input type="text" name="search"
-            placeholder="Cari kategori..."
-            value="{{ request('search') }}"
-            oninput="this.form.submit()"
-            class="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring focus:border-teal-400" />
+    <form method="GET" action="{{ route('categories.index') }}" id="searchForm" class="mb-4">
+        <div class="flex items-center space-x-2">
+            <input type="text" name="search"
+                   value="{{ request('search') }}"
+                   placeholder="Cari kategori..."
+                   class="w-full md:w-64 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                   oninput="submitForm()">
+        </div>
     </form>
 
     @if(session('success'))
@@ -115,7 +116,7 @@
 
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $categories->links('pagination::tailwind') }}
+            {{ $categories->appends(request()->query())->links('pagination::tailwind') }}
         </div>
     </div>
 
@@ -147,4 +148,15 @@
     </div>
 
 </div>
+
+{{-- Script untuk search delay --}}
+<script>
+    let timer;
+    function submitForm() {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            document.getElementById('searchForm').submit();
+        }, 500);
+    }
+</script>
 @endsection

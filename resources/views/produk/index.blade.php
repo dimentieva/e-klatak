@@ -16,12 +16,14 @@
 </div>
 
 {{-- Search --}}
-<form method="GET" action="{{ route('produk.index') }}" class="mb-4">
-    <input type="text" name="search"
-        placeholder="Cari produk..."
-        value="{{ request('search') }}"
-        oninput="this.form.submit()"
-        class="border border-gray-300 rounded px-4 py-2 w-full md:w-1/3 focus:outline-none focus:ring focus:border-teal-400" />
+<form method="GET" action="{{ route('produk.index') }}" id="searchForm" class="mb-4">
+    <div class="flex items-center space-x-2">
+        <input type="text" name="search"
+               value="{{ request('search') }}"
+               placeholder="Cari produk..."
+               class="w-full md:w-64 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+               oninput="submitForm()">
+    </div>
 </form>
 
 @if(session('success'))
@@ -53,7 +55,7 @@
                 <td class="px-3 py-2 border">{{ $produks->firstItem() + $index }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nomor_barcode }}</td>
                 <td class="px-3 py-2 border">{{ $produk->nama_produk }}</td>
-                <td class="px-3 py-2 border">{{  $produk->category->name }}</td>
+                <td class="px-3 py-2 border">{{ $produk->category->name }}</td>
                 <td class="px-3 py-2 border">{{ $produk->supplier->nama_supp ?? '-' }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
                 <td class="px-3 py-2 border">Rp {{ number_format($produk->harga_beli, 0, ',', '.') }}</td>
@@ -98,7 +100,18 @@
 
     {{-- Pagination --}}
     <div class="mt-4">
-        {{ $produks->links('pagination::tailwind') }}
+        {{ $produks->appends(request()->query())->links('pagination::tailwind') }}
     </div>
 </div>
+
+{{-- Script untuk search delay --}}
+<script>
+    let timer;
+    function submitForm() {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            document.getElementById('searchForm').submit();
+        }, 500);
+    }
+</script>
 @endsection

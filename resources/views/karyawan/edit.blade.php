@@ -41,10 +41,17 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium">Password Baru</label>
-            <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti"
-                class="w-full border px-3 py-2 rounded">
-        </div>
+        <label class="block text-sm font-medium">Password Baru</label>
+        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti"
+            class="w-full border px-3 py-2 rounded">
+    </div>
+
+    <div class="mt-2">
+        <label class="block text-sm font-medium">Konfirmasi Password Baru</label>
+        <input type="password" name="password_confirmation"
+            class="w-full border px-3 py-2 rounded">
+    </div>
+
 
         <div class="flex justify-between">
             <a href="{{ route('karyawan.index') }}"
