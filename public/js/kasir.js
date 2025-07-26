@@ -206,6 +206,7 @@ async function konfirmasiBayar() {
                 timer: 2000
             }).then(() => {
                 cetakStruk(
+                    total,
                     document.getElementById('notaDisplay')?.textContent || '',
                     grandTotal,
                     pajak,
@@ -261,7 +262,7 @@ function filterKategori(idKategori) {
     });
 }
 
-function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
+function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
     const itemsHtml = keranjang.map(item => `
         <div style="display: flex; justify-content: space-between; font-size: 12px;">
             <div style="flex: 1;">${item.nama} x${item.jumlah}</div>
@@ -325,7 +326,7 @@ function cetakStruk(nota, grandTotal, pajak, bayar, kembalian) {
             ${itemsHtml}
             <hr>
             <table class="summary-table">
-                <tr><td>Total</td><td>Rp ${formatRupiah(grandTotal - pajak)}</td></tr>
+                <tr><td>Total</td><td>${formatRupiah(total)}</td></tr>
                 <tr><td>Pajak (11%)</td><td>Rp ${formatRupiah(pajak)}</td></tr>
                 <tr><td><strong>Grand Total</strong></td><td><strong>Rp ${formatRupiah(grandTotal)}</strong></td></tr>
                 <tr><td>Bayar</td><td>Rp ${formatRupiah(bayar)}</td></tr>

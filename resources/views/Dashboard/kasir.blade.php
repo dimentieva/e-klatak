@@ -103,7 +103,7 @@
                 data-barcode="{{ $item->nomor_barcode }}">
                 <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"
                     class="w-[150px] h-[150px] object-cover rounded-lg mb-3 border"
-                    onerror="this.src='https://via.placeholder.com/150x150?text=No+Image'" />
+                    onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/250px-No-Image-Placeholder.svg.png'" />
                 <div class="text-sm font-semibold text-gray-800">{{ $item->nama_produk }}</div>
                 <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
                 <div class="text-[#0BB4B2] font-bold mt-1 text-sm">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
