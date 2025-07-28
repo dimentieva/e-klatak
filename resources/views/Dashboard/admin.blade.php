@@ -27,7 +27,7 @@
     <!-- Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-            <p class="text-sm">Total Produk</p>
+            <p class="text-sm">Total Produk </p>
             <h3 class="text-xl font-bold">{{ $totalProduk }}</h3>
         </div>
         <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
