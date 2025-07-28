@@ -41,7 +41,7 @@
 
             <div>
                 <label for="keterangan" class="block font-semibold mb-1">Keterangan* :</label>
-                <input type="text" name="keterangan" id="keterangan" class="w-full border border-gray-300 rounded p-2">
+                <input type="text" name="keterangan" id="keterangan" required class="w-full border border-gray-300 rounded p-2">
             </div>
 
             <div class="flex gap-3 mt-4">

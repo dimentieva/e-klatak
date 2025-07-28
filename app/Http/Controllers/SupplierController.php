@@ -2,75 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
-    // Tampilkan semua data supplier
     public function index(Request $request)
     {
         $keyword = $request->input('search');
 
-        $suppliers = Supplier::query()
-            ->when($keyword, function ($query, $keyword) {
-                $query->where('nama_supp', 'like', "%{$keyword}%")
-                    ->orWhere('kontak', 'like', "%{$keyword}%")
-                    ->orWhere('alamat', 'like', "%{$keyword}%");
+        $query = Supplier::query()
+            ->when($keyword, function ($q) use ($keyword) {
+                $q->where('nama_supp', 'like', "%{$keyword}%")
+                  ->orWhere('kontak', 'like', "%{$keyword}%")
+                  ->orWhere('alamat', 'like', "%{$keyword}%");
             })
-            ->orderBy('id', 'asc')
-            ->paginate(10)
-            ->appends($request->only('search'));
+            ->orderBy('id', 'asc');
 
+        // AJAX Request
+        if ($request->ajax()) {
+            return response()->json($query->get());
+        }
+
+        $suppliers = $query->paginate(5)->withQueryString();
         return view('supplier.supindex', compact('suppliers'));
     }
 
-
-    // Tampilkan form tambah supplier
     public function create()
     {
         return view('supplier.supcreate');
     }
 
-    // Simpan data supplier baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama_supp' => 'required',
-            'kontak' => 'nullable',
-            'alamat' => 'nullable',
+            'nama_supp' => 'required|string|max:255',
+            'kontak' => 'nullable|string|max:100',
+            'alamat' => 'nullable|string',
         ]);
 
         Supplier::create($request->all());
-
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil ditambahkan.');
+        return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil ditambahkan');
     }
 
-    // Tampilkan form edit supplier
-    public function edit(Supplier $supplier)
+    public function edit($id)
     {
+        $supplier = Supplier::findOrFail($id);
         return view('supplier.supedit', compact('supplier'));
     }
 
-    // Update data supplier
-    public function update(Request $request, Supplier $supplier)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_supp' => 'required',
-            'kontak' => 'nullable',
-            'alamat' => 'nullable',
+            'nama_supp' => 'required|string|max:255',
+            'kontak' => 'nullable|string|max:100',
+            'alamat' => 'nullable|string',
         ]);
 
+        $supplier = Supplier::findOrFail($id);
         $supplier->update($request->all());
 
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil diperbarui.');
+        return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil diperbarui');
     }
 
-    // Hapus data supplier
-    public function destroy(Supplier $supplier)
+    public function destroy($id)
     {
+        $supplier = Supplier::findOrFail($id);
         $supplier->delete();
 
-        return redirect()->route('supplier.index')->with('success', 'Supplier berhasil dihapus.');
+        return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil dihapus');
     }
 }
