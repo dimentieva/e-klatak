@@ -4,7 +4,7 @@
 @section('content')
 <div class="flex h-screen bg-gray-50">
     <!-- Sidebar Keranjang -->
-    <div class="w-1/3 bg-white border-r p-6 flex flex-col shadow-md rounded-tr-xl rounded-br-xl">
+    <div class="w-2/5 bg-white border-r p-6 flex flex-col shadow-md rounded-tr-xl rounded-br-xl">
         <div class="flex items-center gap-3 mb-6">
             <img src="{{ asset('assets/eklatak.png') }}" class="w-14 h-14 rounded-full border-2 border-[#0BB4B2]" />
             <h1 class="text-3xl font-extrabold text-[#0BB4B2] tracking-wide">E-Klatak</h1>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Konten Produk -->
-    <div class="w-2/3 bg-white p-6 overflow-auto shadow-inner">
+    <div class="w-3/5 bg-white p-6 overflow-auto shadow-inner">
         <!-- Akun -->
         <div class="flex justify-end mb-6">
             <div class="relative" x-data="{ open: false }" x-cloak>
@@ -119,7 +119,7 @@
         <div id="printArea" class="hidden">
             <div style="font-family: monospace; width: 250px; padding: 10px;">
                 <!-- Header -->
-                <h2 style="text-align: center; margin: 5px 0;">E-Klatak</h2>
+                <h2 style="text-align: center; margin: 5px 0;">Fresh Market Pantai Klatak</h2>
                 <p style="text-align: center; margin: 0;">Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kab. Tulungagung</p>
                 <hr>
 
@@ -158,7 +158,7 @@
 
                 <hr>
                 <p style="text-align: center;">Terima kasih telah berbelanja!</p>
-                <p style="text-align: center;">~ E-Klatak POS ~</p>
+                <p style="text-align: center;">~ E-Klatak ~</p>
             </div>
         </div>
 

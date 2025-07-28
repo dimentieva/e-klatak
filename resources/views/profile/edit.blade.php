@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}">
+    <form method="POST" action="{{ route('profile.update') }}" onsubmit="disableSubmit(this)">
         @csrf
         @method('PUT')
 
@@ -35,11 +35,20 @@
                 class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition duration-150">
                 Batal
             </a>
-            <button type="submit"
+            <button id="submitBtn" type="submit"
                 class="bg-[#0BB4B2] hover:bg-teal-700 text-white font-semibold px-5 py-2 rounded-lg transition duration-150 shadow-md">
                 Simpan Perubahan
             </button>
         </div>
     </form>
 </div>
+
+{{-- Script to disable submit button after click --}}
+<script>
+    function disableSubmit(form) {
+        const btn = form.querySelector('#submitBtn');
+        btn.disabled = true;
+        btn.innerText = 'Menyimpan...';
+    }
+</script>
 @endsection

@@ -15,7 +15,7 @@
 </div>
 @endif
 
-<form action="{{ route('supplier.store') }}" method="POST" class="bg-gray-50 p-6 rounded shadow space-y-4">
+<form id="supplierForm" action="{{ route('supplier.store') }}" method="POST" class="bg-gray-50 p-6 rounded shadow space-y-4">
     @csrf
 
     <div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="flex justify-start space-x-2">
-        <button type="submit"
+        <button id="submitBtn" type="submit"
             class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded font-semibold text-sm transition">
             Simpan
         </button>
@@ -48,4 +48,13 @@
         </a>
     </div>
 </form>
+
+{{-- Script to disable button after submit --}}
+<script>
+    document.getElementById('supplierForm').addEventListener('submit', function () {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Menyimpan...'; 
+    });
+</script>
 @endsection

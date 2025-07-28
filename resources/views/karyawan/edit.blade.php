@@ -16,7 +16,7 @@
     </div>
     @endif
 
-    <form action="{{ route('karyawan.update', $user->id) }}" method="POST" class="space-y-4">
+    <form id="form-edit-karyawan" action="{{ route('karyawan.update', $user->id) }}" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 
@@ -41,29 +41,36 @@
         </div>
 
         <div>
-        <label class="block text-sm font-medium">Password Baru</label>
-        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti"
-            class="w-full border px-3 py-2 rounded">
-    </div>
+            <label class="block text-sm font-medium">Password Baru</label>
+            <input type="password" name="password" placeholder="Kosongkan jika tidak ingin mengganti"
+                class="w-full border px-3 py-2 rounded">
+        </div>
 
-    <div class="mt-2">
-        <label class="block text-sm font-medium">Konfirmasi Password Baru</label>
-        <input type="password" name="password_confirmation"
-            class="w-full border px-3 py-2 rounded">
-    </div>
-
+        <div class="mt-2">
+            <label class="block text-sm font-medium">Konfirmasi Password Baru</label>
+            <input type="password" name="password_confirmation"
+                class="w-full border px-3 py-2 rounded">
+        </div>
 
         <div class="flex justify-between">
             <a href="{{ route('karyawan.index') }}"
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded text-sm font-medium transition">
                 Kembali
             </a>
-            <button type="submit"
+            <button id="btn-update" type="submit"
                 class="bg-[#0BB4B2] hover:bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium transition">
                 Update
             </button>
         </div>
-
     </form>
 </div>
+
+{{-- JavaScript anti double submit --}}
+<script>
+    document.getElementById('form-edit-karyawan').addEventListener('submit', function () {
+        const btn = document.getElementById('btn-update');
+        btn.disabled = true;
+        btn.innerText = 'Mengupdate...';
+    });
+</script>
 @endsection

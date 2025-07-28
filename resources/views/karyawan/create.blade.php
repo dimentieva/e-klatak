@@ -15,7 +15,7 @@
 </div>
 @endif
 
-<form action="{{ route('karyawan.store') }}" method="POST" class="bg-white p-4 rounded shadow space-y-4">
+<form id="form-karyawan" action="{{ route('karyawan.store') }}" method="POST" class="bg-white p-4 rounded shadow space-y-4">
     @csrf
     <div>
         <label class="block text-sm font-medium">Nama</label>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="flex space-x-2">
-        <button type="submit" class="bg-[#0bb4b2] hover:bg-[#0aa5a3] text-white px-4 py-2 rounded transition">
+        <button id="btn-submit" type="submit" class="bg-[#0bb4b2] hover:bg-[#0aa5a3] text-white px-4 py-2 rounded transition">
             Simpan
         </button>
         <a href="{{ route('karyawan.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded transition">
@@ -55,4 +55,13 @@
         </a>
     </div>
 </form>
+
+{{-- JavaScript untuk mencegah double submit --}}
+<script>
+    document.getElementById('form-karyawan').addEventListener('submit', function () {
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true;
+        btn.innerText = 'Menyimpan...';
+    });
+</script>
 @endsection

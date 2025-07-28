@@ -33,7 +33,7 @@
             <tr>
                 <th class="px-3 py-2 border">No</th>
                 <th class="px-3 py-2 border">Nama</th>
-                <th class="px-3 py-2 border">Kontak</th>
+                <th class="px-3 py-2 border">No Hp</th>
                 <th class="px-3 py-2 border">Alamat</th>
                 <th class="px-3 py-2 border">Aksi</th>
             </tr>
@@ -49,7 +49,7 @@
                         <a href="{{ route('supplier.edit', $supplier->id) }}"
                            class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
                         <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST"
-                              class="inline-block" onsubmit="return confirm('Yakin ingin menghapus?')">
+                              class="inline-block" onsubmit="return disableSubmit(this)">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
@@ -71,14 +71,24 @@
     </div>
 </div>
 
-<!-- Live Search JS -->
+<!-- JavaScript -->
 <script>
     let timer;
     function submitForm() {
         clearTimeout(timer);
         timer = setTimeout(() => {
             document.getElementById('searchForm').submit();
-        }, 500); // tunggu 0.5 detik sebelum submit saat user berhenti mengetik
+        }, 500);
+    }
+
+    // Cegah submit ganda
+    function disableSubmit(form) {
+        const button = form.querySelector('button[type="submit"]');
+        if (button) {
+            button.disabled = true;
+            button.innerText = 'Memproses...'; 
+        }
+        return true; 
     }
 </script>
 @endsection

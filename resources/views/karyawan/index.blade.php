@@ -46,8 +46,11 @@
                 <td class="px-3 py-2 border space-x-2">
                     <a href="{{ route('karyawan.edit', $user->id) }}"
                         class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+
+                    {{-- Form Hapus dengan proteksi double submit --}}
                     <form action="{{ route('karyawan.destroy', $user->id) }}" method="POST"
-                        class="inline-block" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+                        class="inline-block"
+                        onsubmit="return handleDelete(this, event)">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -70,6 +73,7 @@
     </div>
 </div>
 
+{{-- JavaScript --}}
 <script>
     function searchUsers() {
         const search = document.getElementById('search').value;
@@ -80,6 +84,17 @@
             params.delete('search');
         }
         window.location.search = params.toString();
+    }
+
+    function handleDelete(form, event) {
+        const confirmed = confirm('Yakin ingin menghapus akun ini?');
+        if (!confirmed) return false;
+
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerText = 'Menghapus...';
+
+        return true;
     }
 </script>
 @endsection

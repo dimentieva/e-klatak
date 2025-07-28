@@ -19,7 +19,6 @@ Route::post('/', [AuthController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard admin dan kasir
-    Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
     Route::get('/dashboard/kasir', [TransaksiController::class, 'index'])->name('dashboard.kasir');
     Route::get('/dashboard/admin', [DashboardController::class, 'index'])->name('dashboard.admin');
     // Profil
@@ -33,7 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('produk', ProdukController::class);
 
     // Transaksi kasir (POS)
-    Route::get('/kasir', [TransaksiController::class, 'index'])->name('transaksi.index'); // Halaman kasir
     Route::post('/kasir', [TransaksiController::class, 'store'])->name('transaksi.store'); // Simpan transaksi
     Route::post('/kasir/tambah/{id}', [TransaksiController::class, 'addToCart'])->name('transaksi.add'); // Tambah item ke keranjang
     Route::post('/kasir/hapus/{id}', [TransaksiController::class, 'remove'])->name('transaksi.remove'); // Hapus item dari keranjang

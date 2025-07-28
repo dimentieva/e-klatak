@@ -16,33 +16,35 @@
     </div>
     @endif
 
-    <form action="{{ route('produk.update', $produk->id_produk) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form id="form-edit-produk" action="{{ route('produk.update', $produk->id_produk) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
 
         <div>
-        <label class="block text-sm font-medium">Kategori</label>
-        <select name="id_categories" class="w-full border px-3 py-2 rounded" required>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}" {{ $produk->id_categories == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                </option>
-            @endforeach
-        </select>
+            <label class="block text-sm font-medium">Kategori</label>
+            <select name="id_categories" class="w-full border px-3 py-2 rounded" required>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ $produk->id_categories == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
         
         <div>
             <label class="block text-sm font-medium">Supplier</label>
             <select name="id_supplier" class="w-full border px-3 py-2 rounded" required>
                 @foreach($suppliers as $supplier)
-                <option value="{{ $supplier->id }}" {{ $produk->id_supplier == $supplier->id ? 'selected' : '' }}>{{ $supplier->nama_supp }}</option>
+                    <option value="{{ $supplier->id }}" {{ $produk->id_supplier == $supplier->id ? 'selected' : '' }}>
+                        {{ $supplier->nama_supp }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
         <div>
             <label class="block text-sm font-medium">Nomor Barcode</label>
-            <input type="text" name="nomor_barcode" value="{{ old('nomor_barcode', $produk->nomor_barcode) }}" class="w-full border px-3 py-2 rounded" required>
+            <input type="text" name="nomor_barcode" value="{{ old('nomor_barcode', $produk->nomor_barcode ?? '') }}" class="w-full border px-3 py-2 rounded" placeholder="(Opsional)">
         </div>
 
         <div>
@@ -60,19 +62,18 @@
                 <input type="number" step="0.01" name="harga_beli" value="{{ old('harga_beli', $produk->harga_beli) }}" class="w-full border px-3 py-2 rounded" required>
             </div>
         </div>
+
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium">Stok</label>
                 <input type="number" name="stok" value="{{ $produk->stok }}" class="w-full border px-3 py-2 rounded bg-gray-100 cursor-not-allowed" readonly>
                 <p class="text-sm text-gray-500 mt-1">Gunakan <strong>Tambah Stok</strong> untuk mengubah stok.</p>
             </div>
-
             <div>
                 <label class="block text-sm font-medium">Batas Stok Minimal</label>
                 <input type="number" name="batas_stok_minimal" value="{{ old('batas_stok_minimal', $produk->batas_stok_minimal) }}" class="w-full border px-3 py-2 rounded" required>
             </div>
         </div>
-
 
         <div>
             <label class="block text-sm font-medium">Status</label>
@@ -94,10 +95,19 @@
             <a href="{{ route('produk.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded text-sm font-medium transition">
                 Batal
             </a>
-            <button type="submit" class="bg-[#0BB4B2] hover:bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium transition">
+            <button id="btn-update" type="submit" class="bg-[#0BB4B2] hover:bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium transition">
                 Update
             </button>
         </div>
     </form>
 </div>
+
+{{-- Script untuk mencegah double submit --}}
+<script>
+    document.getElementById('form-edit-produk').addEventListener('submit', function () {
+        const btn = document.getElementById('btn-update');
+        btn.disabled = true;
+        btn.innerText = 'Memperbarui...';
+    });
+</script>
 @endsection

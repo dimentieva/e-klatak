@@ -79,11 +79,11 @@
                             Stok
                         </a>
                         <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST"
-                            onsubmit="return confirm('Yakin ingin menghapus?')" class="inline-block">
+                            onsubmit="return handleDelete(event, this)" class="inline-block">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
+                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm whitespace-nowrap delete-btn">
                                 Hapus
                             </button>
                         </form>
@@ -112,6 +112,17 @@
         timer = setTimeout(() => {
             document.getElementById('searchForm').submit();
         }, 500);
+    }
+
+    // Script untuk mencegah double delete
+    function handleDelete(event, form) {
+        const confirmed = confirm('Yakin ingin menghapus produk?');
+        if (!confirmed) return false;
+
+        const button = form.querySelector('.delete-btn');
+        button.disabled = true;
+        button.innerText = 'Menghapus...';
+        return true;
     }
 </script>
 @endsection

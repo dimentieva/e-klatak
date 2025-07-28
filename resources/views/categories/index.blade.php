@@ -58,11 +58,16 @@
                     <td class="px-3 py-2 border">
                         <div class="flex flex-wrap gap-2 justify-center">
                             {{-- Tombol Edit --}}
-                            <div x-data="{ showEdit{{ $category->id }}: false }">
-                                <button @click="showEdit{{ $category->id }} = true"
-                                    class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm whitespace-nowrap">
-                                    Edit
-                                </button>
+                           <div x-data="{ showEdit{{ $category->id }}: false, isDisabled: false }">
+                            <button 
+                                @click="if (!isDisabled) { showEdit{{ $category->id }} = true }" 
+                                :disabled="isDisabled"
+                                :class="isDisabled 
+                                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                                    : 'bg-yellow-400 hover:bg-yellow-500 text-black'" 
+                                class="px-3 py-1 rounded text-sm whitespace-nowrap">
+                                Edit
+                            </button>
 
                                 {{-- Modal Edit --}}
                                 <div x-show="showEdit{{ $category->id }}" x-transition
@@ -70,7 +75,7 @@
                                     <div @click.away="showEdit{{ $category->id }} = false"
                                         class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
                                         <h3 class="text-lg font-bold mb-4 text-gray-700">Edit Kategori</h3>
-                                        <form action="{{ route('categories.update', $category->id) }}" method="POST" class="space-y-4">
+                                        <form action="{{ route('categories.update', $category->id) }}" method="POST" class="space-y-4" onsubmit="return disableSubmit(this);">
                                             @csrf
                                             @method('PUT')
                                             <div>
@@ -83,8 +88,7 @@
                                                     class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
                                                     Batal
                                                 </button>
-                                                <button type="submit"
-                                                    class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-semibold">
+                                                <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-semibold submit-btn">
                                                     Simpan
                                                 </button>
                                             </div>
@@ -95,14 +99,15 @@
 
                             {{-- Tombol Hapus --}}
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus?')" class="inline-block">
+                                onsubmit="return confirmDelete(this);" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm whitespace-nowrap">
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm whitespace-nowrap delete-btn">
                                     Hapus
                                 </button>
                             </form>
+
                         </div>
                     </td>
                 </tr>
@@ -121,12 +126,11 @@
     </div>
 
     {{-- MODAL TAMBAH KATEGORI --}}
-    <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        x-transition>
+    <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" x-transition>
         <div @click.away="showModal = false"
             class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
             <h3 class="text-lg font-bold mb-4 text-gray-700">Tambah Kategori</h3>
-            <form action="{{ route('categories.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('categories.store') }}" method="POST" class="space-y-4" onsubmit="return disableSubmit(this);">
                 @csrf
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
@@ -139,7 +143,7 @@
                         Batal
                     </button>
                     <button type="submit"
-                        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-semibold">
+                        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded font-semibold submit-btn">
                         Simpan
                     </button>
                 </div>
@@ -149,7 +153,7 @@
 
 </div>
 
-{{-- Script untuk search delay --}}
+{{-- Script --}}
 <script>
     let timer;
     function submitForm() {
@@ -157,6 +161,29 @@
         timer = setTimeout(() => {
             document.getElementById('searchForm').submit();
         }, 500);
+    }
+
+    function disableSubmit(form) {
+        const btn = form.querySelector('.submit-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+            btn.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+        return true;
+    }
+
+    function confirmDelete(form) {
+        if (confirm('Yakin ingin menghapus?')) {
+            const deleteBtn = form.querySelector('.delete-btn');
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                deleteBtn.innerText = 'Menghapus...';
+                deleteBtn.classList.add('opacity-60', 'cursor-not-allowed');
+            }
+            return true;
+        }
+        return false;
     }
 </script>
 @endsection

@@ -16,7 +16,7 @@
     </div>
     @endif
 
-    <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form id="form-produk" action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
 
         <div>
@@ -45,7 +45,7 @@
 
         <div>
             <label class="block text-sm font-medium">Nomor Barcode (Optional)</label>
-            <input type="text" name="nomor_barcode" value="{{ old('nomor_barcode') }}" class="w-full border px-3 py-2 rounded" required>
+            <input type="text" name="nomor_barcode" value="{{ old('nomor_barcode') }}" class="w-full border px-3 py-2 rounded" placeholder="(Opsional)">
         </div>
 
         <div>
@@ -63,6 +63,7 @@
                 <input type="number" step="0.01" name="harga_beli" value="{{ old('harga_beli') }}" class="w-full border px-3 py-2 rounded" required>
             </div>
         </div>
+
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium">Stok</label>
@@ -93,11 +94,20 @@
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded text-sm font-medium transition">
                 Batal
             </a>
-            <button type="submit"
+            <button id="btn-submit" type="submit"
                 class="bg-[#0BB4B2] hover:bg-teal-700 text-white px-4 py-2 rounded text-sm font-medium transition">
                 Simpan
             </button>
         </div>
     </form>
 </div>
+
+{{-- JavaScript untuk proteksi double submit --}}
+<script>
+    document.getElementById('form-produk').addEventListener('submit', function () {
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true;
+        btn.innerText = 'Menyimpan...';
+    });
+</script>
 @endsection

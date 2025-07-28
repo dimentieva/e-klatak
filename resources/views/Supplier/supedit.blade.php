@@ -15,7 +15,7 @@
     </div>
 @endif
 
-<form action="{{ route('supplier.update', $supplier->id) }}" method="POST" class="space-y-4">
+<form id="formEditSupplier" action="{{ route('supplier.update', $supplier->id) }}" method="POST" class="space-y-4">
     @csrf
     @method('PUT')
 
@@ -35,8 +35,20 @@
     </div>
 
     <div class="flex justify-start space-x-2">
-        <button type="submit" class="bg-[#0bb4b2] hover:bg-[#0aa5a3] text-white px-4 py-2 rounded transition">Update</button>
-        <a href="{{ route('supplier.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded transition">Batal</a>
+        <button id="updateBtn" type="submit" class="bg-[#0bb4b2] hover:bg-[#0aa5a3] text-white px-4 py-2 rounded transition">
+            Update
+        </button>
+        <a href="{{ route('supplier.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded transition">
+            Batal
+        </a>
     </div>
 </form>
+
+<script>
+    document.getElementById('formEditSupplier').addEventListener('submit', function () {
+        const updateBtn = document.getElementById('updateBtn');
+        updateBtn.disabled = true;
+        updateBtn.innerText = 'Mengupdate...';
+    });
+</script>
 @endsection

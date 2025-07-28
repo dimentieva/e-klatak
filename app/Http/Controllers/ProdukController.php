@@ -53,7 +53,7 @@ class ProdukController extends Controller
         $request->validate([
             'id_categories' => 'required|exists:categories,id',
             'id_supplier' => 'required|exists:suppliers,id',
-            'nomor_barcode' => 'required|unique:produk',
+            'nomor_barcode' => 'nullable|unique:produk,nomor_barcode',
             'nama_produk' => 'required|string',
             'harga_jual' => 'required|numeric',
             'harga_beli' => 'required|numeric',
@@ -92,7 +92,7 @@ class ProdukController extends Controller
         $request->validate([
             'id_categories' => 'required|exists:categories,id',
             'id_supplier' => 'required|exists:suppliers,id',
-            'nomor_barcode' => 'required|unique:produk,nomor_barcode,' . $produk->id_produk . ',id_produk',
+            'nomor_barcode' => 'nullable|unique:produk,nomor_barcode,' . $produk->id_produk . ',id_produk',
             'nama_produk' => 'required|string',
             'harga_jual' => 'required|numeric',
             'harga_beli' => 'required|numeric',

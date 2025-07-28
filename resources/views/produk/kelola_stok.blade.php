@@ -17,14 +17,13 @@
 
     {{-- Form Perubahan Stok --}}
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <form action="{{ route('produk.kelola_stok', $produk->id_produk) }}" method="POST" class="space-y-4">
+        <form action="{{ route('produk.kelola_stok', $produk->id_produk) }}" method="POST" class="space-y-4" onsubmit="handleSubmit(event)">
             @csrf
             <div>
                 <label class="block font-semibold mb-1">Produk:</label>
                 <input type="text" value="{{ $produk->nama_produk }}" readonly class="w-full border border-gray-300 rounded p-2 bg-gray-100">
                 <input type="hidden" name="produk_id" value="{{ $produk->id_produk }}">
             </div>
-
 
             <div>
                 <label for="jenis" class="block font-semibold mb-1">Jenis Perubahan:</label>
@@ -47,14 +46,17 @@
 
             <div class="flex gap-3 mt-4">
                 <a href="{{ route('produk.index') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Kembali</a>
-                <button type="reset" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">Batal</button>
-                <button type="submit" class="bg-[#0BB4B2] hover:bg-[#099e9c] text-white px-4 py-2 rounded">Simpan</button>
-
+                <button type="reset" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">Reset</button>
+                <button id="submitBtn" type="submit" class="bg-[#0BB4B2] hover:bg-[#099e9c] text-white px-4 py-2 rounded">
+                    Simpan
+                </button>
             </div>
         </form>
     </div>
+
+    {{-- Riwayat --}}
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Riwayat Perubahan Stok</h2>
-    {{-- Filter Bulan & Tahun --}}
+
     <form method="GET" class="mb-4 flex flex-wrap gap-3 items-center bg-white p-4 rounded-lg shadow">
         <div>
             <label for="bulan" class="block text-sm font-semibold">Bulan:</label>
@@ -126,4 +128,13 @@
         </div>
     </div>
 </div>
+
+{{-- JS: Anti-double submit --}}
+<script>
+    function handleSubmit(event) {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = 'Menyimpan...';
+    }
+</script>
 @endsection

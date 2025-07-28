@@ -4,10 +4,9 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-6">
-    <!-- Header Dashboard + Info User -->
+    <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <h2 class="text-2xl font-bold text-[#0BB4B2]">Dashboard Admin</h2>
-
         <div class="flex items-center space-x-4 mt-4 md:mt-0 bg-white px-4 py-2 rounded shadow-sm border border-gray-200">
             <div class="w-8 h-8 rounded-full bg-[#0BB4B2] text-white flex items-center justify-center font-semibold">
                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
@@ -32,8 +31,8 @@
             <h3 class="text-xl font-bold">{{ $totalProduk }}</h3>
         </div>
         <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
-            <p class="text-sm">Total Pendapatan</p>
-            <h3 class="text-xl font-bold">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
+            <p class="text-sm">Pendapatan Hari ini</p>
+            <h3 class="text-xl font-bold">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}</h3>
         </div>
         <div class="bg-[#0BB4B2] text-white p-4 rounded-lg shadow">
             <p class="text-sm">Total Karyawan</p>
@@ -45,12 +44,12 @@
         </div>
     </div>
 
-    <!-- Table + Chart -->
+    <!-- Table & Chart -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Table -->
         <div class="md:col-span-2 bg-gray-50 rounded-lg p-4 shadow">
             <div class="flex justify-between items-center mb-2">
-                <h3 class="font-semibold text-gray-700">Data Penjualan Terbaru</h3>
+                <h3 class="font-semibold text-gray-700">Data Penjualan Hari Ini</h3>
                 <a href="{{ route('laporan.index') }}" class="text-sm text-[#0BB4B2] hover:underline">Lihat Semua</a>
             </div>
             <div class="overflow-x-auto">
@@ -67,16 +66,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($penjualanTerbaru->take(10) as $index => $transaksi)
+                        @php $rowNumber = 1; @endphp
+                        @forelse ($penjualanHariIni as $transaksi)
                             @foreach ($transaksi->detailTransaksi as $detail)
                                 <tr class="border-b">
-                                    <td class="px-3 py-2">{{ $index + 1 }}</td>
+                                    <td class="px-3 py-2">{{ $rowNumber++ }}</td>
                                     <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
                                     <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
                                     <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
                                     <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
                                     <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                   <td class="px-3 py-2">Rp {{ number_format($detail->sub_total + ($transaksi->pajak / max(count($transaksi->detailTransaksi), 1)), 0, ',', '.') }}</td>
+                                    <td class="px-3 py-2">
+                                        Rp {{ number_format($detail->sub_total + ($transaksi->pajak / max(count($transaksi->detailTransaksi), 1)), 0, ',', '.') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         @empty
@@ -121,14 +123,12 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            // Format angka jadi Rp xxx.xxx
                             const value = context.parsed.y;
-                            const formatted = new Intl.NumberFormat('id-ID', {
+                            return ' ' + new Intl.NumberFormat('id-ID', {
                                 style: 'currency',
                                 currency: 'IDR',
                                 minimumFractionDigits: 0
                             }).format(value);
-                            return ' ' + formatted;
                         }
                     }
                 }
@@ -136,9 +136,7 @@
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
+                    ticks: { precision: 0 }
                 }
             }
         }

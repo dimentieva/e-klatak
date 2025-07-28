@@ -1,4 +1,3 @@
-// kasir.js
 let keranjang = [];
 
 function formatRupiah(angka) {
@@ -45,14 +44,16 @@ async function renderKeranjang() {
                 <td>${item.nama}</td>
                 <td>Rp. ${item.harga.toLocaleString('id-ID')}</td>
                 <td>
-                    <div class="flex items-center gap-1">
-                        <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-2">-</button>
-                        ${item.jumlah}
-                        <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-2">+</button>
+                    <div class="flex items-center gap-2 justify-center">
+                        <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-3 py-1 text-lg font-bold rounded hover:bg-gray-300">−</button>
+                        <span class="mx-2 text-base font-semibold">${item.jumlah}</span>
+                        <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-3 py-1 text-lg font-bold rounded hover:bg-gray-300">+</button>
                     </div>
                 </td>
                 <td>Rp. ${subtotal.toLocaleString('id-ID')}</td>
-                <td><button onclick="hapusItem(${item.id})" class="text-red-500">x</button></td>
+                <td>
+                    <button onclick="hapusItem(${item.id})" class="text-red-500 text-lg font-bold px-3 py-1 rounded hover:bg-red-100">×</button>
+                </td>
             `;
             tbody.appendChild(row);
         });
@@ -119,7 +120,14 @@ function resetKeranjang() {
 }
 
 function bayar() {
-    if (keranjang.length === 0) return alert('Keranjang kosong!');
+    if (keranjang.length === 0) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Keranjang kosong!',
+            text: 'Silakan tambahkan produk terlebih dahulu.'
+        });
+        return;
+    }
 
     const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
     const pajak = total * 0.11;
@@ -171,6 +179,14 @@ async function konfirmasiBayar() {
         return;
     }
 
+    Swal.fire({
+        title: 'Menyimpan Transaksi...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     const keranjangPayload = keranjang.map(item => ({
         id_produk: item.id,
         jumlah: item.jumlah,
@@ -198,6 +214,8 @@ async function konfirmasiBayar() {
         });
 
         const data = await response.json();
+        Swal.close();
+
         if (data.success) {
             Swal.fire({
                 icon: 'success',
@@ -205,19 +223,9 @@ async function konfirmasiBayar() {
                 showConfirmButton: false,
                 timer: 2000
             }).then(() => {
-                cetakStruk(
-                    total,
-                    document.getElementById('notaDisplay')?.textContent || '',
-                    grandTotal,
-                    pajak,
-                    uangDiterima,
-                    kembalian
-                );
-
+                cetakStruk(total, document.getElementById('notaDisplay')?.textContent || '', grandTotal, pajak, uangDiterima, kembalian);
                 keranjang = [];
                 renderKeranjang();
-
-                // ✅ RELOAD halaman setelah cetak dan reset keranjang
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
@@ -230,10 +238,10 @@ async function konfirmasiBayar() {
                 title: 'Gagal Menyimpan Transaksi',
                 text: data.message || 'Terjadi kesalahan.',
             });
-            console.error(data.error);
         }
 
     } catch (error) {
+        Swal.close();
         console.error('Terjadi kesalahan saat menyimpan transaksi:', error);
         Swal.fire({
             icon: 'error',
@@ -241,25 +249,6 @@ async function konfirmasiBayar() {
             text: 'Tidak dapat terhubung ke server.',
         });
     }
-}
-
-function filterKategori(idKategori) {
-    const buttons = document.querySelectorAll('.kategori-button');
-
-    buttons.forEach(btn => {
-        const btnId = btn.getAttribute('data-id');
-        if (btnId == idKategori) {
-            btn.classList.add('active-kategori');
-        } else {
-            btn.classList.remove('active-kategori');
-        }
-    });
-
-    const produkCards = document.querySelectorAll('.produk-card');
-    produkCards.forEach(card => {
-        const kategoriId = card.getAttribute('data-kategori');
-        card.style.display = (idKategori == 0 || kategoriId == idKategori) ? 'flex' : 'none';
-    });
 }
 
 function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
@@ -317,7 +306,7 @@ function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
             </style>
         </head>
         <body>
-            <h2>E-Klatak</h2>
+            <h2>Fresh Market Pantai Klatak</h2>
             <p class="center" style="margin: 0;">Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kab.Tulungagung</p>
             <hr>
             <p>Nota: <span>${nota}</span></p>
@@ -327,14 +316,14 @@ function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
             <hr>
             <table class="summary-table">
                 <tr><td>Total</td><td>${formatRupiah(total)}</td></tr>
-                <tr><td>Pajak (11%)</td><td>Rp ${formatRupiah(pajak)}</td></tr>
-                <tr><td><strong>Grand Total</strong></td><td><strong>Rp ${formatRupiah(grandTotal)}</strong></td></tr>
-                <tr><td>Bayar</td><td>Rp ${formatRupiah(bayar)}</td></tr>
-                <tr><td>Kembalian</td><td>Rp ${formatRupiah(kembalian)}</td></tr>
+                <tr><td>Pajak (11%)</td><td>${formatRupiah(pajak)}</td></tr>
+                <tr><td><strong>Grand Total</strong></td><td><strong>${formatRupiah(grandTotal)}</strong></td></tr>
+                <tr><td>Bayar</td><td>${formatRupiah(bayar)}</td></tr>
+                <tr><td>Kembalian</td><td>${formatRupiah(kembalian)}</td></tr>
             </table>
             <hr>
             <p class="center">Terima kasih telah berbelanja!</p>
-            <p class="center">~ E-Klatak POS ~</p>
+            <p class="center">~ E-Klatak ~</p>
         </body>
         </html>
     `);
@@ -342,6 +331,20 @@ function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
     printWindow.focus();
     printWindow.print();
     printWindow.close();
+}
+
+function filterKategori(idKategori) {
+    const buttons = document.querySelectorAll('.kategori-button');
+    buttons.forEach(btn => {
+        const btnId = btn.getAttribute('data-id');
+        btn.classList.toggle('active-kategori', btnId == idKategori);
+    });
+
+    const produkCards = document.querySelectorAll('.produk-card');
+    produkCards.forEach(card => {
+        const kategoriId = card.getAttribute('data-kategori');
+        card.style.display = (idKategori == 0 || kategoriId == idKategori) ? 'flex' : 'none';
+    });
 }
 
 function searchProduk() {
