@@ -3,6 +3,12 @@
 @section('title', 'Data Kategori - E-KLATAK')
 
 @section('content')
+<div class="mb-4">
+    <a href="{{ route('produk.index') }}"
+        class="inline-flex items-center gap-2 bg-teal-100 hover:bg-teal-200 text-teal-700 px-4 py-2 rounded">
+        ← Kembali
+    </a>
+</div>
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold text-teal-600">Kelola Kategori</h2>
     <button onclick="openCreateModal()"
@@ -197,12 +203,24 @@
     }
 
     function openEditModal(id, name) {
-        const form = document.getElementById('editForm');
-        form.action = `/categories/${id}`;
-        document.getElementById('editName').value = name;
-        document.getElementById('editModal').classList.remove('hidden');
-        document.getElementById('editModal').classList.add('flex');
+    const form = document.getElementById('editForm');
+    form.action = `/admin/categories/${id}`;
+
+    // Pastikan input hidden _method tetap ada dan bernilai PUT
+    let methodInput = form.querySelector('input[name="_method"]');
+    if (!methodInput) {
+        methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        form.appendChild(methodInput);
     }
+    methodInput.value = 'PUT';
+
+    document.getElementById('editName').value = name;
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.add('flex');
+}
+
 
     function closeEditModal() {
         document.getElementById('editModal').classList.add('hidden');
