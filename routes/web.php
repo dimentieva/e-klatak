@@ -42,9 +42,10 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('categories', CategoryController::class);
             Route::get('/api/supplier/search', [SupplierController::class, 'search'])->name('suppliers.search');
             Route::get('/api/karyawan/search', [UserController::class, 'search'])->name('karyawan.search');
+            Route::get('/api/categories/search', [CategoryController::class, 'search'])->name('categories.search');
+            Route::get('/api/produk/search', [ProdukController::class, 'search'])->name('produk.search');
             Route::resource('supplier', SupplierController::class);
             Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
-            Route::get('/api/produk/search', [ProdukController::class, 'search'])->name('produk.search');
             Route::resource('produk', ProdukController::class);
             Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
             Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');

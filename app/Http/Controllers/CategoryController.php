@@ -7,49 +7,64 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Menampilkan daftar kategori dengan pagination
+    // Tampilkan halaman kategori
     public function index(Request $request)
-{
-    $query = Category::query();
+    {
+        $searchQuery = $request->query('search', '');
 
-    // Tambahkan fitur pencarian
-    if ($request->filled('search')) {
-        $query->where('name', 'like', '%' . $request->search . '%');
+        if ($searchQuery) {
+            $categories = Category::where('name', 'like', "%{$searchQuery}%")
+                ->orderBy('created_at', 'asc')
+                ->paginate(10);
+        } else {
+            $categories = Category::orderBy('created_at', 'asc')->paginate(10);
+        }
+
+        return view('categories.index', compact('categories'));
     }
 
-    // Ambil data kategori yang sudah difilter dan paginasi
-    $categories = $query->orderBy('created_at', 'asc')->paginate(10);
+    // Endpoint untuk AJAX search
+    public function search(Request $request)
+    {
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
 
-    return view('categories.index', compact('categories'));
-}
+        $searchQuery = $request->query('search', '');
 
+        $categories = Category::where('name', 'like', "%{$searchQuery}%")
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-    // Menampilkan form tambah kategori
+        return response()->json($categories);
+    }
+
+    // Tampilkan form tambah kategori
     public function create()
     {
         return view('categories.create');
     }
 
-    // Menyimpan kategori baru
+    // Simpan kategori baru
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        Category::create($validatedData); 
+        Category::create($validatedData);
 
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit kategori
+    // Tampilkan form edit kategori
     public function edit($id)
     {
         $category = Category::findOrFail($id);
         return view('categories.edit', compact('category'));
     }
 
-    // Menyimpan perubahan kategori
+    // Simpan perubahan kategori
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -62,7 +77,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
-    // Menghapus kategori
+    // Hapus kategori
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
