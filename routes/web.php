@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/api/karyawan/search', [UserController::class, 'search'])->name('karyawan.search');
             Route::resource('supplier', SupplierController::class);
             Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
+            Route::get('/api/produk/search', [ProdukController::class, 'search'])->name('produk.search');
             Route::resource('produk', ProdukController::class);
             Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
             Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');

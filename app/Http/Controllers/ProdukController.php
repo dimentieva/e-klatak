@@ -195,4 +195,22 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
+    public function search(Request $request)
+{
+    $keyword = $request->search;
+
+    $produk = Produk::with(['category', 'supplier'])
+        ->where('nama_produk', 'like', "%{$keyword}%")
+        ->orWhere('nomor_barcode', 'like', "%{$keyword}%")
+        ->orWhereHas('category', function ($query) use ($keyword) {
+            $query->where('name', 'like', "%{$keyword}%");
+        })
+        ->orWhereHas('supplier', function ($query) use ($keyword) {
+            $query->where('nama_supp', 'like', "%{$keyword}%");
+        })
+        ->get();
+
+    return response()->json($produk);
+}
+
 }
