@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
     // ROUTE UNTUK ADMIN
     // =======================
     Route::middleware(['auth', 'role:admin'])
-        ->prefix('admin') 
+        ->prefix('admin')
         ->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
             Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::resource('categories', CategoryController::class);
             Route::get('/api/supplier/search', [SupplierController::class, 'search'])->name('suppliers.search');
+            Route::get('/api/karyawan/search', [UserController::class, 'search'])->name('karyawan.search');
             Route::resource('supplier', SupplierController::class);
             Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
             Route::resource('produk', ProdukController::class);
@@ -56,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
     // ROUTE UNTUK KASIR
     // =======================
     Route::middleware(['auth', 'role:kasir'])
-        ->prefix('kasir') 
+        ->prefix('kasir')
         ->group(function () {
             Route::get('/dashboard', [TransaksiController::class, 'index'])->name('dashboard.kasir');
 

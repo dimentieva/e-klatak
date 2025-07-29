@@ -11,19 +11,17 @@
     </a>
 </div>
 
+<!-- Form Search -->
+<div class="mb-4">
+    <input type="text" id="searchInput" placeholder="Cari akun..."
+        class="w-full md:w-64 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-teal-500">
+</div>
+
 @if(session('success'))
 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
     {{ session('success') }}
 </div>
 @endif
-
-{{-- Input Search --}}
-<div class="mb-4">
-    <input type="text" name="search" id="search" placeholder="Cari akun..."
-        value="{{ request('search') }}"
-        class="border border-gray-300 rounded px-4 py-2 w-full max-w-sm"
-        oninput="searchUsers()" />
-</div>
 
 <div class="overflow-x-auto bg-gray-50 p-4 rounded shadow">
     <table class="w-full text-sm text-center text-gray-600 border">
@@ -36,7 +34,7 @@
                 <th class="px-3 py-2 border">Aksi</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="userBody">
             @forelse ($users as $index => $user)
             <tr class="border-b">
                 <td class="px-3 py-2 border">{{ $users->firstItem() + $index }}</td>
@@ -46,17 +44,12 @@
                 <td class="px-3 py-2 border space-x-2">
                     <a href="{{ route('karyawan.edit', $user->id) }}"
                         class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
-
-                    {{-- Form Hapus dengan proteksi double submit --}}
                     <form action="{{ route('karyawan.destroy', $user->id) }}" method="POST"
-                        class="inline-block"
-                        onsubmit="return handleDelete(this, event)">
+                        class="inline-block form-delete">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                            Hapus
-                        </button>
+                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
                     </form>
                 </td>
             </tr>
@@ -68,33 +61,104 @@
         </tbody>
     </table>
 
+    <!-- Pagination -->
     <div class="mt-4">
-        {{ $users->withQueryString()->links() }}
+        {{ $users->links('pagination::tailwind') }}
     </div>
 </div>
 
-{{-- JavaScript --}}
+<!-- JavaScript -->
 <script>
-    function searchUsers() {
-        const search = document.getElementById('search').value;
-        const params = new URLSearchParams(window.location.search);
-        if (search) {
-            params.set('search', search);
-        } else {
-            params.delete('search');
-        }
-        window.location.search = params.toString();
+    const searchInput = document.getElementById('searchInput');
+    const userBody = document.getElementById('userBody');
+    const searchUrl = '/admin/api/karyawan/search';
+
+    function debounce(func, delay = 300) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
     }
 
-    function handleDelete(form, event) {
-        const confirmed = confirm('Yakin ingin menghapus akun ini?');
-        if (!confirmed) return false;
+    const fetchAndRenderUsers = async (query) => {
+        try {
+            const response = await fetch(`${searchUrl}?search=${encodeURIComponent(query)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (!response.ok) throw new Error('Gagal ambil data');
+            const users = await response.json();
 
-        const btn = form.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.innerText = 'Menghapus...';
+            userBody.innerHTML = '';
 
-        return true;
+            if (users.length > 0) {
+                users.forEach((user, index) => {
+                    const row = `
+                        <tr class="border-b">
+                            <td class="px-3 py-2 border">${index + 1}</td>
+                            <td class="px-3 py-2 border">${user.name}</td>
+                            <td class="px-3 py-2 border">${user.email}</td>
+                            <td class="px-3 py-2 border capitalize">${user.role}</td>
+                            <td class="px-3 py-2 border space-x-2">
+                                <a href="/karyawan/${user.id}/edit"
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+                                <form action="/karyawan/${user.id}" method="POST"
+                                    class="inline-block form-delete">
+                                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    `;
+                    userBody.insertAdjacentHTML('beforeend', row);
+                });
+                bindDeleteConfirm();
+            } else {
+                userBody.innerHTML = '<tr><td colspan="5" class="text-center px-3 py-4 text-gray-500">Tidak ada data akun.</td></tr>';
+            }
+        } catch (error) {
+            userBody.innerHTML = '<tr><td colspan="5" class="text-center px-3 py-4 text-red-500">Gagal memuat data akun.</td></tr>';
+        }
+    };
+
+    searchInput.addEventListener('input', debounce((event) => {
+        const query = event.target.value.trim();
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('search', query);
+        window.history.pushState({}, '', newUrl);
+        fetchAndRenderUsers(query);
+    }));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialQuery = urlParams.get('search') || '';
+        if (initialQuery) {
+            searchInput.value = initialQuery;
+            fetchAndRenderUsers(initialQuery);
+        }
+        bindDeleteConfirm();
+    });
+
+    function bindDeleteConfirm() {
+        const deleteForms = document.querySelectorAll('.form-delete');
+        deleteForms.forEach(form => {
+            form.onsubmit = function(e) {
+                if (!confirm('Yakin ingin menghapus akun ini?')) {
+                    e.preventDefault();
+                    return false;
+                }
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = 'Menghapus...';
+                }
+                return true;
+            };
+        });
     }
 </script>
 @endsection

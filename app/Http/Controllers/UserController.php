@@ -53,6 +53,20 @@ class UserController extends Controller
         return redirect()->route('karyawan.index')->with('success', 'Akun berhasil ditambahkan.');
     }
 
+    // Search user (AJAX)
+    public function search(Request $request)
+    {
+        $keyword = $request->get('search');
+
+        $users = User::where('name', 'like', "%$keyword%")
+            ->orWhere('email', 'like', "%$keyword%")
+            ->orWhere('role', 'like', "%$keyword%")
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json($users);
+    }
+
     // Tampilkan form edit user
     public function edit(User $user)
     {

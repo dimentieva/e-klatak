@@ -71,7 +71,7 @@
 <script>
     const searchInput = document.getElementById('searchInput');
     const supplierBody = document.getElementById('supplierBody');
-    const searchUrl = '/api/supplier/search';
+    const searchUrl = '/admin/api/supplier/search';
 
     function debounce(func, delay = 300) {
         let timeout;
