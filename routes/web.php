@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Manajemen Data
         Route::resource('categories', CategoryController::class);
+        Route::get('/api/supplier/search', [SupplierController::class, 'search'])->name('suppliers.search');
         Route::resource('supplier', SupplierController::class);
         Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
         Route::resource('produk', ProdukController::class);

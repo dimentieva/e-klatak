@@ -9,23 +9,34 @@ class SupplierController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->input('search');
+        $searchQuery = $request->query('search', '');
 
-        $query = Supplier::query()
-            ->when($keyword, function ($q) use ($keyword) {
-                $q->where('nama_supp', 'like', "%{$keyword}%")
-                  ->orWhere('kontak', 'like', "%{$keyword}%")
-                  ->orWhere('alamat', 'like', "%{$keyword}%");
-            })
-            ->orderBy('id', 'asc');
-
-        // AJAX Request
-        if ($request->ajax()) {
-            return response()->json($query->get());
+        if ($searchQuery) {
+            $suppliers = Supplier::where('nama_supp', 'like', "%{$searchQuery}%")
+                ->orWhere('kontak', 'like', "%{$searchQuery}%")
+                ->orWhere('alamat', 'like', "%{$searchQuery}%")
+                ->paginate(10);
+        } else {
+            $suppliers = Supplier::paginate(10);
         }
 
-        $suppliers = $query->paginate(5)->withQueryString();
         return view('supplier.supindex', compact('suppliers'));
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
+
+        $searchQuery = $request->query('search', '');
+
+        $suppliers = Supplier::where('nama_supp', 'like', "%{$searchQuery}%")
+            ->orWhere('kontak', 'like', "%{$searchQuery}%")
+            ->orWhere('alamat', 'like', "%{$searchQuery}%")
+            ->get();
+
+        return response()->json($suppliers);
     }
 
     public function create()
