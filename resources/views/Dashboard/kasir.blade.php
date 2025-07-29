@@ -3,16 +3,13 @@
 
 @section('content')
 
-<!-- Header Logo -->
+<!-- Header -->
 <div class="bg-white p-4 sm:p-4 border-b shadow-sm">
     <div class="flex items-center justify-between">
-        <!-- Logo -->
         <div class="flex items-center gap-3">
             <img src="{{ asset('assets/eklatak.png') }}" class="w-14 h-14 rounded-full border-2 border-[#0BB4B2]" />
             <h1 class="text-3xl font-extrabold text-[#0BB4B2] tracking-wide">E-Klatak</h1>
         </div>
-
-        <!-- Akun -->
         <div class="relative" x-data="{ open: false }" x-cloak>
             <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-[#0BB4B2] font-medium transition">
                 <svg class="w-5 h-5 text-[#0BB4B2]" fill="currentColor" viewBox="0 0 20 20">
@@ -20,12 +17,10 @@
                 </svg>
                 <span>{{ Auth::user()->name ?? '-' }}</span>
             </button>
-            <div x-show="open" @click.away="open = false" x-transition
-                class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-md z-20">
+            <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-md z-20">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit"
-                        class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition">
+                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition">
                         Logout
                     </button>
                 </form>
@@ -34,13 +29,11 @@
     </div>
 </div>
 
-
-<!-- Konten utama -->
-<div class="flex flex-col-reverse lg:flex-row bg-gray-50 min-h-[calc(50vh-50px)]">
+<!-- Konten -->
+<div class="flex flex-col-reverse lg:flex-row bg-gray-50 min-h-[calc(100vh-100px)]">
 
     <!-- Sidebar Keranjang -->
     <div class="lg:basis-2/5 w-full bg-white border-t lg:border-t-0 lg:border-r p-4 sm:p-6 flex flex-col shadow-md rounded-b-xl lg:rounded-tr-xl lg:rounded-br-xl max-h-screen overflow-y-auto">
-        <!-- TABEL KERANJANG -->
         <div class="overflow-x-auto rounded-lg shadow mb-4">
             <table class="min-w-full text-sm text-center text-gray-700">
                 <thead class="bg-[#0BB4B2] text-white text-xs uppercase tracking-wider">
@@ -53,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody id="keranjang" class="divide-y divide-gray-200 bg-white text-center">
-                    {{-- Diisi dari JavaScript --}}
+                    {{-- Diisi dari JS --}}
                 </tbody>
             </table>
         </div>
@@ -74,8 +67,8 @@
     </div>
 
     <!-- Konten Produk -->
-    <div class="lg:basis-3/5 w-full bg-white p-4 sm:p-6 overflow-auto shadow-inner">
-        <!-- Filter Kategori -->
+    <div class="lg:basis-3/5 w-full bg-white p-4 sm:p-6 overflow-auto shadow-inner flex flex-col">
+        <!-- Kategori -->
         <div class="flex gap-2 mb-4 flex-wrap">
             <button onclick="filterKategori(0)" class="px-4 py-2 rounded-full kategori-button text-sm shadow hover:brightness-110 transition active-kategori" data-id="0">Semua</button>
             @foreach ($categories as $kat)
@@ -85,23 +78,37 @@
             @endforeach
         </div>
 
-        <!-- Search Produk -->
+        <!-- Search -->
         <div class="mb-6">
-            <input type="text" id="searchInput" oninput="searchProduk()" placeholder="Cari nama / ID produk..." class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm shadow focus:outline-none focus:ring-2 focus:ring-[#0BB4B2] focus:border-[#0BB4B2]">
+            <input type="text" id="searchInput" oninput="searchProduk()" placeholder="Cari nama / Barcode produk..." class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm shadow focus:outline-none focus:ring-2 focus:ring-[#0BB4B2] focus:border-[#0BB4B2]">
         </div>
+<!-- List Produk -->
+<div id="produkList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+    @forelse ($produk as $item)
+    <div class="produk-card bg-white rounded-xl p-3 flex flex-col items-center text-center shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1"
+        data-kategori="{{ $item->id_categories }}"
+        data-nama="{{ strtolower($item->nama_produk) }}"
+        data-barcode="{{ $item->nomor_barcode }}">
 
-        <!-- List Produk -->
-        <div id="produkList" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            @foreach ($produk as $item)
-            <div class="produk-card bg-white rounded-xl p-4 flex flex-col items-center text-center shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1" data-kategori="{{ $item->id_categories }}" data-nama="{{ strtolower($item->nama_produk) }}" data-barcode="{{ $item->nomor_barcode }}">
-                <img src="{{ asset('storage/foto_produk/'.$item->foto) }}" class="w-[150px] h-[150px] object-cover rounded-lg mb-3 border" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/250px-No-Image-Placeholder.svg.png'" />
-                <div class="text-sm font-semibold text-gray-800">{{ $item->nama_produk }}</div>
-                <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
-                <div class="text-[#0BB4B2] font-bold mt-1 text-sm">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
-                <button onclick="tambahKeranjang({{ $item->id_produk }}, '{{ addslashes($item->nama_produk) }}', {{ $item->harga_jual }}, {{ $item->stok }})" class="mt-3 w-full py-1.5 rounded-lg text-sm bg-[#0BB4B2] text-white hover:bg-[#099d9c] transition shadow">Tambah</button>
-            </div>
-            @endforeach
-        </div>
+        <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"
+            class="w-full h-[120px] object-cover rounded-lg mb-3 border"
+            onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'" />
+
+        <div class="text-sm font-semibold text-gray-800 truncate w-full">{{ $item->nama_produk }}</div>
+        <div class="text-xs text-gray-500">{{ $item->nomor_barcode }}</div>
+        <div class="text-[#0BB4B2] font-bold mt-1 text-sm">Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}</div>
+
+        <button onclick="tambahKeranjang({{ $item->id_produk }}, '{{ addslashes($item->nama_produk) }}', {{ $item->harga_jual }}, {{ $item->stok }})"
+            class="mt-3 w-full py-1.5 rounded-lg text-sm bg-[#0BB4B2] text-white hover:bg-[#099d9c] transition shadow">
+            Tambah
+        </button>
+    </div>
+    @empty
+    <div class="col-span-full text-center text-gray-400 py-10">
+        Tidak ada produk tersedia.
+    </div>
+    @endforelse
+</div>
 
         <!-- Pagination -->
         <div class="flex justify-center mt-6">
@@ -131,11 +138,10 @@
                 <p style="text-align: center;">~ E-Klatak ~</p>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Modal Pembayaran -->
+<!-- Modal -->
 <x-modal-pembayaran />
 
 @endsection
