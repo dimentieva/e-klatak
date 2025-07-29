@@ -24,52 +24,47 @@ Route::get('/', function () {
 // Proses login
 Route::post('/', [AuthController::class, 'login']);
 
-// Semua route yang memerlukan login
 Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // =======================
-    // ROUTE UNTUK ADMIN SAJA
+    // ROUTE UNTUK ADMIN
     // =======================
-    Route::middleware('role:admin')->group(function () {
-        // Dashboard Admin
-        Route::get('/dashboard/admin', [DashboardController::class, 'index'])->name('dashboard.admin');
+    Route::middleware(['auth', 'role:admin'])
+        ->prefix('admin') 
+        ->group(function () {
+            Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
+            Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+            Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
 
-        // Profil
-        Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
-        Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+            Route::resource('categories', CategoryController::class);
+            Route::resource('supplier', SupplierController::class);
+            Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
+            Route::resource('produk', ProdukController::class);
 
-        // Manajemen Data
-        Route::resource('categories', CategoryController::class);
-        Route::resource('supplier', SupplierController::class);
-        Route::resource('karyawan', UserController::class)->parameters(['karyawan' => 'user']);
-        Route::resource('produk', ProdukController::class);
+            Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
+            Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
 
-        // Log Perubahan Stok
-        Route::get('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'index'])->name('produk.kelola_stok');
-        Route::post('kelola_stok/{produk_id}', [LogPerubahanStokController::class, 'store'])->name('produk.kelola_stok.store');
+            Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+            Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
+        });
 
-        // Laporan
-        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-        Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
-    });
 
     // =======================
-    // ROUTE UNTUK KASIR SAJA
+    // ROUTE UNTUK KASIR
     // =======================
-    Route::middleware('role:kasir')->group(function () {
-        // Dashboard Kasir
-        Route::get('/dashboard/kasir', [TransaksiController::class, 'index'])->name('dashboard.kasir');
+    Route::middleware(['auth', 'role:kasir'])
+        ->prefix('kasir') 
+        ->group(function () {
+            Route::get('/dashboard', [TransaksiController::class, 'index'])->name('dashboard.kasir');
 
-        // Transaksi (POS)
-        Route::post('/kasir', [TransaksiController::class, 'store'])->name('transaksi.store');
-        Route::post('/kasir/tambah/{id}', [TransaksiController::class, 'addToCart'])->name('transaksi.add');
-        Route::post('/kasir/hapus/{id}', [TransaksiController::class, 'remove'])->name('transaksi.remove');
-        Route::post('/kasir/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
+            Route::post('/', [TransaksiController::class, 'store'])->name('transaksi.store');
+            Route::post('/tambah/{id}', [TransaksiController::class, 'addToCart'])->name('transaksi.add');
+            Route::post('/hapus/{id}', [TransaksiController::class, 'remove'])->name('transaksi.remove');
+            Route::post('/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
 
-        // Simpan transaksi dari modal pembayaran
-        Route::post('/transaksi/simpan', [TransaksiController::class, 'store'])->name('components.modal-pembayaran');
-    });
+            Route::post('/simpan', [TransaksiController::class, 'store'])->name('components.modal-pembayaran');
+        });
 });
