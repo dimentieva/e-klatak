@@ -18,24 +18,30 @@ class TransaksiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Produk::query();
+        $q        = trim($request->get('q', ''));
+    $kategori = $request->get('kategori');
+    $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
-        if ($request->has('categories') && $request->categories != '') {
-            $query->where('id_categories', $request->categories);
-        }
-
-        if ($request->has('search') && $request->search != '') {
-            $query->where(function ($q) use ($request) {
-                $q->where('nama_produk', 'like', '%' . $request->search . '%')
-                  ->orWhere('nomor_barcode', 'like', '%' . $request->search . '%');
+    $base = Produk::query()
+        ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
+        ->when($q, function ($qq) use ($q) {
+            $qq->where(function ($s) use ($q) {
+                $s->where('nama_produk', 'like', "%{$q}%")
+                  ->orWhere('nomor_barcode', 'like', "%{$q}%");
             });
-        }
+        })
+        ->orderBy('nama_produk');
 
-        $produk = $query->paginate(8);
-        $categories = Category::all();
-        $cart = session()->get('cart', []);
+    // Search tidak terpengaruh paginate: saat q ada -> tanpa paginate
+    if ($q !== '') {
+        $produk = $base->limit($limitAll)->get();
+    } else {
+        $produk = $base->paginate(5)->appends($request->query());
+    }
 
-        return view('dashboard.kasir', compact('produk', 'categories', 'cart'));
+    $categories = Category::orderBy('name')->get();
+
+    return view('dashboard.kasir', compact('produk', 'categories'));
     }
 
     public function addToCart(Request $request, $id)
