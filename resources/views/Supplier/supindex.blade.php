@@ -36,20 +36,20 @@
         </thead>
         <tbody id="supplierBody">
             @forelse ($suppliers as $index => $supplier)
-            <tr class="border-b">
+            <tr class="px-3 py-2 border">
                 <td class="px-3 py-2 border">{{ $suppliers->firstItem() + $index }}</td>
                 <td class="px-3 py-2 border">{{ $supplier->nama_supp }}</td>
                 <td class="px-3 py-2 border">{{ $supplier->kontak ?? 'Belum Ada' }}</td>
                 <td class="px-3 py-2 border">{{ $supplier->alamat ?? 'Belum Ada' }}</td>
-                <td class="px-3 py-2 border space-x-2">
+                <td class="flex flex-wrap gap-1 justify-center">
                     <a href="{{ route('supplier.edit', $supplier->id) }}"
-                        class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+                        class="bg-yellow-400 hover:bg-yellow-500 text-black px-2 py-1 rounded text-sm">Edit</a>
                     <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST"
                         class="inline-block form-delete">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
+                            class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm">Hapus</button>
                     </form>
                 </td>
             </tr>

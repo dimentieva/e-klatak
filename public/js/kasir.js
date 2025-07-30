@@ -124,7 +124,10 @@ function bayar() {
         Swal.fire({
             icon: 'info',
             title: 'Keranjang kosong!',
-            text: 'Silakan tambahkan produk terlebih dahulu.'
+            text: 'Silakan tambahkan produk terlebih dahulu.',
+             customClass: {
+                confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600',
+            }
         });
         return;
     }

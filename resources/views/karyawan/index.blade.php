@@ -41,7 +41,7 @@
                 <td class="px-3 py-2 border">{{ $user->name }}</td>
                 <td class="px-3 py-2 border">{{ $user->email }}</td>
                 <td class="px-3 py-2 border capitalize">{{ $user->role }}</td>
-                <td class="px-3 py-2 border space-x-2">
+                <td class="flex flex-col sm:flex-row sm:flex-wrap gap-1 justify-center items-center">
                     <a href="{{ route('karyawan.edit', $user->id) }}"
                         class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
                     <form action="{{ route('karyawan.destroy', $user->id) }}" method="POST"
@@ -101,7 +101,7 @@
                             <td class="px-3 py-2 border">${user.name}</td>
                             <td class="px-3 py-2 border">${user.email}</td>
                             <td class="px-3 py-2 border capitalize">${user.role}</td>
-                            <td class="px-3 py-2 border space-x-2">
+                            <td class="flex flex-col sm:flex-row sm:flex-wrap gap-2 justify-center items-center">
                                 <a href="/karyawan/${user.id}/edit"
                                     class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
                                 <form action="/karyawan/${user.id}" method="POST"
