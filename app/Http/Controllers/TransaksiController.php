@@ -18,7 +18,7 @@ class TransaksiController extends Controller
 {
     public function index(Request $request)
     {
-        $q        = trim($request->get('q', ''));
+        $q= trim($request->get('q', ''));
     $kategori = $request->get('kategori');
     $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
@@ -36,7 +36,7 @@ class TransaksiController extends Controller
     if ($q !== '') {
         $produk = $base->limit($limitAll)->get();
     } else {
-        $produk = $base->paginate(5)->appends($request->query());
+        $produk = $base->paginate(10)->appends($request->query());
     }
 
     $categories = Category::orderBy('name')->get();
