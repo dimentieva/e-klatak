@@ -34,7 +34,7 @@
           <label class="text-sm font-semibold">Metode Pembayaran:</label>
           <select id="metodePembayaran"
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:border-[#0BB4B2]">
-            <option value="cash">Cash</option>
+            <option value="cash">Tunai</option>
             <option value="non_tunai">Non Tunai</option>
           </select>
         </div>
