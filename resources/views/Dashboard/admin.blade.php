@@ -60,34 +60,45 @@
                             <th class="px-3 py-2">Kasir</th>
                             <th class="px-3 py-2">Tanggal</th>
                             <th class="px-3 py-2">Produk</th>
-                            <th class="px-3 py-2">Qty</th>
-                            <th class="px-3 py-2">Harga</th>
-                            <th class="px-3 py-2">Subtotal</th>
+                            <th class="px-3 py-2">Jumlah</th>
+                            <th class="px-3 py-2">Sub Total</th>
+                            <th class="px-3 py-2">Grand Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php $rowNumber = 1; @endphp
-                        @forelse ($penjualanHariIni as $transaksi)
-                            @foreach ($transaksi->detailTransaksi as $detail)
-                                <tr class="border-b">
-                                    <td class="px-3 py-2">{{ $rowNumber++ }}</td>
-                                    <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
-                                    <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
-                                    <td class="px-3 py-2">{{ $detail->produk->nama_produk ?? '-' }}</td>
-                                    <td class="px-3 py-2">{{ $detail->jumlah }} pcs</td>
-                                    <td class="px-3 py-2">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                    <td class="px-3 py-2">
-                                        Rp {{ number_format($detail->sub_total + ($transaksi->pajak / max(count($transaksi->detailTransaksi), 1)), 0, ',', '.') }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-gray-500 py-4">Belum ada data penjualan.</td>
-                            </tr>
-                        @endforelse
+            @forelse ($penjualanHariIni as $transaksi)
+                <tr class="border-b">
+                    <td class="px-3 py-2">{{ $rowNumber++ }}</td>
+                    <td class="px-3 py-2">{{ $transaksi->user->name }}</td>
+                    <td class="px-3 py-2">{{ \Carbon\Carbon::parse($transaksi->created_at)->format('d/m/Y') }}</td>
+                    <td class="px-3 py-2">
+                        {{ $transaksi->detailTransaksi->map(function ($item) {
+                            return $item->produk->nama_produk ?? 'Produk dihapus';
+                        })->join(', ') }}
+                    </td>
+                    <td class="px-3 py-2">
+                        {{ $transaksi->detailTransaksi->sum('jumlah') }} pcs
+                    </td>
+                    <td class="px-3 py-2">
+                        Rp {{ number_format($transaksi->detailTransaksi->sum('harga_satuan'), 0, ',', '.') }}
+                    </td>
+                    <td class="px-3 py-2">
+                        Rp {{ number_format( $transaksi->detailTransaksi->sum('harga_satuan') + $transaksi->pajak, 0, ',', '.') }}
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center text-gray-500 py-4">Belum ada data penjualan.</td>
+                </tr>
+            @endforelse
+
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    {{ $penjualanHariIni->links() }}
+                </div>
+
             </div>
         </div>
 

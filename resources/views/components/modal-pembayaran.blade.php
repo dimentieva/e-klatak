@@ -55,10 +55,10 @@
           <span>Pajak</span>
           <span id="pajakDisplay">Rp. 0</span>
         </div>
-        <div class="flex justify-between">
+        <!-- <div class="flex justify-between">
           <span>Diskon</span>
           <span>Rp 0.0</span>
-        </div>
+        </div> -->
         <div class="flex justify-between font-bold border-t pt-2">
           <span>Grand Total</span>
           <span id="grandTotalModal2">Rp. 0</span>

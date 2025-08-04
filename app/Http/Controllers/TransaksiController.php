@@ -24,6 +24,7 @@ class TransaksiController extends Controller
         $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
         $base = Produk::query()
+            ->where('stok', '>', 0)
             ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
             ->when($q, function ($qq) use ($q) {
                 $qq->where(function ($s) use ($q) {
@@ -284,6 +285,14 @@ class TransaksiController extends Controller
             'bold' => 1,
             'align' => 1,
             'format' => 0
+        ];
+
+         $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Pajak: ' . number_format($transaksi->pajak, 0),
+            'bold' => 1,
+            'align' => 2,
+            'format' => 1
         ];
 
         $instructions[] = (object)[
