@@ -83,16 +83,17 @@
             </nav>
         </div>
 
-        <!-- ====== FOOTER STICKY (LOGOUT) ====== -->
-        <div class="sticky bottom-0 left-0 right-0 -mx-4 px-4 pt-3 pb-2 bg-[#0BB4B2] border-t border-white/20">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit"
-                        class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
-                    Logout
-                </button>
-            </form>
-        </div>
+<!-- FOOTER (LOGOUT) -->
+<div class="pt-3 pb-2 border-t border-white/20">
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit"
+                class="w-full text-center bg-[#F8CF63] hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition duration-200">
+            Logout
+        </button>
+    </form>
+</div>
+
     </aside>
 
     <!-- Overlay (mobile) -->

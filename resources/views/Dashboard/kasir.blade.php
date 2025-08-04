@@ -12,7 +12,7 @@
     </div>
 
     <!-- Dropdown User -->
-    <div class="relative" x-data="{ open: false }" x-cloak>
+    <div class="relative z-50" x-data="{ open: false }" x-cloak>
       <button @click="open = !open" class="flex items-center gap-2 text-gray-700 hover:text-[#0BB4B2] font-medium transition text-sm sm:text-base">
         <svg class="w-5 h-5 text-[#0BB4B2]" fill="currentColor" viewBox="0 0 20 20">
           <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-5.6 5a6.978 6.978 0 0111.2 0A2 2 0 0113 18H7a2 2 0 01-2.6-3z" />
