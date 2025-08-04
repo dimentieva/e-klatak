@@ -43,7 +43,7 @@ class DashboardController extends Controller
     $penjualanHariIni = Transaksi::with(['user', 'detailTransaksi.produk'])
         ->whereDate('created_at', Carbon::today())
         ->latest()
-        ->get();
+        ->paginate(10);
 
 
     // Grafik 7 hari terakhir
