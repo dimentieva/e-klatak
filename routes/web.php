@@ -71,3 +71,5 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/simpan', [TransaksiController::class, 'store'])->name('components.modal-pembayaran');
         });
 });
+
+Route::get('/nota-print/{id}', [TransaksiController::class, 'printNota'])->name('transaksi.print');

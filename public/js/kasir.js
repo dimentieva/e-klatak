@@ -226,12 +226,16 @@ async function konfirmasiBayar() {
                 showConfirmButton: false,
                 timer: 2000
             }).then(() => {
-                cetakStruk(total, document.getElementById('notaDisplay')?.textContent || '', grandTotal, pajak, uangDiterima, kembalian);
+                // cetakStruk(total, document.getElementById('notaDisplay')?.textContent || '', grandTotal, pajak, uangDiterima, kembalian);
+                const transaksiId = data.transaksi_id; 
+                
+                cetakNota(transaksiId);
+                
                 keranjang = [];
                 renderKeranjang();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
             });
 
             tutupModal();
@@ -251,6 +255,33 @@ async function konfirmasiBayar() {
             title: 'Kesalahan Server',
             text: 'Tidak dapat terhubung ke server.',
         });
+    }
+}
+
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Fungsi pencetakan yang akan disesuaikan
+function cetakNota(transaksiId) {
+    if (isMobileDevice()) {
+        console.log('Detected mobile device');
+        
+        const baseUrl = window.appUrls.printJson;
+        const printUrl = baseUrl.replace('TRANSACTION_ID_PLACEHOLDER', transaksiId);
+        console.log('Print URL:', printUrl);
+
+        const appSchemeUrl = `my.bluetoothprint.scheme://${window.location.origin}${printUrl}`;
+        console.log('App scheme URL:', appSchemeUrl);
+        window.open(appSchemeUrl, '_self');
+    } else {
+        // Logika untuk mencetak di PC (menggunakan window.print)
+        // const printUrl = `/nota-view/${transaksiId}`; // Buat route baru untuk tampilan nota HTML/CSS
+        // const printWindow = window.open(printUrl, '_blank');
+        // printWindow.onload = () => {
+        //     printWindow.print();
+        // };
+        console.log('Pencetakan di PC tidak didukung dalam mode ini. Gunakan aplikasi mobile untuk mencetak nota.');
     }
 }
 

@@ -13,35 +13,36 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class TransaksiController extends Controller
 {
     public function index(Request $request)
     {
-        $q= trim($request->get('q', ''));
-    $kategori = $request->get('kategori');
-    $limitAll = 200; // batas maksimum item saat mode search (q ada)
+        $q = trim($request->get('q', ''));
+        $kategori = $request->get('kategori');
+        $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
-    $base = Produk::query()
-        ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
-        ->when($q, function ($qq) use ($q) {
-            $qq->where(function ($s) use ($q) {
-                $s->where('nama_produk', 'like', "%{$q}%")
-                  ->orWhere('nomor_barcode', 'like', "%{$q}%");
-            });
-        })
-        ->orderBy('nama_produk');
+        $base = Produk::query()
+            ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
+            ->when($q, function ($qq) use ($q) {
+                $qq->where(function ($s) use ($q) {
+                    $s->where('nama_produk', 'like', "%{$q}%")
+                        ->orWhere('nomor_barcode', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('nama_produk');
 
-    // Search tidak terpengaruh paginate: saat q ada -> tanpa paginate
-    if ($q !== '') {
-        $produk = $base->limit($limitAll)->get();
-    } else {
-        $produk = $base->paginate(10)->appends($request->query());
-    }
+        // Search tidak terpengaruh paginate: saat q ada -> tanpa paginate
+        if ($q !== '') {
+            $produk = $base->limit($limitAll)->get();
+        } else {
+            $produk = $base->paginate(10)->appends($request->query());
+        }
 
-    $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
-    return view('dashboard.kasir', compact('produk', 'categories'));
+        return view('dashboard.kasir', compact('produk', 'categories'));
     }
 
     public function addToCart(Request $request, $id)
@@ -91,85 +92,226 @@ class TransaksiController extends Controller
         return response()->json(['success' => true]);
     }
 
-   public function store(Request $request)
-{
-    try {
-        // Validasi data dasar
-        $request->validate([
-            'total_harga' => 'required|numeric',
-            'jumlah_pembayaran' => 'required|numeric',
-            'kembalian' => 'required|numeric',
-            'metode_bayar' => 'required|string',
-            'pajak' => 'required|numeric',
-            'keranjang' => 'required|array|min:1',
-            'keranjang.*.id_produk' => 'required|exists:produk,id_produk',
-            'keranjang.*.jumlah' => 'required|integer|min:1',
-            'keranjang.*.harga' => 'required|numeric|min:0',
-        ]);
+    public function store(Request $request)
+    {
+        try {
+            // Validasi data dasar
+            $request->validate([
+                'total_harga' => 'required|numeric',
+                'jumlah_pembayaran' => 'required|numeric',
+                'kembalian' => 'required|numeric',
+                'metode_bayar' => 'required|string',
+                'pajak' => 'required|numeric',
+                'keranjang' => 'required|array|min:1',
+                'keranjang.*.id_produk' => 'required|exists:produk,id_produk',
+                'keranjang.*.jumlah' => 'required|integer|min:1',
+                'keranjang.*.harga' => 'required|numeric|min:0',
+            ]);
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        // Simpan transaksi utama
-        $transaksi = Transaksi::create([
-            'id_user' => Auth::id(),
-            'waktu_transaksi' => now(),
-            'nomor_nota' => 'NOTA-' . strtoupper(Str::random(8)),
-            'metode_bayar' => $request->metode_bayar,
-            'total_harga' => $request->total_harga,
-            'jumlah_pembayaran' => $request->jumlah_pembayaran,
-            'kembalian' => $request->kembalian,
-            'pajak' => $request->pajak,
-        ]);
+            // Simpan transaksi utama
+            $transaksi = Transaksi::create([
+                'id_user' => Auth::id(),
+                'waktu_transaksi' => now(),
+                'nomor_nota' => 'NOTA-' . strtoupper(Str::random(8)),
+                'metode_bayar' => $request->metode_bayar,
+                'total_harga' => $request->total_harga,
+                'jumlah_pembayaran' => $request->jumlah_pembayaran,
+                'kembalian' => $request->kembalian,
+                'pajak' => $request->pajak,
+            ]);
 
-        // Loop setiap produk di keranjang
-        foreach ($request->keranjang as $item) {
-            $produk = Produk::findOrFail($item['id_produk']);
-            $stokAwal = $produk->stok;
+            // Loop setiap produk di keranjang
+            foreach ($request->keranjang as $item) {
+                $produk = Produk::findOrFail($item['id_produk']);
+                $stokAwal = $produk->stok;
 
-            // Kurangi stok
-            if ($produk->stok < $item['jumlah']) {
-                throw new \Exception("Stok produk {$produk->nama_produk} tidak mencukupi.");
+                // Kurangi stok
+                if ($produk->stok < $item['jumlah']) {
+                    throw new \Exception("Stok produk {$produk->nama_produk} tidak mencukupi.");
+                }
+
+                $produk->stok -= $item['jumlah'];
+                $produk->save();
+
+                // Simpan detail transaksi
+                DetailTransaksi::create([
+                    'id_transaksi' => $transaksi->id_transaksi,
+                    'id_produk' => $item['id_produk'],
+                    'jumlah' => $item['jumlah'],
+                    'harga_satuan' => $item['harga'],
+                    'diskon' => $item['diskon'] ?? 0,
+                    'sub_total' => $item['sub_total'],
+                ]);
+
+                // Simpan log stok
+                LogPerubahanStok::create([
+                    'id_produk' => $item['id_produk'],
+                    'jenis' => 'kurang',
+                    'jumlah_perubahan' => -$item['jumlah'],
+                    'stok_awal' => $stokAwal,
+                    'stok_akhir' => $produk->stok,
+                    'keterangan' => 'Transaksi #' . $transaksi->nomor_nota,
+                    'created_by' => Auth::check() ? Auth::user()->name : 'admin',
+                ]);
             }
 
-            $produk->stok -= $item['jumlah'];
-            $produk->save();
+            DB::commit();
 
-            // Simpan detail transaksi
-            DetailTransaksi::create([
-                'id_transaksi' => $transaksi->id_transaksi,
-                'id_produk' => $item['id_produk'],
-                'jumlah' => $item['jumlah'],
-                'harga_satuan' => $item['harga'],
-                'diskon' => $item['diskon'] ?? 0,
-                'sub_total' => $item['sub_total'],
-            ]);
-
-            // Simpan log stok
-            LogPerubahanStok::create([
-                'id_produk' => $item['id_produk'],
-                'jenis' => 'kurang',
-                'jumlah_perubahan' => -$item['jumlah'],
-                'stok_awal' => $stokAwal,
-                'stok_akhir' => $produk->stok,
-                'keterangan' => 'Transaksi #' . $transaksi->nomor_nota,
-                'created_by' => Auth::check() ? Auth::user()->name : 'admin',
-            ]);
+            return response()->json(['success' => true, 'message' => 'Transaksi berhasil disimpan', 'transaksi_id' => $transaksi->id_transaksi], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
-
-        DB::commit();
-
-        return response()->json(['success' => true, 'message' => 'Transaksi berhasil disimpan']);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-        ], 500);
     }
-}
+
     public function getSubtotalDashboard()
     {
         $subtotal = DetailTransaksi::sum('sub_total');
         return $subtotal;
+    }
+
+    public function printNota($id)
+    {
+        \Log::info('printNota called with id: ' . $id);
+
+        $transaksi = Transaksi::with('detailTransaksi.produk')->find($id);
+
+        if (!$transaksi) {
+            \Log::warning('Transaksi not found for id: ' . $id);
+            return new JsonResponse([], 404);
+        }
+
+        \Log::info('Transaksi found', ['transaksi' => $transaksi]);
+
+        $instructions = [];
+
+        // Header
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'E-klatak',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 3
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Jl. Pantai Waru Doyong Klatak,<br /> Keboireng, Kec. Besuki,<br /> Kabupaten Tulungagung',
+            'bold' => 0,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Pantai Klatak',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        // Transaction details
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'No. Nota: ' . $transaksi->nomor_nota,
+            'bold' => 0,
+            'align' => 0,
+            'format' => 0
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Waktu: ' . $transaksi->waktu_transaksi,
+            'bold' => 0,
+            'align' => 0,
+            'format' => 0
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => '--------------------------------',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        // Contoh alternatif tanpa tabel HTML:
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Produk         Jumlah   Subtotal',
+            'bold' => 1,
+            'align' => 0,
+            'format' => 4
+        ];
+        foreach ($transaksi->detailTransaksi as $detail) {
+            // Siapkan data
+            $namaProduk = substr($detail->produk->nama_produk ?? 'N/A', 0, 14);
+            $jumlah = $detail->jumlah;
+            $harga = number_format($detail->sub_total ?? 0, 0, ',', '.');
+
+            // --- Bagian yang diubah ---
+            // Pad string nama produk hingga 15 karakter
+            $namaFormatted = str_pad($namaProduk, 14, ' ', STR_PAD_RIGHT);
+
+            // Pad string jumlah hingga 2 karakter
+            $jumlahFormatted = str_pad($jumlah, 6, ' ', STR_PAD_LEFT);
+
+            // Pad string harga hingga 6 karakter
+            $hargaFormatted = str_pad($harga, 10, ' ', STR_PAD_LEFT);
+
+            // Gabungkan string yang sudah dirapikan
+            $content = $namaFormatted . ' ' . $jumlahFormatted . ' ' . $hargaFormatted;
+
+            // Masukkan ke dalam array instruksi
+            $instructions[] = (object)[
+                'type' => 0,
+                'content' => $content,
+                'bold' => 0,
+                'align' => 0,
+                'format' => 4
+            ];
+        }
+
+        // Total section
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => '--------------------------------',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Total: ' . number_format($transaksi->total_harga, 0),
+            'bold' => 1,
+            'align' => 2,
+            'format' => 1
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => '--------------------------------',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        $instructions[] = (object)[
+            'type' => 0,
+            'content' => 'Terima kasih telah berbelanja di E-klatak',
+            'bold' => 1,
+            'align' => 1,
+            'format' => 0
+        ];
+
+        \Log::info('Print instructions prepared', ['instructions' => $instructions]);
+
+        return response()->json($instructions, 200, [], JSON_FORCE_OBJECT);
     }
 }

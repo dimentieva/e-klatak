@@ -200,6 +200,13 @@
 @endsection
 
 @push('scripts')
+<script>
+  // Buat objek global untuk menyimpan semua URL yang dibutuhkan
+  window.appUrls = {
+    printJson: "{{ route('transaksi.print', ['id' => 'TRANSACTION_ID_PLACEHOLDER'], false) }}"
+  };
+</script>
+
 <script src="{{ asset('js/kasir.js') }}"></script>
 
 <script>
