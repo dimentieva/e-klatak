@@ -115,10 +115,18 @@
 
         <div id="produkList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 md:min-h-0">
           @forelse ($produk as $item)
-            <div class="produk-card bg-white rounded-xl p-2.5 sm:p-3 flex flex-col items-center text-center shadow-md hover:shadow-lg transition-transform hover:-translate-y-1"
-                 data-kategori="{{ $item->id_categories }}"
-                 data-nama="{{ strtolower($item->nama_produk) }}"
-                 data-barcode="{{ $item->nomor_barcode }}">
+            <div class="produk-card relative bg-white rounded-xl p-2.5 sm:p-3 flex flex-col items-center text-center shadow-md hover:shadow-lg transition-transform hover:-translate-y-1"
+                data-kategori="{{ $item->id_categories }}"
+                data-nama="{{ strtolower($item->nama_produk) }}"
+                data-barcode="{{ $item->nomor_barcode }}">
+
+              {{-- Label Stok Habis --}}
+              @if ($item->stok == 0)
+                <div class="absolute top-2 left-2 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded shadow z-10">
+                  Stok Habis
+                </div>
+              @endif
+
               <img src="{{ asset('storage/foto_produk/'.$item->foto) }}"
                    class="w-full h-28 sm:h-32 md:h-40 lg:h-44 object-cover rounded-lg mb-2.5 sm:mb-3 border"
                    onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'"

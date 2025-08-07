@@ -24,7 +24,6 @@ class TransaksiController extends Controller
         $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
         $base = Produk::query()
-            ->where('stok', '>', 0)
             ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
             ->when($q, function ($qq) use ($q) {
                 $qq->where(function ($s) use ($q) {
