@@ -79,9 +79,9 @@
                 <a href="#tentang" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
                   Jelajahi
                  </a>
-                <a href="#gallery" class="px-8 py-3.5 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 flex items-center">
+                {{-- <a href="#gallery" class="px-8 py-3.5 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 flex items-center">
                   Galeri
-                </a>
+                </a> --}}
               </div>
             </div>
           </div>
@@ -99,7 +99,7 @@
                 Menyaksikan langsung kehidupan nelayan tradisional dan hasil tangkapan laut segar setiap hari.
               </p>
               <div class="flex flex-wrap gap-4 animate-fadeInUp delay-200">
-                <a href="#aktivitas" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
+                <a href="#gallery" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
                   Aktivitas
                 </a>
               </div>
@@ -129,20 +129,6 @@
       </ul>
     </div>
     
-    <!-- Navigation Arrows -->
-    <div class="glide__arrows absolute w-full top-1/2 transform -translate-y-1/2 z-20 px-4" data-glide-el="controls">
-      <button class="glide__arrow glide__arrow--left absolute left-4 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-300 shadow-lg" data-glide-dir="<">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button class="glide__arrow glide__arrow--right absolute right-4 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-3 transition-all duration-300 shadow-lg" data-glide-dir=">">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </div>
-    
     <!-- Bullet Indicators -->
     <div class="glide__bullets absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20" data-glide-el="controls[nav]">
       <button class="glide__bullet w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all duration-300" data-glide-dir="=0"></button>
@@ -162,7 +148,7 @@
     <div>
       <h2 class="text-3xl font-bold text-[#0BB4B2] mb-6">Tentang Pantai Klatak</h2>
       <p class="text-gray-700 mb-4 leading-relaxed" style="text-align: justify;">
-        Pantai Klatak terletak di Desa Keboireng, Kecamatan Besuki, Kabupaten Tulungagung, Jawa Timur. Pantai ini menyuguhkan pesona alam yang memikat dengan pasir hitam yang eksotis, ombak yang tenang, dan suasana khas pesisir selatan.
+        Pantai Klatak terletak di Desa Keboireng, Kecamatan Besuki, Kabupaten Tulungagung, Jawa Timur. Pantai ini menyuguhkan pesona alam yang memikat dengan pasir hitam yang eksotis, ombak yang tenang, goa glogok yang asri dan suasana khas pesisir selatan.
       </p>
       <p class="text-gray-700 mb-6 leading-relaxed" style="text-align: justify;">
         Lebih dari sekadar destinasi wisata, Pantai Klatak memberikan pengalaman yang unik melalui kampung nelayan yang ramah dan hangat. Wisatawan bisa menyaksikan aktivitas para nelayan melaut, melihat perahu-perahu tradisional yang berlabuh, hingga menikmati langsung hasil tangkapan segar serta  beragam produk olahan laut khas Pantai Klatak di fresh market yang dikelola oleh warga setempat.
@@ -170,7 +156,7 @@
       <div class="flex flex-wrap gap-3">
         <span class="bg-[#0BB4B2]/10 text-[#0BB4B2] px-4 py-2 rounded-full">Pasir Hitam</span>
         <span class="bg-[#0BB4B2]/10 text-[#0BB4B2] px-4 py-2 rounded-full">Kampung Nelayan</span>
-        <span class="bg-[#0BB4B2]/10 text-[#0BB4B2] px-4 py-2 rounded-full">Sunset Indah</span>
+        <span class="bg-[#0BB4B2]/10 text-[#0BB4B2] px-4 py-2 rounded-full">Goa Glogok</span>
         <span class="bg-[#0BB4B2]/10 text-[#0BB4B2] px-4 py-2 rounded-full">Fresh Market</span>
       </div>
     </div>
@@ -260,7 +246,7 @@
     <div class="text-center mb-16">
       <h2 class="text-4xl font-bold text-[#0BB4B2] mb-4">Fresh Market Pantai Klatak</h2>
       <div class="w-24 h-1 bg-[#0BB4B2] mx-auto mb-6"></div>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">Hasil Olahan yang dikelola oleh BUM Desa Karyaw</p>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">Hasil Olahan yang dikelola oleh BUM Desa Karya Nyata</p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-10 items-start">
@@ -362,7 +348,7 @@
               <img src="{{ asset('assets/market/ikan-tongkol.jpg') }}" alt="Ikan Tongkol" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Ikan Tongkol</h4>
+                  <h4 class="font-bold">Sambal Ikan Tuna</h4>
                   <p class="text-sm">Rp35.000/kg</p>
                 </div>
               </div>
@@ -373,7 +359,7 @@
               <img src="{{ asset('assets/market/cumi.jpg') }}" alt="Cumi-Cumi" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Cumi-Cumi</h4>
+                  <h4 class="font-bold">Stik Ikan</h4>
                   <p class="text-sm">Rp65.000/kg</p>
                 </div>
               </div>
@@ -384,7 +370,7 @@
               <img src="{{ asset('assets/market/udang.jpg') }}" alt="Udang Vaname" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Udang Vaname</h4>
+                  <h4 class="font-bold">Abon Ikan</h4>
                   <p class="text-sm">Rp75.000/kg</p>
                 </div>
               </div>
@@ -395,8 +381,8 @@
               <img src="{{ asset('assets/market/kerang.jpg') }}" alt="Kerang Hijau" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Kerang Hijau</h4>
-                  <p class="text-sm">Rp25.000/kg</p>
+                  <h4 class="font-bold">Sambal Ikan Tongkol</h4>
+                  <p class="text-sm">Rp25.000/pcs</p>
                 </div>
               </div>
             </div>
@@ -454,7 +440,7 @@
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
             <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
               <h3 class="text-xl font-bold mb-2">Pasir Hitam Eksotis</h3>
-              <p class="text-sm">Keunikan pasir vulkanik Pantai Klatak</p>
+              <p class="text-sm">Keunikan pasir eksotis dan bebatuan Pantai Klatak</p>
             </div>
           </div>
         </div>
@@ -506,7 +492,7 @@
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
             <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
               <h3 class="text-xl font-bold mb-2">Area Parkir Luas</h3>
-              <p class="text-sm">Parkir aman untuk kendaraan Anda</p>
+              <p class="text-sm">Parkir aman da untuk kendaraan Anda</p>
             </div>
           </div>
         </div>
@@ -700,111 +686,129 @@
     </div>
   </div>
 </section>
-
-
-
-{{-- CTA --}}
-<section class="py-16 bg-[#0BB4B2] text-white">
-  <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-3xl font-bold mb-6">Siap Mengunjungi Pantai Klatak?</h2>
-    <p class="text-xl mb-8 max-w-2xl mx-auto">Pesan tiket Anda sekarang dan nikmati pengalaman liburan yang tak terlupakan</p>
-    <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a href="#" class="px-8 py-4 bg-white text-[#0BB4B2] rounded-full font-semibold hover:bg-gray-100 transition duration-300 shadow-lg hover:shadow-xl">
-        Pesan Tiket Sekarang
-      </a>
-      <a href="#kontak" class="px-8 py-4 border-2 border-white rounded-full font-semibold hover:bg-white/10 transition duration-300 shadow-lg hover:shadow-xl">
-        Hubungi Kami
-      </a>
+<section class="py-12 bg-[#0BB4B2] text-white relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+    <div class="pt-4">
+      <p class="text-xl md:text-2xl mb-8 font-medium">Supported By:</p>
+      <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6"> <!-- Reduced gap -->
+        <!-- Logo 1 -->
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300"> <!-- Reduced size and padding -->
+          <img src="{{ asset('assets/tutwuri.png') }}" alt="Kemendikbud" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 2 -->
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/dikti.png') }}" alt="Ditjen Dikti" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 3 -->
+        <div class="w-32 h-16 md:w-36 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/ormawa.png') }}" alt="Ormawa" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 4 -->
+        <div class="w-24 h-16 md:w-28 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/udinus.png') }}" alt="Universitas Dian Nuswantoro" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 5 -->
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/ppk.png') }}" alt="PPK Ormawa" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 6 -->
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/biro.png') }}" alt="Biro Sistem Informasi" class="w-full h-full object-contain object-center">
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-{{-- Footer --}}
-<footer class="bg-gray-900 text-white pt-16 pb-8">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="grid md:grid-cols-4 gap-8 mb-12">
-      <div>
-        <h3 class="text-xl font-bold text-[#0BB4B2] mb-4 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Pantai Klatak
+<footer class="bg-gray-900 text-white pt-12 pb-6">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-8">
+      <!-- Kolom 1 - Brand & Sosial Media -->
+      <div class="text-center md:text-left">
+        <h3 class="text-xl font-bold text-[#0BB4B2] mb-4 flex flex-col md:flex-row items-center justify-center md:justify-start">
+          <span class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Pantai Klatak
+          </span>
         </h3>
-        <p class="text-gray-400">Pesona pasir hitam eksotis & ombak tenang di Tulungagung/p>
-        <div class="flex space-x-4 mt-4">
-          <a href="#" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+        <p class="text-gray-400 mb-3 text-sm md:text-base">
+          Connect with Us:
+        </p>
+        <div class="flex justify-center md:justify-start space-x-4">
+          <!-- TikTok -->
+          <a href="https://www.tiktok.com/@pantaiklatak.ofc" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
             </svg>
           </a>
-          <a href="#" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+          
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/pantaiklatak.ofc" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
             </svg>
           </a>
-          <a href="#" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+          
+          <!-- Shopee -->
+          <a href="#" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
           </a>
         </div>
       </div>
-      
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Tautan Cepat</h4>
+
+      <!-- Kolom 2 - Tautan Cepat -->
+      <div class="text-center md:text-left">
+        <h4 class="text-lg font-semibold mb-3 sm:mb-4">Tautan Cepat</h4>
         <ul class="space-y-2">
-          <li><a href="#tentang" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">Tentang</a></li>
-          <li><a href="#gallery" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">Galeri</a></li>
-          <li><a href="#fasilitas" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">Fasilitas</a></li>
-          <li><a href="#harga" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">Harga Tiket</a></li>
-          <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200">Login</a></li>
+          <li><a href="#tentang" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Tentang</a></li>
+          <li><a href="#gallery" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Galeri</a></li>
+          <li><a href="#fasilitas" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Fasilitas</a></li>
+          <li><a href="#market" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Fresh Market</a></li>
         </ul>
       </div>
-      
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Kontak Kami</h4>
+
+      <!-- Kolom 3 - Kontak -->
+      <div class="text-center md:text-left">
+        <h4 class="text-lg font-semibold mb-3 sm:mb-4">Kontak Kami</h4>
         <ul class="space-y-2 text-gray-400">
-          <li class="flex items-start">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Jalan Pantai Waru Doyong Klatak, Soireng, Keboireng, Kec. Besuki, Kabupaten Tulungagung, Jawa Timur 66275
+          <li class="flex flex-col sm:flex-row items-center justify-center md:justify-start text-sm sm:text-base">
+            <span class="flex items-center mb-1 sm:mb-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              Jl. Pantai Waru Doyong Klatak
+            </span>
+            <span class="sm:ml-5">Soireng, Keboireng, Besuki</span>
           </li>
-          <li class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          <li class="flex items-center justify-center md:justify-start text-sm sm:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
             </svg>
             0812-XXXX-XXXX
           </li>
-          <li class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <li class="flex items-center justify-center md:justify-start text-sm sm:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
             info@pantaiklatak.com
           </li>
         </ul>
       </div>
-      
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Jam Operasional</h4>
-        <div class="bg-gray-800/50 rounded-lg p-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-gray-400">Senin - Minggu</span>
-            <span class="font-medium">06.00 - 18.00</span>
-          </div>
-        </div>
-      </div>
     </div>
     
-    <div class="border-t border-gray-800 pt-8 text-center text-gray-500">
+    <!-- Copyright -->
+    <div class="border-t border-gray-800 pt-6 text-center text-gray-500 text-xs sm:text-sm">
       <p>&copy; {{ date('Y') }} Pantai Klatak. All rights reserved.</p>
-      <p class="mt-2 text-sm">Developed by PPK Ormawa Biro Sistem Informasi Udinus Kampus Kota Kediri</p>
+      <p class="mt-1">Developed by PPK Ormawa Biro Sistem Informasi Udinus Kampus Kota Kediri</p>
     </div>
   </div>
 </footer>
-@endsection
 
 <style>
   /* Navbar animation */
