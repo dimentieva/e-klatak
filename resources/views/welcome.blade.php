@@ -659,12 +659,25 @@
 {{-- Goa Glogok --}}
 <section class="py-20 bg-white">
   <div class="max-w-6xl mx-auto px-6">
+
+    {{-- Judul & Deskripsi --}}
     <div class="text-center mb-16">
       <h2 class="text-3xl font-bold text-[#0BB4B2] mb-3">Eksplorasi Goa Glogok</h2>
+          {{-- Gambar Goa --}}
+<div class="mb-8 text-center">
+  <img 
+    src="{{ asset('assets/goa-glogok.jpg') }}" 
+    alt="Goa Glogok" 
+    class="w-[200px] h-[200px] object-cover rounded-xl shadow-md mx-auto"
+  >
+</div>
+
       <p class="text-gray-600 max-w-2xl mx-auto">
         Goa Glogok adalah salah satu destinasi alam tersembunyi yang berada di kawasan Pantai Klatak, Tulungagung. Tempat ini menawarkan pengalaman berwisata yang berbeda dengan suasana goa alami yang sejuk dan penuh keindahan alam.
       </p>
     </div>
+
+    {{-- Tiga Kolom Informasi --}}
     <div class="grid md:grid-cols-3 gap-8">
       <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-gray-700">
         <h3 class="text-xl font-semibold mb-4">Keunikan Goa</h3>
@@ -687,6 +700,7 @@
     </div>
   </div>
 </section>
+
 
 
 {{-- CTA --}}
