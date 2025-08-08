@@ -33,7 +33,7 @@
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0BB4B2] transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a href="{{ route('login') }}" class="ml-4 px-6 py-2 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5">
-          Login
+          E-Klatak
         </a>
       </div>
 
@@ -55,7 +55,7 @@
       <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Galeri</a>
       <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Fasilitas</a>
       <a href="#market" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Fresh Market</a>
-      <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] mt-2">Login</a>
+      <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] mt-2">E-Klatak</a>
     </div>
   </div>
 </nav>
@@ -499,13 +499,13 @@
       </div>
     </div>
 
-    {{-- View More Button --}}
+    <!-- {{-- View More Button --}}
     <div class="text-center mt-12">
       <button class="px-8 py-3 bg-transparent border-2 border-[#0BB4B2] text-[#0BB4B2] rounded-full hover:bg-[#0BB4B2] hover:text-white transition duration-300 font-medium">
         Lihat Lebih Banyak Foto
       </button>
     </div>
-  </div>
+  </div> -->
 </section>
 
 {{-- Lightbox Modal --}}
@@ -686,34 +686,35 @@
     </div>
   </div>
 </section>
+
 <section class="py-12 bg-[#0BB4B2] text-white relative overflow-hidden">
   <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
     <div class="pt-4">
       <p class="text-xl md:text-2xl mb-8 font-medium">Supported By:</p>
-      <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6"> <!-- Reduced gap -->
-        <!-- Logo 1 -->
-        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300"> <!-- Reduced size and padding -->
+      <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+        <!-- Logo 1 - Kemendikbud -->
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/tutwuri.png') }}" alt="Kemendikbud" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 2 -->
+        <!-- Logo 2 - Dikti -->
         <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/dikti.png') }}" alt="Ditjen Dikti" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 3 -->
-        <div class="w-32 h-16 md:w-36 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <!-- Logo 3 - ORMAWA (diperbesar) -->
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/ormawa.png') }}" alt="Ormawa" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 4 -->
-        <div class="w-24 h-16 md:w-28 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <!-- Logo 4 - UDINUS (diperbesar) -->
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/udinus.png') }}" alt="Universitas Dian Nuswantoro" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 5 -->
-        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
-          <img src="{{ asset('assets/ppk.png') }}" alt="PPK Ormawa" class="w-full h-full object-contain object-center">
-        </div>
-        <!-- Logo 6 -->
+        <!-- Logo 5 - Biro -->
         <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/biro.png') }}" alt="Biro Sistem Informasi" class="w-full h-full object-contain object-center">
+        </div>
+        <!-- Logo 6 - PPK (diperbesar) -->
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+          <img src="{{ asset('assets/ppk.png') }}" alt="PPK Ormawa" class="w-full h-full object-contain object-center">
         </div>
       </div>
     </div>
