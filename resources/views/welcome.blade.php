@@ -642,51 +642,7 @@
   </div>
 </section>
 
-{{-- Goa Glogok --}}
-<section class="py-20 bg-white">
-  <div class="max-w-6xl mx-auto px-6">
-
-    {{-- Judul & Deskripsi --}}
-    <div class="text-center mb-16">
-      <h2 class="text-3xl font-bold text-[#0BB4B2] mb-3">Eksplorasi Goa Glogok</h2>
-          {{-- Gambar Goa --}}
-<div class="mb-8 text-center">
-  <img 
-    src="{{ asset('assets/goa-glogok.jpg') }}" 
-    alt="Goa Glogok" 
-    class="w-[200px] h-[200px] object-cover rounded-xl shadow-md mx-auto"
-  >
-</div>
-
-      <p class="text-gray-600 max-w-2xl mx-auto">
-        Goa Glogok adalah salah satu destinasi alam tersembunyi yang berada di kawasan Pantai Klatak, Tulungagung. Tempat ini menawarkan pengalaman berwisata yang berbeda dengan suasana goa alami yang sejuk dan penuh keindahan alam.
-      </p>
-    </div>
-
-    {{-- Tiga Kolom Informasi --}}
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-gray-700">
-        <h3 class="text-xl font-semibold mb-4">Keunikan Goa</h3>
-        <p>
-          Goa Glogok memiliki formasi batuan alami yang eksotis serta suara tetesan air yang menciptakan suasana hening dan damai. Cocok untuk wisatawan yang menyukai ketenangan dan eksplorasi alam.
-        </p>
-      </div>
-      <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-gray-700">
-        <h3 class="text-xl font-semibold mb-4">Akses dan Lokasi</h3>
-        <p>
-          Goa ini dapat diakses dengan berjalan kaki dari area utama Pantai Klatak. Perjalanan menuju goa melewati jalur alami yang memberikan sensasi petualangan tersendiri bagi para pengunjung.
-        </p>
-      </div>
-      <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition duration-300 text-gray-700">
-        <h3 class="text-xl font-semibold mb-4">Tips Berkunjung</h3>
-        <p>
-          Disarankan untuk membawa senter dan mengenakan alas kaki yang nyaman karena jalurnya cukup berbatu dan lembap. Waktu terbaik untuk berkunjung adalah pagi atau sore hari saat cuaca tidak terlalu panas.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
+{{-- Supported By Section --}}
 <section class="py-12 bg-[#0BB4B2] text-white relative overflow-hidden">
   <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
     <div class="pt-4">
