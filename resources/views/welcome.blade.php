@@ -1,46 +1,55 @@
 @extends('layouts.app')
+
 @section('title', 'Pantai Klatak')
 
+@section('styles')
+    <!-- Preload gambar utama -->
+    <link rel="preload" href="{{ asset('assets/pantaiklatak.jpg') }}" as="image">
+    <link rel="preload" href="{{ asset('assets/klatak2.jpg') }}" as="image">
+    <link rel="preload" href="{{ asset('assets/freshmart.jpg') }}" as="image">
+    <link rel="preload" href="{{ asset('assets/eklatak.png') }}" as="image">
+@endsection
+
 @section('content')
-{{-- Modern Navbar --}}
-<nav class="fixed w-full z-50 transition-all duration-500 bg-white/90 backdrop-blur-md shadow-sm">
+<!-- Modern Navbar -->
+<nav class="navbar-critical fixed w-full z-50 transition-all duration-500 bg-white/90 backdrop-blur-md shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
         <div class="flex items-center space-x-2">
-          <img src="{{ asset('assets/eklatak.png') }}" alt="Logo Pantai Klatak" class="h-10 w-10">
-          <span class="text-2xl font-bold bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] bg-clip-text text-transparent">Pantai Klatak</span>
+          <img src="{{ asset('assets/eklatak.png') }}" alt="Logo Pantai Klatak" class="h-10 w-10" loading="eager" width="40" height="40">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary to-[#089c9a] bg-clip-text text-transparent">Pantai Klatak</span>
         </div>
       </div>
 
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-8">
-        <a href="#tentang" class="relative group text-gray-700 hover:text-[#0BB4B2] transition-colors duration-300 font-medium">
+        <a href="#tentang" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
           Tentang
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0BB4B2] transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#gallery" class="relative group text-gray-700 hover:text-[#0BB4B2] transition-colors duration-300 font-medium">
+        <a href="#gallery" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
           Galeri
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0BB4B2] transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#fasilitas" class="relative group text-gray-700 hover:text-[#0BB4B2] transition-colors duration-300 font-medium">
+        <a href="#fasilitas" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
           Fasilitas
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0BB4B2] transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#market" class="relative group text-gray-700 hover:text-[#0BB4B2] transition-colors duration-300 font-medium">
+        <a href="#market" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
           Fresh Market
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0BB4B2] transition-all duration-300 group-hover:w-full"></span>
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="{{ route('login') }}" class="ml-4 px-6 py-2 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5">
+        <a href="{{ route('login') }}" class="ml-4 px-6 py-2 bg-gradient-to-r from-primary to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-primary transform hover:-translate-y-0.5">
           E-Klatak
         </a>
       </div>
 
       <!-- Mobile menu button -->
       <div class="md:hidden flex items-center">
-        <button class="mobile-menu-button p-2 rounded-md text-gray-700 hover:text-[#0BB4B2] focus:outline-none">
-          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button class="mobile-menu-button p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -51,55 +60,53 @@
   <!-- Mobile menu -->
   <div class="mobile-menu hidden md:hidden bg-white shadow-xl">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Tentang</a>
-      <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Galeri</a>
-      <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Fasilitas</a>
-      <a href="#market" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0BB4B2] hover:bg-gray-100">Fresh Market</a>
-      <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] mt-2">E-Klatak</a>
+      <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Tentang</a>
+      <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Galeri</a>
+      <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Fasilitas</a>
+      <a href="#market" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Fresh Market</a>
+      <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gradient-to-r from-primary to-[#089c9a] mt-2">E-Klatak</a>
     </div>
   </div>
 </nav>
-{{-- Modern Hero Slider --}}
-<section class="relative h-screen overflow-hidden">
+
+<!-- Modern Hero Slider -->
+<section class="hero-section">
   <div class="glide h-full">
     <div class="glide__track h-full" data-glide-el="track">
       <ul class="glide__slides h-full">
         <!-- Slide 1 -->
-        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center transition-all duration-1000 ease-in-out" style="background-image:url('{{ asset('assets/pantaiklatak.jpg') }}')">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent transition-all duration-1000"></div>
-          <div class="relative z-10 container mx-auto px-6 text-white">
+        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center" style="background-image:url('{{ asset('assets/pantaiklatak.jpg') }}')">
+          <div class="hero-overlay"></div>
+          <div class="hero-content container mx-auto px-6">
             <div class="max-w-2xl">
-              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fadeInUp">
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">Pantai Klatak</span>
               </h1>
-              <p class="text-lg md:text-xl mb-10 leading-relaxed animate-fadeInUp delay-100 max-w-lg">
+              <p class="text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
                 Surga pesisir di Tulungagung dengan keindahan alam, kampung nelayan, fresh market, dan ragam produk olahan lokal yang menggoda selera.
               </p>
-              <div class="flex flex-wrap gap-4 animate-fadeInUp delay-200">
-                <a href="#tentang" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
+              <div class="flex flex-wrap gap-4">
+                <a href="#tentang" class="px-8 py-3.5 bg-gradient-to-r from-primary to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-primary transform hover:-translate-y-0.5 flex items-center">
                   Jelajahi
-                 </a>
-                {{-- <a href="#gallery" class="px-8 py-3.5 border-2 border-white text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 flex items-center">
-                  Galeri
-                </a> --}}
+                </a>
               </div>
             </div>
           </div>
         </li>
         
         <!-- Slide 2 -->
-        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center transition-all duration-1000 ease-in-out" style="background-image:url('{{ asset('assets/klatak2.jpg') }}')">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent transition-all duration-1000"></div>
-          <div class="relative z-10 container mx-auto px-6 text-white">
+        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center" style="background-image:url('{{ asset('assets/klatak2.jpg') }}')">
+          <div class="hero-overlay"></div>
+          <div class="hero-content container mx-auto px-6">
             <div class="max-w-2xl">
-              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fadeInUp">
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">Kampung Nelayan</span>
               </h1>
-              <p class="text-lg md:text-xl mb-10 leading-relaxed animate-fadeInUp delay-100 max-w-lg">
+              <p class="text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
                 Menyaksikan langsung kehidupan nelayan tradisional dan hasil tangkapan laut segar setiap hari.
               </p>
-              <div class="flex flex-wrap gap-4 animate-fadeInUp delay-200">
-                <a href="#gallery" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
+              <div class="flex flex-wrap gap-4">
+                <a href="#gallery" class="px-8 py-3.5 bg-gradient-to-r from-primary to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-primary transform hover:-translate-y-0.5 flex items-center">
                   Aktivitas
                 </a>
               </div>
@@ -108,18 +115,18 @@
         </li>
         
         <!-- Slide 3 -->
-        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center transition-all duration-1000 ease-in-out" style="background-image:url('{{ asset('assets/freshmarket.jpg') }}')">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent transition-all duration-1000"></div>
-          <div class="relative z-10 container mx-auto px-6 text-white">
+        <li class="glide__slide h-full bg-cover bg-center relative flex items-center justify-center" style="background-image:url('{{ asset('assets/freshmart.jpg') }}')">
+          <div class="hero-overlay"></div>
+          <div class="hero-content container mx-auto px-6">
             <div class="max-w-2xl">
-              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fadeInUp">
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">Fresh Market</span>
               </h1>
-              <p class="text-lg md:text-xl mb-10 leading-relaxed animate-fadeInUp delay-100 max-w-lg">
+              <p class="text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
                 Nikmati hasil laut segar langsung dari nelayan lokal dan temukan aneka olahan khas di Fresh Market Pantai Klatak yang siap memanjakan lidah Anda.
               </p>
-              <div class="flex flex-wrap gap-4 animate-fadeInUp delay-200">
-                <a href="#market" class="px-8 py-3.5 bg-gradient-to-r from-[#0BB4B2] to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-[#0BB4B2] transform hover:-translate-y-0.5 flex items-center">
+              <div class="flex flex-wrap gap-4">
+                <a href="#market" class="px-8 py-3.5 bg-gradient-to-r from-primary to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-primary transform hover:-translate-y-0.5 flex items-center">
                   Jelajahi Market
                 </a>
               </div>
@@ -141,8 +148,8 @@
 {{-- Tentang --}}
 <section id="tentang" class="py-20 bg-white">
   <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-    <div class="relative group">
-      <img src="{{ asset('assets/pantai-klatak.jpg') }}" alt="Pantai" class="rounded-xl shadow-2xl transform group-hover:scale-105 transition duration-500">
+    <div class="relative group max-w-md mx-auto">
+      <img src="{{ asset('assets/klatak3.jpg') }}" alt="Pantai" class="rounded-xl shadow-2xl w-full h-auto object-cover max-h-[28rem] transform group-hover:scale-105 transition duration-500">
       <div class="absolute -inset-4 border-2 border-[#0BB4B2]/30 rounded-xl pointer-events-none transform group-hover:scale-105 transition duration-500"></div>
     </div>
     <div>
@@ -228,9 +235,9 @@
       <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 text-center">
         <div class="bg-[#0BB4B2]/10 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-5">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-[#0BB4B2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8h13.2L17 13M7 13L5.4 5M17 13l1.6 8M9 21a2 2 0 104 0 2 2 0 00-4 0z" />
+        </svg>
         </div>
         <h3 class="text-xl font-semibold text-[#0BB4B2] mb-3">Fresh Market</h3>
         <p class="text-gray-600">Tersedia berbagai oalahan hasil laut segar, jajanan tradisional, hingga oleh-oleh khas lokal.</p>
@@ -407,7 +414,9 @@
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-16">
       <h2 class="text-4xl font-bold text-[#0BB4B2] mb-4">Galeri Pantai Klatak</h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">Kumpulan momen indah di Pantai Klatak yang akan membuat Anda jatuh cinta</p>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Kumpulan momen indah di Pantai Klatak yang akan membuat Anda jatuh cinta
+      </p>
     </div>
 
     {{-- Gallery Filter --}}
@@ -465,8 +474,8 @@
           <img src="{{ asset('assets/gallery/aktivitas2.jpg') }}" alt="Foto di Pantai Klatak" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
             <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-              <h3 class="text-xl font-bold mb-2">Spot Foto Instagramable</h3>
-              <p class="text-sm">Abadikan momen terbaik Anda</p>
+              <h3 class="text-xl font-bold mb-2">Berbelanja Produk Olahan Klatak</h3>
+              <p class="text-sm">Bawa pulang cita rasa dan cerita pantai</p>
             </div>
           </div>
         </div>
@@ -488,25 +497,175 @@
       {{-- Item 6 --}}
       <div class="gallery-item fasilitas" data-category="fasilitas">
         <div class="relative overflow-hidden rounded-xl shadow-lg group h-80">
-          <img src="{{ asset('assets/gallery/fasilitas2.jpg') }}" alt="Area Parkir Pantai Klatak" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+          <img src="{{ asset('assets/gallery/fasilitas2.jpg') }}" alt="Warung Makan Pantai Klatak" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+            <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
+              <h3 class="text-xl font-bold mb-2">Kuliner Pantai</h3>
+              <p class="text-sm">Nikmati olahan hasil laut segar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Item 7 (hidden by default) --}}
+      <div class="gallery-item fasilitas hidden" data-category="fasilitas">
+        <div class="relative overflow-hidden rounded-xl shadow-lg group h-80" >
+          <img src="{{ asset('assets/gallery/fasilitas3.jpg') }}" alt="Warung Makan Pantai Klatak" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+            <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
+              <h3 class="text-xl font-bold mb-2">Kuliner Pantai</h3>
+              <p class="text-sm">Nikmati olahan hasil laut segar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       {{-- Item 8 (hidden by default) --}}
+      <div class="gallery-item fasilitas hidden" data-category="fasilitas">
+        <div class="relative overflow-hidden rounded-xl shadow-lg group h-80">
+          <img src="{{ asset('assets/gallery/fasilitas4.jpg') }}" alt="Area Parkir Pantai Klatak" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
             <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
               <h3 class="text-xl font-bold mb-2">Area Parkir Luas</h3>
-              <p class="text-sm">Parkir aman da untuk kendaraan Anda</p>
+              <p class="text-sm">Parkir aman untuk kendaraan Anda</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Item 9 (hidden by default) --}}
+      <div class="gallery-item fasilitas hidden" data-category="fasilitas">
+        <div class="relative overflow-hidden rounded-xl shadow-lg group h-80">
+          <img src="{{ asset('assets/gallery/fasilitas6.jpg') }}" alt="Gazebo nyaman untuk bersantai" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+            <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
+              <h3 class="text-xl font-bold mb-2">Gazebo nyaman untuk bersantai </h3>
+              <p class="text-sm">Cocok menikmati angin laut sambil minum kelapa muda dan bersantai</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Item 10 (hidden by default) --}}
+      <div class="gallery-item fasilitas hidden" data-category="fasilitas">
+        <div class="relative overflow-hidden rounded-xl shadow-lg group h-80">
+          <img src="{{ asset('assets/gallery/fasilitas5.jpg') }}" alt="Mushola dekat area pantai" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+            <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
+              <h3 class="text-xl font-bold mb-2">Mushola dekat area pantai</h3>
+              <p class="text-sm"> Nyaman beribadah tanpa harus jauh dari lokasi</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- {{-- View More Button --}}
+    {{-- View More Button --}}
     <div class="text-center mt-12">
-      <button class="px-8 py-3 bg-transparent border-2 border-[#0BB4B2] text-[#0BB4B2] rounded-full hover:bg-[#0BB4B2] hover:text-white transition duration-300 font-medium">
+      <button id="loadMoreBtn" class="px-8 py-3 bg-transparent border-2 border-[#0BB4B2] text-[#0BB4B2] rounded-full hover:bg-[#0BB4B2] hover:text-white transition duration-300 font-medium">
         Lihat Lebih Banyak Foto
       </button>
     </div>
-  </div> -->
+  </div>
 </section>
+
+{{-- Lightbox Modal --}}
+<div id="lightbox" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+  <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-4xl z-10 hover:text-[#0BB4B2] transition">
+    &times;
+  </button>
+  
+  <div class="relative w-full max-w-6xl h-full max-h-[90vh]">
+    <img id="lightbox-img" src="" alt="" class="w-full h-full object-contain">
+    
+    <div class="absolute bottom-6 left-0 right-0 text-center text-white">
+      <h3 id="lightbox-title" class="text-xl font-bold"></h3>
+      <p id="lightbox-desc" class="text-sm"></p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gallery-item {
+    transition: all 0.3s ease;
+  }
+  
+  .gallery-item.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  // Gallery Filter Functionality
+  document.querySelectorAll('.gallery-filter').forEach(button => {
+    button.addEventListener('click', function() {
+      // Update active button
+      document.querySelectorAll('.gallery-filter').forEach(btn => {
+        btn.classList.remove('bg-[#0BB4B2]', 'text-white');
+        btn.classList.add('bg-gray-200');
+      });
+      this.classList.add('bg-[#0BB4B2]', 'text-white');
+      this.classList.remove('bg-gray-200');
+      
+      // Filter items
+      const filter = this.dataset.filter;
+      const items = document.querySelectorAll('.gallery-item');
+      
+      items.forEach(item => {
+        if (filter === 'all' || item.dataset.category === filter) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // Lightbox Functionality
+  function openLightbox(imgSrc, title, desc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+    
+    lightboxImg.src = imgSrc;
+    lightboxTitle.textContent = title;
+    lightboxDesc.textContent = desc;
+    lightbox.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Initialize gallery items to open lightbox when clicked
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const imgSrc = this.querySelector('img').src;
+      const title = this.querySelector('h3')?.textContent || '';
+      const desc = this.querySelector('p')?.textContent || '';
+      openLightbox(imgSrc, title, desc);
+    });
+  });
+
+  // Close lightbox when clicking outside image
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeLightbox();
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('hidden')) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    }
+  });
+</script>
 
 {{-- Lightbox Modal --}}
 <div id="lightbox" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
@@ -739,9 +898,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
-              Jl. Pantai Waru Doyong Klatak
+              Jl. Pantai Waru Doyong Klatak Soireng, Keboireng, Besuki
             </span>
-            <span class="sm:ml-5">Soireng, Keboireng, Besuki</span>
+            <span class="sm:ml-5"></span>
           </li>
           <li class="flex items-center justify-center md:justify-start text-sm sm:text-base">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -767,125 +926,42 @@
   </div>
 </footer>
 
-<style>
-  /* Navbar animation */
-  nav {
-    transition: all 0.5s ease;
-  }
-  
-  nav.scrolled {
-    @apply shadow-md bg-white/95;
-  }
-  
-  /* Mobile menu animation */
-  .mobile-menu {
-    transition: all 0.3s ease;
-    max-height: 0;
-    overflow: hidden;
-  }
-  
-  .mobile-menu.active {
-    max-height: 500px;
-  }
-  
-  /* Hero section animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .animate-fadeInUp {
-    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-  
-  .animate-fadeInUp.delay-100 {
-    animation-delay: 0.2s;
-  }
-  
-  .animate-fadeInUp.delay-200 {
-    animation-delay: 0.4s;
-  }
-  
-  /* Scroll indicator animation */
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-20px);
-    }
-    60% {
-      transform: translateY(-10px);
-    }
-  }
-  
-  .animate-bounce {
-    animation: bounce 2s infinite;
-  }
-  
-  @keyframes scroll {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(10px);
-      opacity: 0;
-    }
-  }
-  
-  .animate-scroll {
-    animation: scroll 1.5s infinite;
-  }
-  
-  /* Glide slider styles */
-  .glide__slide {
-    opacity: 0.8;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .glide__slide.glide__slide--active {
-    opacity: 1;
-  }
-</style>
-
+@section('scripts')
 <script>
+  // Inisialisasi Glide slider
   document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Glide !== 'undefined') {
+      new Glide('.glide', {
+        type: 'carousel',
+        autoplay: 4000,
+        hoverpause: true,
+        animationDuration: 800,
+        animationTimingFunc: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        rewind: true,
+        gap: 0,
+        perView: 1
+      }).mount();
+    }
+    
     // Mobile menu toggle
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     const mobileMenu = document.querySelector('.mobile-menu');
     
-    mobileMenuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
-      mobileMenu.classList.toggle('active');
-    });
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
+      const nav = document.querySelector('nav');
       if (window.scrollY > 50) {
-        document.querySelector('nav').classList.add('scrolled');
+        nav.classList.add('shadow-md', 'bg-white/95');
       } else {
-        document.querySelector('nav').classList.remove('scrolled');
+        nav.classList.remove('shadow-md', 'bg-white/95');
       }
     });
-    
-    // Initialize Glide slider
-    new Glide('.glide', {
-      type: 'carousel',
-      autoplay: 4000,
-      hoverpause: true,
-      animationDuration: 800,
-      animationTimingFunc: 'cubic-bezier(0.4, 0, 0.2, 1)',
-      rewind: true,
-      gap: 0,
-      perView: 1
-    }).mount();
   });
 </script>
-
+@endsection
