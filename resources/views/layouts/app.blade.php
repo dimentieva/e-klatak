@@ -6,11 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="https://cdn.tailwindcss.com" as="script" crossorigin>
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" as="style">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/glide.min.js" as="script">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css"></noscript>
 
     <!-- Critical CSS (Inline) -->
     <style>

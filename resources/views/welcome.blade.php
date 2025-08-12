@@ -806,29 +806,29 @@ document.getElementById('mobileMenuBtn').addEventListener('click', function () {
   <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
     <div class="pt-4">
       <p class="text-xl md:text-2xl mb-8 font-medium">Supported By:</p>
-      <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6">
+      <div class="flex flex-wrap justify-center items-center gap-1 md:gap-2">
         <!-- Logo 1 - Kemendikbud -->
-        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/tutwuri.png') }}" alt="Kemendikbud" class="w-full h-full object-contain object-center">
         </div>
         <!-- Logo 2 - Dikti -->
-        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/dikti.png') }}" alt="Ditjen Dikti" class="w-full h-full object-contain object-center">
         </div>
         <!-- Logo 3 - ORMAWA -->
-        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/ormawa.png') }}" alt="Ormawa" class="w-full h-full object-contain object-center">
         </div>
         <!-- Logo 4 - UDINUS -->
-        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center  hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/udinus.png') }}" alt="Universitas Dian Nuswantoro" class="w-full h-full object-contain object-center">
         </div>
         <!-- Logo 5 - Biro -->
-        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-28 h-16 md:w-32 md:h-20 flex items-center  hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/biro.png') }}" alt="Biro Sistem Informasi" class="w-full h-full object-contain object-center">
         </div>
         <!-- Logo 6 - PPK  -->
-        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
+        <div class="w-36 h-20 md:w-44 md:h-24 flex items-center  hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/ppk.png') }}" alt="PPK Ormawa" class="w-full h-full object-contain object-center">
         </div>
       </div>
