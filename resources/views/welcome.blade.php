@@ -18,29 +18,21 @@
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
         <div class="flex items-center space-x-2">
-          <img src="{{ asset('assets/eklatak.png') }}" alt="Logo Pantai Klatak" class="h-10 w-10" loading="eager" width="40" height="40">
-          <span class="text-2xl font-bold bg-gradient-to-r from-primary to-[#089c9a] bg-clip-text text-transparent">Pantai Klatak</span>
+          <img src="{{ asset('assets/eklatak.png') }}" alt="Logo Pantai Klatak" class="h-10 w-10" loading="eager">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary to-[#089c9a] bg-clip-text text-transparent">
+            Pantai Klatak
+          </span>
         </div>
       </div>
 
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-8">
-        <a href="#tentang" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
-          Tentang
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#gallery" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
-          Galeri
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#fasilitas" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
-          Fasilitas
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#market" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
-          Fresh Market
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-        </a>
+        @foreach (['Tentang' => '#tentang', 'Galeri' => '#gallery', 'Fasilitas' => '#fasilitas', 'Fresh Market' => '#market'] as $label => $link)
+          <a href="{{ $link }}" class="relative group text-gray-700 hover:text-primary transition-colors duration-300 font-medium">
+            {{ $label }}
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+        @endforeach
         <a href="{{ route('login') }}" class="ml-4 px-6 py-2 bg-gradient-to-r from-primary to-[#089c9a] text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:from-[#089c9a] hover:to-primary transform hover:-translate-y-0.5">
           E-Klatak
         </a>
@@ -48,8 +40,8 @@
 
       <!-- Mobile menu button -->
       <div class="md:hidden flex items-center">
-        <button class="mobile-menu-button p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none">
-          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+        <button id="mobileMenuBtn" class="p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -58,8 +50,8 @@
   </div>
 
   <!-- Mobile menu -->
-  <div class="mobile-menu hidden md:hidden bg-white shadow-xl">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+  <div id="mobileMenu" class="hidden md:hidden bg-white shadow-xl transition-all duration-300 ease-in-out transform origin-top">
+    <div class="px-4 pt-4 pb-4 space-y-2">
       <a href="#tentang" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Tentang</a>
       <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Galeri</a>
       <a href="#fasilitas" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100">Fasilitas</a>
@@ -68,6 +60,14 @@
     </div>
   </div>
 </nav>
+
+<script>
+document.getElementById('mobileMenuBtn').addEventListener('click', function () {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('hidden');
+});
+</script>
+
 
 <!-- Modern Hero Slider -->
 <section class="hero-section">
@@ -352,44 +352,44 @@
           <div class="grid grid-cols-2 gap-4">
             {{-- Product 1 --}}
             <div class="group relative overflow-hidden rounded-lg h-40">
-              <img src="{{ asset('assets/market/ikan-tongkol.jpg') }}" alt="Ikan Tongkol" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+              <img src="{{ asset('assets/market/sambeltongkol.jpg') }}" alt="Ikan Tongkol" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Sambal Ikan Tuna</h4>
-                  <p class="text-sm">Rp35.000/kg</p>
+                  <h4 class="font-bold">Sambal Ikan Tongkol</h4>
+                  <p class="text-sm">Rp 20.000</p>
                 </div>
               </div>
             </div>
             
             {{-- Product 2 --}}
             <div class="group relative overflow-hidden rounded-lg h-40">
-              <img src="{{ asset('assets/market/cumi.jpg') }}" alt="Cumi-Cumi" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+              <img src="{{ asset('assets/market/stikikan.jpg') }}" alt="Cumi-Cumi" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
                   <h4 class="font-bold">Stik Ikan</h4>
-                  <p class="text-sm">Rp65.000/kg</p>
+                  <p class="text-sm">Rp 15.000</p>
                 </div>
               </div>
             </div>
             
             {{-- Product 3 --}}
             <div class="group relative overflow-hidden rounded-lg h-40">
-              <img src="{{ asset('assets/market/udang.jpg') }}" alt="Udang Vaname" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+              <img src="{{ asset('assets/market/abonikan.png') }}" alt="Udang Vaname" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
                   <h4 class="font-bold">Abon Ikan</h4>
-                  <p class="text-sm">Rp75.000/kg</p>
+                  <p class="text-sm">Rp 30.000</p>
                 </div>
               </div>
             </div>
             
             {{-- Product 4 --}}
             <div class="group relative overflow-hidden rounded-lg h-40">
-              <img src="{{ asset('assets/market/kerang.jpg') }}" alt="Kerang Hijau" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+              <img src="{{ asset('assets/market/dimsumikan.png') }}" alt="Kerang Hijau" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
-                  <h4 class="font-bold">Sambal Ikan Tongkol</h4>
-                  <p class="text-sm">Rp25.000/pcs</p>
+                  <h4 class="font-bold">Dimsum Ikan</h4>
+                  <p class="text-sm">Rp 25.000/pcs</p>
                 </div>
               </div>
             </div>
@@ -815,11 +815,11 @@
         <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/dikti.png') }}" alt="Ditjen Dikti" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 3 - ORMAWA (diperbesar) -->
+        <!-- Logo 3 - ORMAWA -->
         <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/ormawa.png') }}" alt="Ormawa" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 4 - UDINUS (diperbesar) -->
+        <!-- Logo 4 - UDINUS -->
         <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/udinus.png') }}" alt="Universitas Dian Nuswantoro" class="w-full h-full object-contain object-center">
         </div>
@@ -827,7 +827,7 @@
         <div class="w-28 h-16 md:w-32 md:h-20 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/biro.png') }}" alt="Biro Sistem Informasi" class="w-full h-full object-contain object-center">
         </div>
-        <!-- Logo 6 - PPK (diperbesar) -->
+        <!-- Logo 6 - PPK  -->
         <div class="w-36 h-20 md:w-44 md:h-24 flex items-center p-1 hover:scale-105 transition-transform duration-300">
           <img src="{{ asset('assets/ppk.png') }}" alt="PPK Ormawa" class="w-full h-full object-contain object-center">
         </div>
@@ -880,7 +880,7 @@
       <!-- Kolom 2 - Tautan Cepat -->
       <div class="text-center md:text-left">
         <h4 class="text-lg font-semibold mb-3 sm:mb-4">Tautan Cepat</h4>
-        <ul class="space-y-2">
+        <ul class="list-none space-y-2">
           <li><a href="#tentang" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Tentang</a></li>
           <li><a href="#gallery" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Galeri</a></li>
           <li><a href="#fasilitas" class="text-gray-400 hover:text-[#0BB4B2] transition duration-200 text-sm sm:text-base">Fasilitas</a></li>

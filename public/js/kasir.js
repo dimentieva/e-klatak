@@ -47,7 +47,8 @@ async function renderKeranjang() {
                     <div class="flex items-center gap-2 justify-center">
                         <button onclick="ubahJumlah(${item.id}, -1)" class="bg-gray-200 px-3 py-1 text-lg font-bold rounded hover:bg-gray-300">−</button>
                         <span class="mx-2 text-base font-semibold">${item.jumlah}</span>
-                        <button onclick="ubahJumlah(${item.id}, 1)" class="bg-gray-200 px-3 py-1 text-lg font-bold rounded hover:bg-gray-300">+</button>
+                        <button onclick="ubahJumlah(${item.id}, 1, ${item.stok})" 
+                        class="bg-gray-200 px-3 py-1 text-lg font-bold rounded hover:bg-gray-300">+</button>
                     </div>
                 </td>
                 <td>Rp. ${subtotal.toLocaleString('id-ID')}</td>
@@ -59,11 +60,13 @@ async function renderKeranjang() {
         });
     }
 
-    const pajak = total * 0.11;
+    const pajak = total * 0;
     const grandTotal = total + pajak;
 
     document.getElementById('grandTotal').textContent = formatRupiah(grandTotal);
 }
+
+
 
 async function tambahKeranjang(id, nama, harga, stok) {
     const index = keranjang.findIndex(p => p.id == id);
@@ -92,22 +95,38 @@ async function tambahKeranjang(id, nama, harga, stok) {
             });
             return;
         }
-        keranjang.push({ id, nama, harga, jumlah: 1 });
+        keranjang.push({ id, nama, harga, jumlah: 1, stok });
     }
 
     await renderKeranjang();
 }
 
-async function ubahJumlah(id, delta) {
+async function ubahJumlah(id, delta, stok) {
     const index = keranjang.findIndex(p => p.id == id);
+
     if (index !== -1) {
+        if (delta > 0) {
+            // Cek stok sebelum menambah
+            if (keranjang[index].jumlah >= stok) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stok Habis',
+                    text: `Stok produk "${keranjang[index].nama}" tidak mencukupi.`,
+                });
+                return;
+            }
+        }
+
         keranjang[index].jumlah += delta;
+
+        // Hapus kalau jumlah <= 0
         if (keranjang[index].jumlah <= 0) {
             keranjang.splice(index, 1);
         }
     }
     await renderKeranjang();
 }
+
 
 async function hapusItem(id) {
     keranjang = keranjang.filter(p => p.id != id);
@@ -133,7 +152,7 @@ function bayar() {
     }
 
     const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
-    const pajak = total * 0.11;
+    const pajak = total * 0;
     const grandTotal = total + pajak;
     const jumlahProduk = keranjang.reduce((acc, item) => acc + item.jumlah, 0);
     const nota = 'NOTA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -163,7 +182,7 @@ function tutupModal() {
 async function konfirmasiBayar() {
     const metode = document.getElementById('metodePembayaran').value;
     const total = keranjang.reduce((acc, item) => acc + item.harga * item.jumlah, 0);
-    const pajak = total * 0.11;
+    const pajak = total * 0;
     const grandTotal = total + pajak;
     const uangDiterima = parseFloat(document.getElementById('inputPembayaran').value);
     const kembalian = uangDiterima - grandTotal;
@@ -350,7 +369,7 @@ function cetakStruk(total, nota, grandTotal, pajak, bayar, kembalian) {
             <hr>
             <table class="summary-table">
                 <tr><td>Total</td><td>${formatRupiah(total)}</td></tr>
-                <tr><td>Pajak (11%)</td><td>${formatRupiah(pajak)}</td></tr>
+                <tr><td>Pajak (10%)</td><td>${formatRupiah(pajak)}</td></tr>
                 <tr><td><strong>Grand Total</strong></td><td><strong>${formatRupiah(grandTotal)}</strong></td></tr>
                 <tr><td>Bayar</td><td>${formatRupiah(bayar)}</td></tr>
                 <tr><td>Kembalian</td><td>${formatRupiah(kembalian)}</td></tr>

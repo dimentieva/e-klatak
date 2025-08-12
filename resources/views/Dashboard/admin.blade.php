@@ -84,7 +84,7 @@
                         Rp {{ number_format($transaksi->detailTransaksi->sum('harga_satuan'), 0, ',', '.') }}
                     </td>
                     <td class="px-3 py-2">
-                        Rp {{ number_format( $transaksi->detailTransaksi->sum('harga_satuan') + $transaksi->pajak, 0, ',', '.') }}
+                        Rp {{ number_format( $transaksi->detailTransaksi->sum('sub_total') + $transaksi->pajak, 0, ',', '.') }}
                     </td>
                 </tr>
             @empty

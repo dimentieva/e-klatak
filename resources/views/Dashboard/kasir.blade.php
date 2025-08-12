@@ -62,7 +62,7 @@
           <span id="totalCart" class="font-semibold">Rp 0</span>
         </div>
         <div class="flex justify-between text-sm sm:text-base">
-          <span>Pajak (11%)</span>
+          <span>Pajak (10%)</span>
           <span id="pajakCart" class="font-semibold">Rp 0</span>
         </div>
         <div class="flex justify-between text-base sm:text-lg font-bold text-[#0BB4B2] border-t pt-2">
@@ -165,7 +165,7 @@
           <hr>
           <table style="width: 100%; font-size: 12px;">
             <tr><td>Total</td><td style="text-align: right;"><span id="printTotal"></span></td></tr>
-            <tr><td>Pajak (11%)</td><td style="text-align: right;"><span id="printPajak"></span></td></tr>
+            <tr><td>Pajak (10%)</td><td style="text-align: right;"><span id="printPajak"></span></td></tr>
             <tr><td><strong>Grand Total</strong></td><td style="text-align: right;"><strong><span id="printGrandTotal"></span></strong></td></tr>
             <tr><td>Bayar</td><td style="text-align: right;"><span id="printBayar"></span></td></tr>
             <tr><td>Kembalian</td><td style="text-align: right;"><span id="printKembalian"></span></td></tr>
@@ -191,7 +191,7 @@
       <span id="totalCartMobile" class="font-semibold">Rp 0</span>
     </div>
     <div class="flex justify-between">
-      <span>Pajak (11%)</span>
+      <span>Pajak (10%)</span>
       <span id="pajakCartMobile" class="font-semibold">Rp 0</span>
     </div>
     <div class="flex justify-between text-base font-bold text-[#0BB4B2] border-t pt-2">
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (td) total += parseRupiah(td.textContent);
       });
     }
-    const pajak = Math.round(total * 0.11);
+    const pajak = Math.round(total * 0);
     const grand = total + pajak;
 
     if (totalCart)        totalCart.textContent        = formatRupiah(total);

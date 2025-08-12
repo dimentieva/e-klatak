@@ -9,9 +9,12 @@
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script" crossorigin>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" as="style">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/glide.min.js" as="script">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css">
+
     <!-- Critical CSS (Inline) -->
     <style>
+      
       /* Base Styles to prevent FOUC */
       :root {
         --primary-color: #0BB4B2;
@@ -85,7 +88,13 @@
         position: relative;
         overflow: hidden;
       }
-      
+
+        .glide__slide {
+        height: 100vh; /* pastikan penuh layar */
+        background-size: cover;
+        background-position: center;
+      }
+
       .hero-content {
         position: relative;
         z-index: 10;
@@ -112,7 +121,6 @@
       h2 { font-size: 1.875rem; }
       h3 { font-size: 1.5rem; }
       
-      /* Basic Button Styles */
       .btn-primary {
         display: inline-block;
         padding: 0.5rem 1rem;
@@ -130,13 +138,7 @@
         transform: translateY(-2px);
       }
     </style>
-    
-    <!-- Non-critical CSS (loaded asynchronously) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.4.1/dist/css/glide.core.min.css">
-    </noscript>
-    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
@@ -159,7 +161,7 @@
           }
         },
         corePlugins: {
-          preflight: false, // Disable default styles to prevent conflicts
+          preflight: true, // Disable default styles to prevent conflicts
         }
       }
     </script>
@@ -172,9 +174,9 @@
     <!-- Initial Loader -->
     <div id="initial-loader">
         <div class="loader-spinner"></div>
-        <div class="text-primary font-medium">Memuat...</div>
+        <div class="loader-text">Memuat...</div>
     </div>
-
+    
     @yield('content')
 
     <!-- Alpine.js -->

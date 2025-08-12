@@ -177,16 +177,16 @@ class TransaksiController extends Controller
 
     public function printNota($id)
     {
-        \Log::info('printNota called with id: ' . $id);
+        Log::info('printNota called with id: ' . $id);
 
         $transaksi = Transaksi::with('detailTransaksi.produk')->find($id);
 
         if (!$transaksi) {
-            \Log::warning('Transaksi not found for id: ' . $id);
+            Log::warning('Transaksi not found for id: ' . $id);
             return new JsonResponse([], 404);
         }
 
-        \Log::info('Transaksi found', ['transaksi' => $transaksi]);
+        Log::info('Transaksi found', ['transaksi' => $transaksi]);
 
         $instructions = [];
 
@@ -286,13 +286,13 @@ class TransaksiController extends Controller
             'format' => 0
         ];
 
-         $instructions[] = (object)[
-            'type' => 0,
-            'content' => 'Pajak: ' . number_format($transaksi->pajak, 0),
-            'bold' => 1,
-            'align' => 2,
-            'format' => 1
-        ];
+        //  $instructions[] = (object)[
+        //     'type' => 0,
+        //     'content' => 'Pajak: ' . number_format($transaksi->pajak, 0),
+        //     'bold' => 1,
+        //     'align' => 2,
+        //     'format' => 1
+        // ];
 
         $instructions[] = (object)[
             'type' => 0,
@@ -318,7 +318,7 @@ class TransaksiController extends Controller
             'format' => 0
         ];
 
-        \Log::info('Print instructions prepared', ['instructions' => $instructions]);
+        Log::info('Print instructions prepared', ['instructions' => $instructions]);
 
         return response()->json($instructions, 200, [], JSON_FORCE_OBJECT);
     }
