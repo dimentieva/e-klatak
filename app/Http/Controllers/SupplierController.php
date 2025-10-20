@@ -36,7 +36,19 @@ class SupplierController extends Controller
             ->orWhere('alamat', 'like', "%{$searchQuery}%")
             ->get();
 
-        return response()->json($suppliers);
+        // 🔥 Tambahkan URL edit & delete agar bisa dipakai di JS
+        $result = $suppliers->map(function ($supplier) {
+            return [
+                'id' => $supplier->id,
+                'nama_supp' => $supplier->nama_supp,
+                'kontak' => $supplier->kontak,
+                'alamat' => $supplier->alamat,
+                'edit_url' => route('supplier.edit', $supplier->id),
+                'delete_url' => route('supplier.destroy', $supplier->id),
+            ];
+        });
+
+        return response()->json($result);
     }
 
     public function create()
@@ -77,27 +89,26 @@ class SupplierController extends Controller
     }
 
     public function destroy($id)
-{
-    $supplier = Supplier::findOrFail($id);
+    {
+        $supplier = Supplier::findOrFail($id);
 
-    // Cek apakah ada produk supplier ini yang dipakai di detail_transaksi
-    $produkDipakai = \DB::table('detail_transaksi')
-        ->whereIn('id_produk', function($query) use ($id) {
-            $query->select('id_produk')
-                  ->from('produk')
-                  ->where('id_supplier', $id);
-        })
-        ->exists();
+        // Cek apakah ada produk supplier ini yang dipakai di detail_transaksi
+        $produkDipakai = \DB::table('detail_transaksi')
+            ->whereIn('id_produk', function ($query) use ($id) {
+                $query->select('id_produk')
+                    ->from('produk')
+                    ->where('id_supplier', $id);
+            })
+            ->exists();
 
-    if ($produkDipakai) {
-        return redirect()->route('supplier.index')
-            ->with('error', 'Supplier ini tidak dapat dihapus karena masih digunakan pada halaman kelola produk.');
+        if ($produkDipakai) {
+            return redirect()->route('supplier.index')
+                ->with('error', 'Supplier ini tidak dapat dihapus karena masih digunakan pada halaman kelola produk.');
+        }
+
+        // Kalau sampai sini, berarti aman. Produknya bisa dihapus otomatis karena ON DELETE CASCADE di produk
+        $supplier->delete();
+
+        return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil dihapus.');
     }
-
-    // Kalau sampai sini, berarti aman. Produknya bisa dihapus otomatis karena ON DELETE CASCADE di produk
-    $supplier->delete();
-
-    return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil dihapus.');
-}
-
 }

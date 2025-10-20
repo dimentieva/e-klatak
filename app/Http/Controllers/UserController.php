@@ -58,13 +58,25 @@ class UserController extends Controller
     {
         $keyword = $request->get('search');
 
-        $users = User::where('name', 'like', "%$keyword%")
-            ->orWhere('email', 'like', "%$keyword%")
-            ->orWhere('role', 'like', "%$keyword%")
+        $users = User::where('name', 'like', "%{$keyword}%")
+            ->orWhere('email', 'like', "%{$keyword}%")
+            ->orWhere('role', 'like', "%{$keyword}%")
             ->orderBy('created_at', 'asc')
             ->get();
 
-        return response()->json($users);
+        $result = $users->map(function ($user) {
+            return [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+                'role'  => $user->role,
+
+                'edit_url'   => route('karyawan.edit', $user->id),
+                'delete_url' => route('karyawan.destroy', $user->id),
+            ];
+        });
+
+        return response()->json($result);
     }
 
     // Tampilkan form edit user
