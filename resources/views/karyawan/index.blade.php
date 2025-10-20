@@ -84,9 +84,7 @@
     const fetchAndRenderUsers = async (query) => {
         try {
             const response = await fetch(`${searchUrl}?search=${encodeURIComponent(query)}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
             if (!response.ok) throw new Error('Gagal ambil data');
             const users = await response.json();
@@ -102,10 +100,9 @@
                             <td class="px-3 py-2 border">${user.email}</td>
                             <td class="px-3 py-2 border capitalize">${user.role}</td>
                             <td class="flex flex-col sm:flex-row sm:flex-wrap gap-2 justify-center items-center">
-                                <a href="/karyawan/${user.id}/edit"
+                                <a href="${user.edit_url}"
                                     class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
-                                <form action="/karyawan/${user.id}" method="POST"
-                                    class="inline-block form-delete">
+                                <form action="${user.delete_url}" method="POST" class="inline-block form-delete">
                                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit"
@@ -142,6 +139,7 @@
         }
         bindDeleteConfirm();
     });
+
 
     function bindDeleteConfirm() {
         const deleteForms = document.querySelectorAll('.form-delete');

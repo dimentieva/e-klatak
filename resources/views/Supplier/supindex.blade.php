@@ -79,6 +79,7 @@
     const supplierBody = document.getElementById('supplierBody');
     const searchUrl = '/admin/api/supplier/search';
 
+    // Fungsi debounce agar pencarian tidak terlalu sering request
     function debounce(func, delay = 300) {
         let timeout;
         return (...args) => {
@@ -87,74 +88,68 @@
         };
     }
 
+    // Fungsi fetch dan render data supplier
     const fetchAndRenderSuppliers = async (query) => {
         try {
             const response = await fetch(`${searchUrl}?search=${encodeURIComponent(query)}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
-                }
+                },
+                credentials: 'same-origin' // penting agar cookie session login ikut terkirim
             });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const suppliers = await response.json();
 
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const suppliers = await response.json();
             supplierBody.innerHTML = '';
 
             if (suppliers.length > 0) {
                 suppliers.forEach((supplier, index) => {
                     const row = `
-                    <tr class="border-b">
-                        <td class="px-3 py-2 border">${index + 1}</td>
-                        <td class="px-3 py-2 border">${supplier.nama_supp}</td>
-                        <td class="px-3 py-2 border">${supplier.kontak ? supplier.kontak : 'Belum Ada'}</td>
-                        <td class="px-3 py-2 border">${supplier.alamat ? supplier.alamat : 'Belum Ada'}</td>
-                        <td class="px-3 py-2 border space-x-2">
-                            <a href="/supplier/${supplier.id}/edit"
-                               class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
-                            <form action="/supplier/${supplier.id}" method="POST"
-                                  class="inline-block form-delete">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                `;
+                        <tr class="border-b">
+                            <td class="px-3 py-2 border">${index + 1}</td>
+                            <td class="px-3 py-2 border">${supplier.nama_supp}</td>
+                            <td class="px-3 py-2 border">${supplier.kontak || 'Belum Ada'}</td>
+                            <td class="px-3 py-2 border">${supplier.alamat || 'Belum Ada'}</td>
+                            <td class="px-3 py-2 border space-x-2 text-center">
+                                <a href="${supplier.edit_url}" 
+                                   class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+
+                                <form action="${supplier.delete_url}" method="POST" class="inline-block form-delete">
+                                    <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    `;
                     supplierBody.insertAdjacentHTML('beforeend', row);
                 });
+
                 bindDeleteConfirm();
             } else {
-                supplierBody.innerHTML = '<tr><td colspan="5" class="text-center px-3 py-4 text-gray-500">Tidak ada data supplier.</td></tr>';
+                supplierBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center px-3 py-4 text-gray-500">
+                            Tidak ada data supplier.
+                        </td>
+                    </tr>`;
             }
+
         } catch (error) {
             console.error('Fetch error:', error);
-            supplierBody.innerHTML = '<tr><td colspan="5" class="text-center px-3 py-4 text-red-500">Gagal memuat data supplier.</td></tr>';
+            supplierBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center px-3 py-4 text-red-500">
+                        Gagal memuat data supplier.
+                    </td>
+                </tr>`;
         }
     };
 
-    // Main event listener for search input
-    searchInput.addEventListener('input', debounce((event) => {
-        const query = event.target.value.trim();
-
-        // Update URL with search query
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.set('search', query);
-        window.history.pushState({}, '', newUrl);
-
-        // Fetch and update suppliers
-        fetchAndRenderSuppliers(query);
-    }));
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialQuery = urlParams.get('search') || '';
-        if (initialQuery) {
-            searchInput.value = initialQuery;
-            fetchAndRenderSuppliers(initialQuery);
-        }
-    });
-
-    // Tambahkan konfirmasi hapus + cegah submit ganda
+    // Fungsi konfirmasi hapus
     function bindDeleteConfirm() {
         const deleteForms = document.querySelectorAll('.form-delete');
         deleteForms.forEach(form => {
@@ -175,7 +170,30 @@
         });
     }
 
-    // Panggil bind saat halaman pertama kali dimuat
-    bindDeleteConfirm();
+    // Event listener untuk input pencarian
+    searchInput.addEventListener('input', debounce((event) => {
+        const query = event.target.value.trim();
+
+        // Ubah URL di browser tanpa reload
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('search', query);
+        window.history.pushState({}, '', newUrl);
+
+        // Jalankan pencarian
+        fetchAndRenderSuppliers(query);
+    }));
+
+    // Saat halaman pertama kali dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialQuery = urlParams.get('search') || '';
+        if (initialQuery) {
+            searchInput.value = initialQuery;
+            fetchAndRenderSuppliers(initialQuery);
+        }
+        bindDeleteConfirm();
+    });
 </script>
+
+
 @endsection
