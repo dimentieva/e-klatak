@@ -30,42 +30,29 @@
         transition: opacity 0.4s ease, visibility 0.4s ease;
       }
       
-      /* Critical Layout Styles */
-      .max-w-6xl { max-width: 72rem; }
-      .max-w-7xl { max-width: 80rem; }
-      .mx-auto { margin-left: auto; margin-right: auto; }
-      .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-      
-      /* Simple loader */
-      #initial-loader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #f4f4f4;
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        transition: opacity 0.3s ease;
-      }
-      
-      .loader-spinner {
-        border: 4px solid rgba(11, 180, 178, 0.2);
-        border-radius: 50%;
-        border-top: 4px solid var(--primary-color);
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin-bottom: 1rem;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
+     /* Loader minimal langsung muncul */
+  #initial-loader {
+    position: fixed;
+    inset: 0;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  .loader-spinner {
+    border: 4px solid rgba(11, 180, 178, 0.2);
+    border-top: 4px solid #0BB4B2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
       
       /* Critical Navbar Styles */
       .navbar-critical {
@@ -186,47 +173,64 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Main Script -->
-    <script>
-      // Sembunyikan body sebelum CSS siap
-      document.body.style.visibility = 'hidden';
-      document.body.style.opacity = '0';
+   <script>
+  // 1. Sembunyikan body dan tampilkan loader segera
+  document.body.style.visibility = 'hidden';
+  document.body.style.opacity = '0';
+  document.getElementById('initial-loader').style.display = 'flex';
+  document.getElementById('initial-loader').style.opacity = '1';
 
-      // Tampilkan body setelah DOM siap (menghindari FOUC)
-      window.addEventListener('DOMContentLoaded', function() {
-        document.body.style.visibility = 'visible';
-        document.body.style.opacity = '1';
-      });
-
-      // Sembunyikan loader setelah semua resource selesai dimuat
-      window.addEventListener('load', function() {
-        if (document.getElementById('initial-loader')) {
-          document.getElementById('initial-loader').style.opacity = '0';
-          setTimeout(function() {
-            document.getElementById('initial-loader').style.display = 'none';
-          }, 300);
-        }
-        // Inisialisasi komponen JS jika perlu
-        if (typeof Glide !== 'undefined') {
-          document.querySelectorAll('.glide').forEach(function(element) {
-            new Glide(element, {
-              type: 'carousel',
-              autoplay: 4000,
-              animationDuration: 600,
-              perView: 1
-            }).mount();
-          });
-        }
-      });
-
-      // Fallback jika load event tidak terpanggil
+  // 2. Saat DOM siap (HTML terparsing)
+  document.addEventListener('DOMContentLoaded', function() {
+    // Tampilkan body secara halus
+    document.body.style.visibility = 'visible';
+    document.body.style.opacity = '1';
+    
+    // Tunggu 100ms untuk memastikan CSS sudah diterapkan
+    setTimeout(function() {
+      // Mulai proses menghilangkan loader
+      document.getElementById('initial-loader').style.opacity = '0';
+      
+      // Setelah transisi selesai, sembunyikan loader
       setTimeout(function() {
-        if (document.getElementById('initial-loader')) {
-          document.getElementById('initial-loader').style.display = 'none';
-        }
-        document.body.style.visibility = 'visible';
-        document.body.style.opacity = '1';
-      }, 3000);
-    </script>
+        document.getElementById('initial-loader').style.display = 'none';
+      }, 300); // Harus sama dengan durasi transisi CSS
+    }, 100);
+  });
+
+  // 3. Backup untuk event load (resource eksternal selesai)
+  window.addEventListener('load', function() {
+    // Jika loader masih terlihat
+    if (parseFloat(getComputedStyle(document.getElementById('initial-loader')).opacity) > 0) {
+      document.getElementById('initial-loader').style.opacity = '0';
+      setTimeout(function() {
+        document.getElementById('initial-loader').style.display = 'none';
+      }, 300);
+    }
+    
+    // Inisialisasi komponen JS
+    if (typeof Glide !== 'undefined') {
+      document.querySelectorAll('.glide').forEach(function(element) {
+        new Glide(element, {
+          type: 'carousel',
+          autoplay: 4000,
+          animationDuration: 600,
+          perView: 1
+        }).mount();
+      });
+    }
+  });
+
+  // 4. Fallback timeout (3 detik)
+  setTimeout(function() {
+    document.body.style.visibility = 'visible';
+    document.body.style.opacity = '1';
+    document.getElementById('initial-loader').style.opacity = '0';
+    setTimeout(function() {
+      document.getElementById('initial-loader').style.display = 'none';
+    }, 300);
+  }, 3000);
+</script>
     
     <!-- Optional Custom JS -->
     @stack('scripts')

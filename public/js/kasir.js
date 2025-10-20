@@ -252,9 +252,9 @@ async function konfirmasiBayar() {
                 
                 keranjang = [];
                 renderKeranjang();
-                // setTimeout(() => {
-                //     window.location.reload();
-                // }, 1000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             });
 
             tutupModal();
