@@ -11,6 +11,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Middleware\PreventBackHistory;
+
 
 /**
  * LANDING PAGE
@@ -29,7 +31,7 @@ Route::get('/login', function () {
             : redirect()->route('dashboard.kasir');
     }
     return app(AuthController::class)->showLoginForm();
-})->name('login');
+})->middleware(PreventBackHistory::class)->name('login');
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -41,7 +43,7 @@ Route::middleware(['auth'])->post('/logout', [AuthController::class, 'logout'])-
 /**
  * ADMIN ROUTES
  */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin', PreventBackHistory::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -66,7 +68,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 /**
  * KASIR ROUTES
  */
-Route::middleware(['auth', 'role:kasir'])->prefix('kasir')->group(function () {
+Route::middleware(['auth', 'role:kasir', PreventBackHistory::class])->prefix('kasir')->group(function () {
     Route::get('/dashboard', [TransaksiController::class, 'index'])->name('dashboard.kasir');
 
     Route::post('/', [TransaksiController::class, 'store'])->name('transaksi.store');
