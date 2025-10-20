@@ -184,22 +184,38 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Stok berhasil ditambahkan.');
     }
 
-    public function destroy($id)
-    {
-        $produk = Produk::findOrFail($id);
+   public function destroy($id)
+{
+    $produk = Produk::findOrFail($id);
 
-        if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
-            Storage::disk('public')->delete('foto_produk/' . $produk->foto);
-        }
-        $produk->delete();
+    // Cek apakah produk sudah pernah dipakai di transaksi
+    $produkDipakai = \DB::table('detail_transaksi')
+        ->where('id_produk', $id)
+        ->exists();
 
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+    if ($produkDipakai) {
+        // Kalau produk sudah pernah dipakai, ubah status jadi tidak dijual
+        $produk->update(['status' => 'tidak dijual']);
+        return redirect()->route('produk.index')
+            ->with('success', 'Produk tidak dihapus karena sudah pernah digunakan di transaksi. Status diubah menjadi "tidak dijual".');
     }
+
+    // Kalau ada foto, hapus dari storage
+    if ($produk->foto && Storage::disk('public')->exists('foto_produk/' . $produk->foto)) {
+        Storage::disk('public')->delete('foto_produk/' . $produk->foto);
+    }
+
+    // Hapus produk jika belum pernah digunakan
+    $produk->delete();
+
+    return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+}
+
     public function search(Request $request)
 {
     $keyword = $request->search;
 
-    $produk = Produk::with(['category', 'supplier'])
+    $produks = Produk::with(['category', 'supplier'])
         ->where('nama_produk', 'like', "%{$keyword}%")
         ->orWhere('nomor_barcode', 'like', "%{$keyword}%")
         ->orWhereHas('category', function ($query) use ($keyword) {
@@ -210,7 +226,25 @@ class ProdukController extends Controller
         })
         ->get();
 
-    return response()->json($produk);
-}
+    $result = $produks->map(function ($produk) {
+        return [
+            'id_produk'   => $produk->id_produk,
+            'nomor_barcode' => $produk->nomor_barcode,
+            'nama_produk' => $produk->nama_produk,
+            'harga_jual'  => $produk->harga_jual,
+            'harga_beli'  => $produk->harga_beli,
+            'stok'        => $produk->stok,
+            'status'      => $produk->status,
+            'foto'        => $produk->foto,
+            'category'    => $produk->category,
+            'supplier'    => $produk->supplier,
+            // tambahkan url langsung dari route()
+            'edit_url'    => route('produk.edit', $produk->id_produk),
+            'stok_url'    => route('produk.kelola_stok', $produk->id_produk),
+            'delete_url'  => route('produk.destroy', $produk->id_produk),
+        ];
+    });
 
+    return response()->json($result);
+}
 }

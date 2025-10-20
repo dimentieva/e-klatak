@@ -23,15 +23,17 @@ class TransaksiController extends Controller
         $kategori = $request->get('kategori');
         $limitAll = 200; // batas maksimum item saat mode search (q ada)
 
-        $base = Produk::query()
-            ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori)) // pakai kolom yg benar
-            ->when($q, function ($qq) use ($q) {
-                $qq->where(function ($s) use ($q) {
-                    $s->where('nama_produk', 'like', "%{$q}%")
-                        ->orWhere('nomor_barcode', 'like', "%{$q}%");
-                });
-            })
-            ->orderBy('nama_produk');
+       $base = Produk::query()
+        ->where('status', 'dijual') // Tambahan filter supaya hanya produk aktif yang muncul di kasir
+        ->when($kategori, fn($qq) => $qq->where('id_categories', $kategori))
+        ->when($q, function ($qq) use ($q) {
+            $qq->where(function ($s) use ($q) {
+                $s->where('nama_produk', 'like', "%{$q}%")
+                    ->orWhere('nomor_barcode', 'like', "%{$q}%");
+            });
+        })
+        ->orderBy('nama_produk');
+
 
         // Search tidak terpengaruh paginate: saat q ada -> tanpa paginate
         if ($q !== '') {

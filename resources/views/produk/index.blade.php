@@ -62,11 +62,14 @@
                     <div class="flex flex-wrap gap-2 justify-center">
                         <a href="{{ route('produk.edit', $produk->id_produk) }}" class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
                         <a href="{{ route('produk.kelola_stok', $produk->id_produk) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Stok</a>
-                        <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST" class="inline-block form-delete">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
-                        </form>
+                        <form action="{{ route('produk.destroy', $produk->id_produk) }}" method="POST" class="inline-block form-delete"
+                        onsubmit="return confirm('Yakin ingin menghapus produk ini? Jika produk sudah pernah digunakan di transaksi, status akan diubah menjadi TIDAK DIJUAL.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                            Hapus
+                        </button>
+                    </form>
                     </div>
                 </td>
             </tr>
@@ -96,56 +99,57 @@
     }
 
     const fetchAndRenderProduk = async (query) => {
-        try {
-            const response = await fetch(`${searchUrl}?search=${encodeURIComponent(query)}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            const produks = await response.json();
-            produkBody.innerHTML = '';
-            pagination.innerHTML = '';
-
-            if (produks.length === 0) {
-                produkBody.innerHTML = `<tr><td colspan="11" class="text-center px-3 py-4 text-gray-500">Tidak ada produk ditemukan.</td></tr>`;
-                return;
+    try {
+        const response = await fetch(`${searchUrl}?search=${encodeURIComponent(query)}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
+        });
 
-            produks.forEach((produk, index) => {
-                produkBody.innerHTML += `
-                    <tr class="border-b text-center">
-                        <td class="px-3 py-2 border">${index + 1}</td>
-                        <td class="px-3 py-2 border">${produk.nomor_barcode}</td>
-                        <td class="px-3 py-2 border">${produk.nama_produk}</td>
-                        <td class="px-3 py-2 border">${produk.category ? produk.category.name : '-'}</td>
-                        <td class="px-3 py-2 border">${produk.supplier ? produk.supplier.nama_supp : '-'}</td>
-                        <td class="px-3 py-2 border">Rp ${parseInt(produk.harga_jual).toLocaleString('id-ID')}</td>
-                        <td class="px-3 py-2 border">Rp ${parseInt(produk.harga_beli).toLocaleString('id-ID')}</td>
-                        <td class="px-3 py-2 border">${produk.stok}</td>
-                        <td class="px-3 py-2 border">${produk.status}</td>
-                        <td class="px-3 py-2 border">
-                            ${produk.foto ? `<img src="/storage/foto_produk/${produk.foto}" class="w-14 h-14 object-cover rounded">` : '<span class="text-gray-400">-</span>'}
-                        </td>
-                        <td class="px-3 py-2 border">
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                <a href="/produk/${produk.id_produk}/edit" class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
-                                <a href="/produk/${produk.id_produk}/kelola-stok" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Stok</a>
-                                <form action="/produk/${produk.id_produk}" method="POST" class="inline-block form-delete" onsubmit="return confirmDelete(event, this)">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        } catch (error) {
-            console.error('Gagal memuat data produk:', error);
-            produkBody.innerHTML = '<tr><td colspan="11" class="text-center px-3 py-4 text-red-500">Gagal memuat data.</td></tr>';
+        const produks = await response.json();
+        produkBody.innerHTML = '';
+        pagination.innerHTML = '';
+
+        if (produks.length === 0) {
+            produkBody.innerHTML = `<tr><td colspan="11" class="text-center px-3 py-4 text-gray-500">Tidak ada produk ditemukan.</td></tr>`;
+            return;
         }
-    };
+
+        produks.forEach((produk, index) => {
+            produkBody.innerHTML += `
+                <tr class="border-b text-center">
+                    <td class="px-3 py-2 border">${index + 1}</td>
+                    <td class="px-3 py-2 border">${produk.nomor_barcode}</td>
+                    <td class="px-3 py-2 border">${produk.nama_produk}</td>
+                    <td class="px-3 py-2 border">${produk.category ? produk.category.name : '-'}</td>
+                    <td class="px-3 py-2 border">${produk.supplier ? produk.supplier.nama_supp : '-'}</td>
+                    <td class="px-3 py-2 border">Rp ${parseInt(produk.harga_jual).toLocaleString('id-ID')}</td>
+                    <td class="px-3 py-2 border">Rp ${parseInt(produk.harga_beli).toLocaleString('id-ID')}</td>
+                    <td class="px-3 py-2 border">${produk.stok}</td>
+                    <td class="px-3 py-2 border">${produk.status}</td>
+                    <td class="px-3 py-2 border">
+                        ${produk.foto ? `<img src="/storage/foto_produk/${produk.foto}" class="w-14 h-14 object-cover rounded">` : '<span class="text-gray-400">-</span>'}
+                    </td>
+                    <td class="px-3 py-2 border">
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <a href="${produk.edit_url}" class="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded text-sm">Edit</a>
+                            <a href="${produk.stok_url}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Stok</a>
+                            <form action="${produk.delete_url}" method="POST" class="inline-block form-delete" onsubmit="return confirmDelete(event, this)">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Hapus</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error('Gagal memuat data produk:', error);
+        produkBody.innerHTML = '<tr><td colspan="11" class="text-center px-3 py-4 text-red-500">Gagal memuat data.</td></tr>';
+    }
+};
+
 
     searchInput.addEventListener('input', debounce((e) => {
         const query = e.target.value.trim();

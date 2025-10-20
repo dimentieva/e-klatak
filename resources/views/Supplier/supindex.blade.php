@@ -23,6 +23,12 @@
 </div>
 @endif
 
+@if (session('error'))
+    <div class="bg-red-100 text-red-700 px-4 py-3 mb-4 rounded border">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="overflow-x-auto bg-gray-50 p-4 rounded shadow">
     <table class="w-full text-sm text-center text-gray-600 border">
         <thead class="bg-[#0BB4B2] text-white text-xs uppercase">

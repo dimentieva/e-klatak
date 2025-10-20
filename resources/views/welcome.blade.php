@@ -374,7 +374,7 @@ document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             
             {{-- Product 3 --}}
             <div class="group relative overflow-hidden rounded-lg h-40">
-              <img src="{{ asset('assets/market/abonikan.png') }}" alt="Udang Vaname" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+              <img src="{{ asset('assets/market/otakotak.png') }}" alt="Udang Vaname" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
                 <div class="text-white translate-y-4 group-hover:translate-y-0 transition duration-300">
                   <h4 class="font-bold">Abon Ikan</h4>
