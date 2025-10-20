@@ -8,61 +8,150 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
-    public function index(Request $request)
-    {
-        $startDate = $request->tanggal_mulai;
-        $endDate = $request->tanggal_selesai;
+   public function index(Request $request)
+{
+    $tanggalMulai = $request->get('tanggal_mulai');
+    $tanggalSelesai = $request->get('tanggal_selesai');
 
-        // Query untuk seluruh transaksi (tanpa paginate)
-        $queryForTotal = Transaksi::with('detailTransaksi');
+    $query = \App\Models\Transaksi::with('detailTransaksi.produk');
 
-        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
-            $queryForTotal->whereBetween('created_at', [
-                $startDate . ' 00:00:00',
-                $endDate . ' 23:59:59'
-            ]);
-        }
-
-        $allTransaksi = $queryForTotal->get();
-
-        // Hitung total dari seluruh transaksi (bukan hanya halaman yang ditampilkan)
-        $totalProduk = $allTransaksi->sum(function ($trx) {
-            return $trx->detailTransaksi->sum('jumlah');
-        });
-
-        $totalPendapatan = $allTransaksi->sum('total_harga');
-
-        // Query ulang untuk paginasi
-        $queryPaginated = Transaksi::with('detailTransaksi')->orderBy('created_at', 'asc');
-
-        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
-            $queryPaginated->whereBetween('created_at', [
-                $startDate . ' 00:00:00',
-                $endDate . ' 23:59:59'
-            ]);
-        }
-
-        $transaksi = $queryPaginated->paginate(15);
-
-        return view('laporan.index', compact('transaksi', 'totalProduk', 'totalPendapatan'));
+    if ($tanggalMulai && $tanggalSelesai) {
+        $query->whereBetween('created_at', [$tanggalMulai . ' 00:00:00', $tanggalSelesai . ' 23:59:59']);
     }
+
+    $transaksi = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    // Total produk terjual
+    $totalProduk = \App\Models\DetailTransaksi::when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+        $q->whereBetween('created_at', [$tanggalMulai . ' 00:00:00', $tanggalSelesai . ' 23:59:59']);
+    })->sum('jumlah');
+
+    // Total pendapatan
+    $totalPendapatan = \App\Models\Transaksi::when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+        $q->whereBetween('created_at', [$tanggalMulai . ' 00:00:00', $tanggalSelesai . ' 23:59:59']);
+    })->sum('total_harga');
+
+    // 🔹 Produk paling banyak dijual
+    $produkTerlaris = \App\Models\DetailTransaksi::selectRaw('id_produk, SUM(jumlah) as total_terjual')
+        ->when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+            $q->whereBetween('created_at', [$tanggalMulai . ' 00:00:00', $tanggalSelesai . ' 23:59:59']);
+        })
+        ->groupBy('id_produk')
+        ->orderByDesc('total_terjual')
+        ->with('produk')
+        ->first();
+
+    // 🔹 Hitung total laba dan rugi
+    $detailTransaksi = \App\Models\DetailTransaksi::with('produk')
+        ->when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+            $q->whereBetween('created_at', [$tanggalMulai . ' 00:00:00', $tanggalSelesai . ' 23:59:59']);
+        })
+        ->get();
+
+    $laba = 0;
+    $rugi = 0;
+
+    foreach ($detailTransaksi as $detail) {
+        $produk = $detail->produk;
+        if ($produk) {
+            $hargaBeli = $produk->harga_beli;
+            $hargaJual = $produk->harga_jual;
+            $selisih = ($hargaJual - $hargaBeli) * $detail->jumlah;
+
+            if ($selisih >= 0) {
+                $laba += $selisih;
+            } else {
+                $rugi += abs($selisih);
+            }
+        }
+    }
+
+    return view('laporan.index', compact(
+        'transaksi',
+        'totalProduk',
+        'totalPendapatan',
+        'produkTerlaris',
+        'laba',
+        'rugi'
+    ));
+}
+
 
 
 
     public function exportPdf(Request $request)
-    {
-        $query = Transaksi::with(['detailTransaksi.produk', 'user'])->orderBy('created_at', 'asc');
+{
+    $tanggalMulai = $request->tanggal_mulai;
+    $tanggalSelesai = $request->tanggal_selesai;
 
-        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
-            $query->whereBetween('created_at', [
-                $request->tanggal_mulai . ' 00:00:00',
-                $request->tanggal_selesai . ' 23:59:59'
-            ]);
-        }
+    $query = Transaksi::with('detailTransaksi.produk')->orderBy('created_at', 'desc');
 
-        $semuaTransaksi = $query->get();
-
-        $pdf = Pdf::loadView('laporan.pdf', compact('semuaTransaksi'))->setPaper('A4', 'portrait');
-        return $pdf->stream('laporan_penjualan.pdf');
+    if ($tanggalMulai && $tanggalSelesai) {
+        $query->whereBetween('created_at', [
+            $tanggalMulai . ' 00:00:00',
+            $tanggalSelesai . ' 23:59:59'
+        ]);
     }
+
+    $transaksi = $query->get();
+
+    // Total produk terjual
+    $totalProduk = \App\Models\DetailTransaksi::when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+        $q->whereBetween('created_at', [
+            $tanggalMulai . ' 00:00:00',
+            $tanggalSelesai . ' 23:59:59'
+        ]);
+    })->sum('jumlah');
+
+    // Total pendapatan
+    $totalPendapatan = $transaksi->sum('total_harga');
+
+    // Hitung laba/rugi
+    $detailTransaksi = \App\Models\DetailTransaksi::with('produk')
+        ->when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+            $q->whereBetween('created_at', [
+                $tanggalMulai . ' 00:00:00',
+                $tanggalSelesai . ' 23:59:59'
+            ]);
+        })->get();
+
+    $laba = 0;
+    $rugi = 0;
+
+    foreach ($detailTransaksi as $detail) {
+        $produk = $detail->produk;
+        if ($produk) {
+            $selisih = ($produk->harga_jual - $produk->harga_beli) * $detail->jumlah;
+            if ($selisih >= 0) {
+                $laba += $selisih;
+            } else {
+                $rugi += abs($selisih);
+            }
+        }
+    }
+
+    // Produk terlaris
+    $produkTerlaris = \App\Models\DetailTransaksi::selectRaw('id_produk, SUM(jumlah) as total_terjual')
+        ->when($tanggalMulai && $tanggalSelesai, function ($q) use ($tanggalMulai, $tanggalSelesai) {
+            $q->whereBetween('created_at', [
+                $tanggalMulai . ' 00:00:00',
+                $tanggalSelesai . ' 23:59:59'
+            ]);
+        })
+        ->groupBy('id_produk')
+        ->orderByDesc('total_terjual')
+        ->with('produk')
+        ->first();
+
+    return Pdf::loadView('laporan.pdf', compact(
+        'transaksi',
+        'totalProduk',
+        'totalPendapatan',
+        'laba',
+        'rugi',
+        'produkTerlaris',
+        'tanggalMulai',
+        'tanggalSelesai'
+    ))->setPaper('A4', 'portrait')->stream('laporan_penjualan.pdf');
+}
 }
