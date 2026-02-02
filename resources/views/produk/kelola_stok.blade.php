@@ -39,9 +39,25 @@
                 <input type="number" name="jumlah_perubahan" id="jumlah_perubahan" required class="w-full border border-gray-300 rounded p-2">
             </div>
 
+            {{-- KETERANGAN --}}
             <div>
-                <label for="keterangan" class="block font-semibold mb-1">Keterangan* :</label>
-                <input type="text" name="keterangan" id="keterangan" required class="w-full border border-gray-300 rounded p-2">
+                <label class="block font-semibold mb-1">Alasan Perubahan Stok:</label>
+                <select name="keterangan" id="keteranganSelect" required
+                    class="w-full border border-gray-300 rounded p-2"
+                    onchange="toggleKeteranganLainnya()">
+                    <option value="">-- Pilih Alasan --</option>
+                    <option value="expired">Expired</option>
+                    <option value="restock">Restock</option>
+                    <option value="lainnya">Lainnya</option>
+                </select>
+            </div>
+
+
+ <div id="keteranganLainnya" class="hidden">
+                <label class="block font-semibold mb-1">Keterangan Lainnya:</label>
+                <input type="text" name="keterangan_lainnya"
+                    class="w-full border border-gray-300 rounded p-2"
+                    placeholder="Masukkan keterangan tambahan">
             </div>
 
             <div class="flex gap-3 mt-4">
@@ -136,5 +152,11 @@
         btn.disabled = true;
         btn.innerText = 'Menyimpan...';
     }
+
+    function toggleKeteranganLainnya() {
+    const select = document.getElementById('keteranganSelect');
+    const lainnya = document.getElementById('keteranganLainnya');
+    lainnya.classList.toggle('hidden', select.value !== 'lainnya');
+}
 </script>
 @endsection
